@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CyXmlSerializer>
+<!--This file is machine generated and read. It is not intended to be edited by hand.-->
+<!--Due to this, there is no schema for this file.-->
+<CyGuid_843a90a4-0c4b-4e44-991d-05e7fb117a21 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtWrkspcCustomData" version="4">
+<CyGuid_fdba8dfd-b15b-4469-9bbb-9e40c3e70997 type_name="CyDesigner.Common.Base.CyCustomData" version="2">
+<userData>
+<dataGuid v="1b906a0f-a7b6-4e4d-a428-82f98b53cb35">
+<CyGuid_1b906a0f-a7b6-4e4d-a428-82f98b53cb35 type_name="CyDesigner.Common.ProjMgmt.GUI.CyExplorerWindow+CyExplorerWindowState" version="3" SelectedTab="Source">
+<TreeKeys>
+<v>Source</v>
+<v>Components</v>
+<v>Output</v>
+</TreeKeys>
+<TreeStates>
+<CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237 type_name="CyDesigner.Common.Base.Controls.CyTreeViewState" version="1" SelectedNodeId="">
+<ExpandedNodeIds>
+<v>Workspace01</v>
+<v>Workspace01\FYP</v>
+<v>Workspace01\FYP\TopDesign</v>
+<v>Workspace01\FYP\FYP.cydwr</v>
+<v>Workspace01\FYP\FYP.cydwr\Pins</v>
+<v>Workspace01\FYP\FYP.cydwr\Analog</v>
+<v>Workspace01\FYP\FYP.cydwr\Clocks</v>
+<v>Workspace01\FYP\FYP.cydwr\Interrupts</v>
+<v>Workspace01\FYP\FYP.cydwr\DMA</v>
+<v>Workspace01\FYP\FYP.cydwr\System</v>
+<v>Workspace01\FYP\FYP.cydwr\Directives</v>
+<v>Workspace01\FYP\FYP.cydwr\Flash Security</v>
+<v>Workspace01\FYP\FYP.cydwr\EEPROM</v>
+<v>Workspace01\FYP\Header Files</v>
+<v>Workspace01\FYP\Header Files\cyapicallbacks.h</v>
+<v>Workspace01\FYP\Source Files</v>
+<v>Workspace01\FYP\Source Files\main.c</v>
+<v>Workspace01\FYP\Source Files\serial.c</v>
+<v>Workspace01\FYP\Generated_Source</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cy_boot</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cy_boot\cm3gcc.ld</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cy_boot\Cm3Iar.icf</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cy_boot\Cm3RealView.scat</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cy_boot\Cm3Start.c</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cy_boot\cmsis_armcc.h</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cy_boot\cmsis_gcc.h</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cy_boot\core_cm3.h</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cy_boot\core_cm3_psoc5.h</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cy_boot\core_cmFunc.h</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cy_boot\core_cmInstr.h</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cy_boot\CyBootAsmGnu.s</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cy_boot\CyBootAsmIar.s</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cy_boot\CyBootAsmRv.s</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cy_boot\CyDmac.c</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cy_boot\CyDmac.h</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cy_boot\CyFlash.c</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cy_boot\CyFlash.h</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cy_boot\CyLib.c</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cy_boot\CyLib.h</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cy_boot\cypins.h</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cy_boot\cyPm.c</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cy_boot\cyPm.h</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cy_boot\CySpc.c</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cy_boot\CySpc.h</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cy_boot\cytypes.h</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cy_boot\cyutils.c</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\M1_BWD</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\M1_BWD\M1_BWD.c</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\M1_BWD\M1_BWD.h</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\M1_BWD\M1_BWD_aliases.h</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\M1_FWD</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\M1_FWD\M1_FWD.c</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\M1_FWD\M1_FWD.h</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\M1_FWD\M1_FWD_aliases.h</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\M2_BWD</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\M2_BWD\M2_BWD.c</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\M2_BWD\M2_BWD.h</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\M2_BWD\M2_BWD_aliases.h</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\M2_FWD</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\M2_FWD\M2_FWD.c</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\M2_FWD\M2_FWD.h</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\M2_FWD\M2_FWD_aliases.h</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\MClock</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\MClock\MClock.c</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\MClock\MClock.h</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\PWM_M1</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\PWM_M1\PWM_M1.c</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\PWM_M1\PWM_M1.h</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\PWM_M1\PWM_M1_PM.c</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\PWM_M2</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\PWM_M2\PWM_M2.c</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\PWM_M2\PWM_M2.h</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\PWM_M2\PWM_M2_PM.c</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\PWM_Out_1</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\PWM_Out_1\PWM_Out_1.c</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\PWM_Out_1\PWM_Out_1.h</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\PWM_Out_1\PWM_Out_1_aliases.h</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\PWM_Out_2</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\PWM_Out_2\PWM_Out_2.c</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\PWM_Out_2\PWM_Out_2.h</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\PWM_Out_2\PWM_Out_2_aliases.h</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\Standby</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\Standby\Standby.c</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\Standby\Standby.h</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\Standby\Standby_aliases.h</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\UART</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\UART\UART.c</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\UART\UART.h</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\UART\UART_BOOT.c</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\UART\UART_INT.c</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\UART\UART_PM.c</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\UART_IntClock</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\UART_IntClock\UART_IntClock.c</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\UART_IntClock\UART_IntClock.h</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cycodeshareexport.ld</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cycodeshareimport.ld</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cycodeshareimport.scat</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cydevice.h</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cydevice_trm.h</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cydevicegnu.inc</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cydevicegnu_trm.inc</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cydeviceiar.inc</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cydeviceiar_trm.inc</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cydevicerv.inc</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cydevicerv_trm.inc</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cydisabledsheets.h</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cyfitter.h</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cyfitter_cfg.c</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cyfitter_cfg.h</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cyfittergnu.inc</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cyfitteriar.inc</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cyfitterrv.inc</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cymetadata.c</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\project.h</v>
+</ExpandedNodeIds>
+<VisibleNodeIds>
+<v>Workspace01</v>
+<v>Workspace01\FYP</v>
+<v>Workspace01\FYP\TopDesign</v>
+<v>Workspace01\FYP\FYP.cydwr</v>
+<v>Workspace01\FYP\FYP.cydwr\Pins</v>
+<v>Workspace01\FYP\FYP.cydwr\Analog</v>
+<v>Workspace01\FYP\FYP.cydwr\Clocks</v>
+<v>Workspace01\FYP\FYP.cydwr\Interrupts</v>
+<v>Workspace01\FYP\FYP.cydwr\DMA</v>
+<v>Workspace01\FYP\FYP.cydwr\System</v>
+<v>Workspace01\FYP\FYP.cydwr\Directives</v>
+<v>Workspace01\FYP\FYP.cydwr\Flash Security</v>
+<v>Workspace01\FYP\FYP.cydwr\EEPROM</v>
+<v>Workspace01\FYP\Header Files</v>
+<v>Workspace01\FYP\Header Files\cyapicallbacks.h</v>
+<v>Workspace01\FYP\Source Files</v>
+<v>Workspace01\FYP\Source Files\main.c</v>
+<v>Workspace01\FYP\Source Files\movement.c</v>
+<v>Workspace01\FYP\Source Files\serial.c</v>
+<v>Workspace01\FYP\Generated_Source</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cy_boot</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cy_boot\cm3gcc.ld</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cy_boot\Cm3Iar.icf</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cy_boot\Cm3RealView.scat</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cy_boot\Cm3Start.c</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cy_boot\cmsis_armcc.h</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cy_boot\cmsis_gcc.h</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cy_boot\core_cm3.h</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cy_boot\core_cm3_psoc5.h</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cy_boot\core_cmFunc.h</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cy_boot\core_cmInstr.h</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cy_boot\CyBootAsmGnu.s</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cy_boot\CyBootAsmIar.s</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cy_boot\CyBootAsmRv.s</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cy_boot\CyDmac.c</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cy_boot\CyDmac.h</v>
+<v>Workspace01\FYP\Generated_Source\PSoC5\cy_boot\CyFlash.c</v>
+</VisibleNodeIds>
+</CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237>
+<CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237 type_name="CyDesigner.Common.Base.Controls.CyTreeViewState" version="1" SelectedNodeId="">
+<ExpandedNodeIds>
+<v>Workspace01</v>
+<v>Workspace01\FYP</v>
+<v>Workspace01\FYP\TopDesign</v>
+<v>Workspace01\FYP\TopDesign\TopDesign.cysch</v>
+</ExpandedNodeIds>
+<VisibleNodeIds>
+<v>Workspace01</v>
+<v>Workspace01\FYP</v>
+<v>Workspace01\FYP\TopDesign</v>
+<v>Workspace01\FYP\TopDesign\TopDesign.cysch</v>
+</VisibleNodeIds>
+</CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237>
+<CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237 type_name="CyDesigner.Common.Base.Controls.CyTreeViewState" version="1" SelectedNodeId="">
+<ExpandedNodeIds>
+<v>Workspace01</v>
+<v>Workspace01\FYP</v>
+<v>Workspace01\FYP\CortexM3</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\Cm3Start.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\CyBootAsmGnu.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\CyDmac.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\cyfitter_cfg.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\CyFlash.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\CyLib.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\cymetadata.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\cyPm.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\CySpc.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\cyutils.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\isr_1ms.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\M1_BWD.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\M1_FWD.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\M1_Phase1.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\M1_Phase2.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\M1Clock.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\M1QuadDec.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\M1QuadDec_Cnt16.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\M1QuadDec_Cnt16_PM.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\M1QuadDec_INT.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\M1QuadDec_isr.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\M1QuadDec_PM.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\M2_BWD.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\M2_FWD.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\M2_Phase1.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\M2_Phase2.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\M2QuadDec.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\M2QuadDec_Cnt16.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\M2QuadDec_Cnt16_PM.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\M2QuadDec_INT.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\M2QuadDec_isr.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\M2QuadDec_PM.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\main.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\MClock.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\movement.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\PWM_M1.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\PWM_M1_PM.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\PWM_M2.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\PWM_M2_PM.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\PWM_Out_1.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\PWM_Out_2.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\serial.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\Standby.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\Timer_1.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\Timer_1_PM.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\UART.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\UART_BOOT.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\UART_INT.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\UART_IntClock.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\UART_PM.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\FYP.elf</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\FYP.hex</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\FYP.map</v>
+<v>Workspace01\FYP\FYP.gpdsc</v>
+<v>Workspace01\FYP\FYP.rpt</v>
+<v>Workspace01\FYP\FYP_timing.html</v>
+</ExpandedNodeIds>
+<VisibleNodeIds>
+<v>Workspace01</v>
+<v>Workspace01\FYP</v>
+<v>Workspace01\FYP\CortexM3</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\Cm3Start.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\CyBootAsmGnu.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\CyDmac.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\cyfitter_cfg.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\CyFlash.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\CyLib.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\cymetadata.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\cyPm.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\CySpc.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\cyutils.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\isr_1ms.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\M1_BWD.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\M1_FWD.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\M1_Phase1.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\M1_Phase2.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\M1Clock.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\M1QuadDec.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\M1QuadDec_Cnt16.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\M1QuadDec_Cnt16_PM.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\M1QuadDec_INT.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\M1QuadDec_isr.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\M1QuadDec_PM.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\M2_BWD.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\M2_FWD.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\M2_Phase1.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\M2_Phase2.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\M2QuadDec.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\M2QuadDec_Cnt16.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\M2QuadDec_Cnt16_PM.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\M2QuadDec_INT.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\M2QuadDec_isr.lst</v>
+<v>Workspace01\FYP\CortexM3\ARM_GCC_493\Debug\Listing Files\M2QuadDec_PM.lst</v>
+</VisibleNodeIds>
+</CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237>
+</TreeStates>
+<TreeKeysV2>
+<v>Datasheet</v>
+</TreeKeysV2>
+<TreeStatesV2>
+<CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237 type_name="CyDesigner.Common.Base.Controls.CyTreeViewState" version="1" SelectedNodeId="">
+<ExpandedNodeIds>
+<v>Workspace01</v>
+<v>Workspace01\FYP</v>
+<v>Workspace01\FYP\PSoC 5LP Architecture TRM</v>
+<v>Workspace01\FYP\CY8C58LP Family Datasheet</v>
+<v>Workspace01\FYP\System Reference Guides</v>
+<v>Workspace01\FYP\System Reference Guides\cy_boot_v5_50</v>
+<v>Workspace01\FYP\cy_clock_v2_20</v>
+<v>Workspace01\FYP\cy_clock_v2_20\cy_clock_v2_20.pdf</v>
+<v>Workspace01\FYP\cy_isr_v1_70.pdf</v>
+<v>Workspace01\FYP\cy_pins_v2_20</v>
+<v>Workspace01\FYP\cy_pins_v2_20\cy_pins_v2_20.pdf</v>
+<v>Workspace01\FYP\PWM_v3_30</v>
+<v>Workspace01\FYP\PWM_v3_30\PWM_v3_30.pdf</v>
+<v>Workspace01\FYP\QuadDec_v3_0</v>
+<v>Workspace01\FYP\QuadDec_v3_0\QuadDec_v3_0.pdf</v>
+<v>Workspace01\FYP\Timer_v2_70.pdf</v>
+<v>Workspace01\FYP\UART_v2_50.pdf</v>
+<v>Workspace01\FYP\ZeroTerminal.pdf</v>
+</ExpandedNodeIds>
+<VisibleNodeIds>
+<v>Workspace01</v>
+<v>Workspace01\FYP</v>
+<v>Workspace01\FYP\PSoC 5LP Architecture TRM</v>
+<v>Workspace01\FYP\CY8C58LP Family Datasheet</v>
+<v>Workspace01\FYP\System Reference Guides</v>
+<v>Workspace01\FYP\System Reference Guides\cy_boot_v5_50</v>
+<v>Workspace01\FYP\cy_clock_v2_20</v>
+<v>Workspace01\FYP\cy_clock_v2_20\cy_clock_v2_20.pdf</v>
+<v>Workspace01\FYP\cy_isr_v1_70.pdf</v>
+<v>Workspace01\FYP\cy_pins_v2_20</v>
+<v>Workspace01\FYP\cy_pins_v2_20\cy_pins_v2_20.pdf</v>
+<v>Workspace01\FYP\PWM_v3_30</v>
+<v>Workspace01\FYP\PWM_v3_30\PWM_v3_30.pdf</v>
+<v>Workspace01\FYP\QuadDec_v3_0</v>
+<v>Workspace01\FYP\QuadDec_v3_0\QuadDec_v3_0.pdf</v>
+<v>Workspace01\FYP\Timer_v2_70.pdf</v>
+<v>Workspace01\FYP\UART_v2_50.pdf</v>
+<v>Workspace01\FYP\ZeroTerminal.pdf</v>
+</VisibleNodeIds>
+</CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237>
+</TreeStatesV2>
+</CyGuid_1b906a0f-a7b6-4e4d-a428-82f98b53cb35>
+</dataGuid>
+</userData>
+</CyGuid_fdba8dfd-b15b-4469-9bbb-9e40c3e70997>
+<Unloaded />
+<OpenDocs>
+<name v=".\FYP.cydsn\TopDesign\TopDesign.cysch" />
+<name v=".\FYP.cydsn\FYP.cydwr" />
+<name v=".\FYP.cydsn\main.c" />
+<name v=".\FYP.cydsn\movement.c" />
+<name v=".\FYP.cydsn\cyapicallbacks.h" />
+<name v=".\FYP.cydsn\serial.c" />
+</OpenDocs>
+<OpenDocsLayout><![CDATA[<?xml version="1.0"?><!--
+
+  Actipro Docking/MDI for WinForms
+  Copyright (c) 2001-2016 Actipro Software LLC.  All rights reserved.
+  http://www.actiprosoftware.com
+
+--><DocumentLayout Version="1.0"><LayoutData><TabbedMdiRootContainer Orientation="Horizontal"><TabbedMdiContainer Size="1235, 544" SelectedTabbedMdiWindow="50e2dda0-6b48-4e22-aed0-9269a63f19dd"><ToolWindow Key="Start Page:bd4649ab-da6b-4d04-a663-c722b8bf99db:Start Page" Guid="2185b81d-c41d-4651-b3a0-16b1b3e4a127" /><DocumentWindow Key="b9164338-8c3c-452a-9add-3a20c7e00c94" Guid="379005fc-cd82-4e20-b829-3f1c582bee2a" /><DocumentWindow Key="c1c345ad-9293-4fd6-81bb-5af0b6f7e6a7" Guid="a56d4258-ccb9-47e6-9754-bd7ec81669ad" /><DocumentWindow Key="a0fad269-334a-4fa4-9297-1050ebd46616" Guid="80a68a7d-9f4a-435e-95ca-9ee8bb5ffcd0" /><DocumentWindow Key="cec47754-d5a1-4e56-b9e6-fccb2c57bb6d" Guid="2244b194-be3c-4902-9568-18f2524a2c41" /><DocumentWindow Key="330599fa-5992-492c-a829-46c74a9bf91b" Guid="c22acd94-b8ac-4a0c-a850-8e8242794ceb" /><DocumentWindow Key="b7f3b0a0-15b5-4fce-895b-c706d9cf1e33" Guid="50e2dda0-6b48-4e22-aed0-9269a63f19dd" /></TabbedMdiContainer></TabbedMdiRootContainer><FloatingContainers /></LayoutData></DocumentLayout>]]></OpenDocsLayout>
+<config v="" />
+<AutoUpdate v="true" />
+</CyGuid_843a90a4-0c4b-4e44-991d-05e7fb117a21>
+</CyXmlSerializer>

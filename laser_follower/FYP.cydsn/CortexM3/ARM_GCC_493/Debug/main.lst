@@ -1,0 +1,2185 @@
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccpEov4m.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.file	"main.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.section	.text.Timer_1_Handler,"ax",%progbits
+  19              		.align	2
+  20              		.global	Timer_1_Handler
+  21              		.thumb
+  22              		.thumb_func
+  23              		.type	Timer_1_Handler, %function
+  24              	Timer_1_Handler:
+  25              	.LFB65:
+  26              		.file 1 "main.c"
+   1:main.c        **** // include directives
+   2:main.c        **** #include "project.h"
+   3:main.c        **** #include <math.h>
+   4:main.c        **** #include <stdio.h>
+   5:main.c        **** #include <stdint.h>
+   6:main.c        **** #include <time.h>
+   7:main.c        **** 
+   8:main.c        **** extern void forward();
+   9:main.c        **** extern void stop();
+  10:main.c        **** extern void drive();
+  11:main.c        **** extern void turn_wheel();
+  12:main.c        **** extern void turn();
+  13:main.c        **** extern void straight();
+  14:main.c        **** extern void turn();
+  15:main.c        **** extern void Check_Speed();
+  16:main.c        **** extern void Print_Values();
+  17:main.c        **** extern void new_path();
+  18:main.c        **** extern int get_serial_update();
+  19:main.c        **** extern void get_serial_speed();
+  20:main.c        **** extern void get_serial_control();
+  21:main.c        **** extern void test_values();
+  22:main.c        **** extern void step_response();
+  23:main.c        **** 
+  24:main.c        **** 
+  25:main.c        **** char mystring[50];
+  26:main.c        **** 
+  27:main.c        **** //turn on all components
+  28:main.c        **** void Setup(){
+  29:main.c        ****     
+  30:main.c        ****     PWM_M1_Start();
+  31:main.c        ****     PWM_M2_Start();
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccpEov4m.s 			page 2
+
+
+  32:main.c        ****     UART_Start();
+  33:main.c        ****     M1Clock_Start();
+  34:main.c        ****     MClock_Start();
+  35:main.c        ****     
+  36:main.c        ****     M1QuadDec_Start();
+  37:main.c        ****     M1QuadDec_Enable();
+  38:main.c        ****     CyDelay(1000);
+  39:main.c        ****     M1QuadDec_SetCounter(0);
+  40:main.c        **** 
+  41:main.c        ****     CyDelay(1000);
+  42:main.c        ****     
+  43:main.c        ****     M2QuadDec_Start();
+  44:main.c        ****     M2QuadDec_Enable();
+  45:main.c        ****     CyDelay(1000);
+  46:main.c        ****     M2QuadDec_SetCounter(0);
+  47:main.c        ****     
+  48:main.c        ****     Timer_1_Start();
+  49:main.c        ****     isr_1ms_Enable();
+  50:main.c        ****    
+  51:main.c        **** }
+  52:main.c        **** 
+  53:main.c        **** void Stop(){
+  54:main.c        **** PWM_M1_Stop();
+  55:main.c        ****     PWM_M2_Stop();}
+  56:main.c        **** CY_ISR( Timer_1_Handler ){
+  27              		.loc 1 56 0
+  28              		.cfi_startproc
+  29              		@ args = 0, pretend = 0, frame = 0
+  30              		@ frame_needed = 0, uses_anonymous_args = 0
+  31 0000 08B5     		push	{r3, lr}
+  32              		.cfi_def_cfa_offset 8
+  33              		.cfi_offset 3, -8
+  34              		.cfi_offset 14, -4
+  57:main.c        ****     
+  58:main.c        ****     Check_Speed(30);
+  35              		.loc 1 58 0
+  36 0002 1E20     		movs	r0, #30
+  37 0004 FFF7FEFF 		bl	Check_Speed
+  38              	.LVL0:
+  59:main.c        ****     Timer_1_ReadStatusRegister();
+  39              		.loc 1 59 0
+  40 0008 FFF7FEFF 		bl	Timer_1_ReadStatusRegister
+  41              	.LVL1:
+  42 000c 08BD     		pop	{r3, pc}
+  43              		.cfi_endproc
+  44              	.LFE65:
+  45              		.size	Timer_1_Handler, .-Timer_1_Handler
+  46 000e 00BF     		.section	.text.Setup,"ax",%progbits
+  47              		.align	2
+  48              		.global	Setup
+  49              		.thumb
+  50              		.thumb_func
+  51              		.type	Setup, %function
+  52              	Setup:
+  53              	.LFB63:
+  28:main.c        ****     
+  54              		.loc 1 28 0
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccpEov4m.s 			page 3
+
+
+  55              		.cfi_startproc
+  56              		@ args = 0, pretend = 0, frame = 0
+  57              		@ frame_needed = 0, uses_anonymous_args = 0
+  58 0000 08B5     		push	{r3, lr}
+  59              		.cfi_def_cfa_offset 8
+  60              		.cfi_offset 3, -8
+  61              		.cfi_offset 14, -4
+  30:main.c        ****     PWM_M2_Start();
+  62              		.loc 1 30 0
+  63 0002 FFF7FEFF 		bl	PWM_M1_Start
+  64              	.LVL2:
+  31:main.c        ****     UART_Start();
+  65              		.loc 1 31 0
+  66 0006 FFF7FEFF 		bl	PWM_M2_Start
+  67              	.LVL3:
+  32:main.c        ****     M1Clock_Start();
+  68              		.loc 1 32 0
+  69 000a FFF7FEFF 		bl	UART_Start
+  70              	.LVL4:
+  33:main.c        ****     MClock_Start();
+  71              		.loc 1 33 0
+  72 000e FFF7FEFF 		bl	M1Clock_Start
+  73              	.LVL5:
+  34:main.c        ****     
+  74              		.loc 1 34 0
+  75 0012 FFF7FEFF 		bl	MClock_Start
+  76              	.LVL6:
+  36:main.c        ****     M1QuadDec_Enable();
+  77              		.loc 1 36 0
+  78 0016 FFF7FEFF 		bl	M1QuadDec_Start
+  79              	.LVL7:
+  37:main.c        ****     CyDelay(1000);
+  80              		.loc 1 37 0
+  81 001a FFF7FEFF 		bl	M1QuadDec_Enable
+  82              	.LVL8:
+  38:main.c        ****     M1QuadDec_SetCounter(0);
+  83              		.loc 1 38 0
+  84 001e 4FF47A70 		mov	r0, #1000
+  85 0022 FFF7FEFF 		bl	CyDelay
+  86              	.LVL9:
+  39:main.c        **** 
+  87              		.loc 1 39 0
+  88 0026 0020     		movs	r0, #0
+  89 0028 FFF7FEFF 		bl	M1QuadDec_SetCounter
+  90              	.LVL10:
+  41:main.c        ****     
+  91              		.loc 1 41 0
+  92 002c 4FF47A70 		mov	r0, #1000
+  93 0030 FFF7FEFF 		bl	CyDelay
+  94              	.LVL11:
+  43:main.c        ****     M2QuadDec_Enable();
+  95              		.loc 1 43 0
+  96 0034 FFF7FEFF 		bl	M2QuadDec_Start
+  97              	.LVL12:
+  44:main.c        ****     CyDelay(1000);
+  98              		.loc 1 44 0
+  99 0038 FFF7FEFF 		bl	M2QuadDec_Enable
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccpEov4m.s 			page 4
+
+
+ 100              	.LVL13:
+  45:main.c        ****     M2QuadDec_SetCounter(0);
+ 101              		.loc 1 45 0
+ 102 003c 4FF47A70 		mov	r0, #1000
+ 103 0040 FFF7FEFF 		bl	CyDelay
+ 104              	.LVL14:
+  46:main.c        ****     
+ 105              		.loc 1 46 0
+ 106 0044 0020     		movs	r0, #0
+ 107 0046 FFF7FEFF 		bl	M2QuadDec_SetCounter
+ 108              	.LVL15:
+  48:main.c        ****     isr_1ms_Enable();
+ 109              		.loc 1 48 0
+ 110 004a FFF7FEFF 		bl	Timer_1_Start
+ 111              	.LVL16:
+  49:main.c        ****    
+ 112              		.loc 1 49 0
+ 113 004e FFF7FEFF 		bl	isr_1ms_Enable
+ 114              	.LVL17:
+ 115 0052 08BD     		pop	{r3, pc}
+ 116              		.cfi_endproc
+ 117              	.LFE63:
+ 118              		.size	Setup, .-Setup
+ 119              		.section	.text.Stop,"ax",%progbits
+ 120              		.align	2
+ 121              		.global	Stop
+ 122              		.thumb
+ 123              		.thumb_func
+ 124              		.type	Stop, %function
+ 125              	Stop:
+ 126              	.LFB64:
+  53:main.c        **** PWM_M1_Stop();
+ 127              		.loc 1 53 0
+ 128              		.cfi_startproc
+ 129              		@ args = 0, pretend = 0, frame = 0
+ 130              		@ frame_needed = 0, uses_anonymous_args = 0
+ 131 0000 08B5     		push	{r3, lr}
+ 132              		.cfi_def_cfa_offset 8
+ 133              		.cfi_offset 3, -8
+ 134              		.cfi_offset 14, -4
+  54:main.c        ****     PWM_M2_Stop();}
+ 135              		.loc 1 54 0
+ 136 0002 FFF7FEFF 		bl	PWM_M1_Stop
+ 137              	.LVL18:
+  55:main.c        **** CY_ISR( Timer_1_Handler ){
+ 138              		.loc 1 55 0
+ 139 0006 FFF7FEFF 		bl	PWM_M2_Stop
+ 140              	.LVL19:
+ 141 000a 08BD     		pop	{r3, pc}
+ 142              		.cfi_endproc
+ 143              	.LFE64:
+ 144              		.size	Stop, .-Stop
+ 145              		.section	.text.main,"ax",%progbits
+ 146              		.align	2
+ 147              		.global	main
+ 148              		.thumb
+ 149              		.thumb_func
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccpEov4m.s 			page 5
+
+
+ 150              		.type	main, %function
+ 151              	main:
+ 152              	.LFB66:
+  60:main.c        ****     //Print_Values();
+  61:main.c        ****     
+  62:main.c        ****     
+  63:main.c        **** }
+  64:main.c        **** 
+  65:main.c        **** int main(void){
+ 153              		.loc 1 65 0
+ 154              		.cfi_startproc
+ 155              		@ args = 0, pretend = 0, frame = 48
+ 156              		@ frame_needed = 0, uses_anonymous_args = 0
+ 157 0000 10B5     		push	{r4, lr}
+ 158              		.cfi_def_cfa_offset 8
+ 159              		.cfi_offset 4, -8
+ 160              		.cfi_offset 14, -4
+ 161 0002 8EB0     		sub	sp, sp, #56
+ 162              		.cfi_def_cfa_offset 64
+  66:main.c        ****     
+  67:main.c        ****     CyGlobalIntEnable;
+ 163              		.loc 1 67 0
+ 164              	@ 67 "main.c" 1
+ 165 0004 62B6     		CPSIE   i
+ 166              	@ 0 "" 2
+  68:main.c        ****     
+  69:main.c        ****     Setup();
+ 167              		.loc 1 69 0
+ 168              		.thumb
+ 169 0006 FFF7FEFF 		bl	Setup
+ 170              	.LVL20:
+  70:main.c        ****     char str[50];
+  71:main.c        **** 
+  72:main.c        ****     isr_1ms_StartEx( Timer_1_Handler );
+ 171              		.loc 1 72 0
+ 172 000a 3248     		ldr	r0, .L22
+ 173 000c FFF7FEFF 		bl	isr_1ms_StartEx
+ 174              	.LVL21:
+  73:main.c        ****     int counter = 0; 
+  74:main.c        ****     Timer_1_WritePeriod(12000); //CHANGE THIS BACK TO 12000
+ 175              		.loc 1 74 0
+ 176 0010 42F6E060 		movw	r0, #12000
+ 177 0014 FFF7FEFF 		bl	Timer_1_WritePeriod
+ 178              	.LVL22:
+  75:main.c        ****     int trigger1=0;
+  76:main.c        ****     int int1=0;
+ 179              		.loc 1 76 0
+ 180 0018 0023     		movs	r3, #0
+ 181 001a 0D93     		str	r3, [sp, #52]
+  77:main.c        ****     int int2=0;
+ 182              		.loc 1 77 0
+ 183 001c 0C93     		str	r3, [sp, #48]
+ 184              	.LVL23:
+ 185              	.L8:
+  78:main.c        ****     int int3=0;
+  79:main.c        ****     int update;
+  80:main.c        ****     double int11;
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccpEov4m.s 			page 6
+
+
+  81:main.c        ****     double int22;
+  82:main.c        ****     double int33;
+  83:main.c        ****     long int int111;
+  84:main.c        ****     long int int222;
+  85:main.c        ****     int i;
+  86:main.c        ****         
+  87:main.c        ****     for(;;){ 
+  88:main.c        ****     
+  89:main.c        ****     get_serial_update(&update);
+ 186              		.loc 1 89 0
+ 187 001e 0BA8     		add	r0, sp, #44
+ 188 0020 FFF7FEFF 		bl	get_serial_update
+ 189              	.LVL24:
+  90:main.c        ****     
+  91:main.c        ****     if(update==0){      
+ 190              		.loc 1 91 0
+ 191 0024 0B9B     		ldr	r3, [sp, #44]
+ 192 0026 2BB9     		cbnz	r3, .L9
+  92:main.c        ****         UART_PutString("----- Reset -----\n"); 
+ 193              		.loc 1 92 0
+ 194 0028 2B48     		ldr	r0, .L22+4
+ 195 002a FFF7FEFF 		bl	UART_PutString
+ 196              	.LVL25:
+  93:main.c        ****         CySoftwareReset();
+ 197              		.loc 1 93 0
+ 198 002e FFF7FEFF 		bl	CySoftwareReset
+ 199              	.LVL26:
+ 200 0032 F4E7     		b	.L8
+ 201              	.L9:
+  94:main.c        ****         
+  95:main.c        ****     }
+  96:main.c        ****     else if (update==2){
+ 202              		.loc 1 96 0
+ 203 0034 022B     		cmp	r3, #2
+ 204 0036 1AD1     		bne	.L11
+  97:main.c        ****         UART_PutString("----- Speed -----\n"); 
+ 205              		.loc 1 97 0
+ 206 0038 2848     		ldr	r0, .L22+8
+ 207 003a FFF7FEFF 		bl	UART_PutString
+ 208              	.LVL27:
+  98:main.c        ****         get_serial_speed(&int1, &int2);
+ 209              		.loc 1 98 0
+ 210 003e 0DA8     		add	r0, sp, #52
+ 211 0040 0CA9     		add	r1, sp, #48
+ 212 0042 FFF7FEFF 		bl	get_serial_speed
+ 213              	.LVL28:
+  99:main.c        ****         new_path(int1,int2);
+ 214              		.loc 1 99 0
+ 215 0046 0D98     		ldr	r0, [sp, #52]
+ 216 0048 0C99     		ldr	r1, [sp, #48]
+ 217 004a FFF7FEFF 		bl	new_path
+ 218              	.LVL29:
+ 219 004e 0024     		movs	r4, #0
+ 220              	.LVL30:
+ 221              	.L13:
+ 100:main.c        ****         do {                
+ 101:main.c        ****             Print_Values();
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccpEov4m.s 			page 7
+
+
+ 222              		.loc 1 101 0
+ 223 0050 FFF7FEFF 		bl	Print_Values
+ 224              	.LVL31:
+ 102:main.c        ****             if((0u != UART_ReadRxStatus())||(0u != UART_GetRxBufferSize())){trigger1=1;}
+ 225              		.loc 1 102 0
+ 226 0054 FFF7FEFF 		bl	UART_ReadRxStatus
+ 227              	.LVL32:
+ 228 0058 18B9     		cbnz	r0, .L17
+ 229              		.loc 1 102 0 is_stmt 0 discriminator 2
+ 230 005a FFF7FEFF 		bl	UART_GetRxBufferSize
+ 231              	.LVL33:
+ 232 005e 10B9     		cbnz	r0, .L18
+ 233 0060 02E0     		b	.L12
+ 234              	.L17:
+ 235              		.loc 1 102 0
+ 236 0062 0124     		movs	r4, #1
+ 237              	.LVL34:
+ 238 0064 00E0     		b	.L12
+ 239              	.LVL35:
+ 240              	.L18:
+ 241 0066 0124     		movs	r4, #1
+ 242              	.LVL36:
+ 243              	.L12:
+ 103:main.c        ****         } while(trigger1==0);
+ 244              		.loc 1 103 0 is_stmt 1
+ 245 0068 002C     		cmp	r4, #0
+ 246 006a F1D0     		beq	.L13
+ 247 006c D7E7     		b	.L8
+ 248              	.LVL37:
+ 249              	.L11:
+ 104:main.c        ****     
+ 105:main.c        ****     }
+ 106:main.c        ****     else if (update==1){
+ 250              		.loc 1 106 0
+ 251 006e 012B     		cmp	r3, #1
+ 252 0070 12D1     		bne	.L14
+ 107:main.c        ****         UART_PutString("----- Update  -----\n"); 
+ 253              		.loc 1 107 0
+ 254 0072 1B48     		ldr	r0, .L22+12
+ 255 0074 FFF7FEFF 		bl	UART_PutString
+ 256              	.LVL38:
+ 108:main.c        ****         get_serial_control(&int11,&int22,&int33);
+ 257              		.loc 1 108 0
+ 258 0078 08A8     		add	r0, sp, #32
+ 259 007a 06A9     		add	r1, sp, #24
+ 260 007c 04AA     		add	r2, sp, #16
+ 261 007e FFF7FEFF 		bl	get_serial_control
+ 262              	.LVL39:
+ 109:main.c        ****         test_values(int11,int22,int33); 
+ 263              		.loc 1 109 0
+ 264 0082 DDE90423 		ldrd	r2, [sp, #16]
+ 265 0086 CDE90023 		strd	r2, [sp]
+ 266 008a DDE90801 		ldrd	r0, [sp, #32]
+ 267 008e DDE90623 		ldrd	r2, [sp, #24]
+ 268 0092 FFF7FEFF 		bl	test_values
+ 269              	.LVL40:
+ 270 0096 C2E7     		b	.L8
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccpEov4m.s 			page 8
+
+
+ 271              	.L14:
+ 110:main.c        ****     } 
+ 111:main.c        ****     else if (update==3){
+ 272              		.loc 1 111 0
+ 273 0098 032B     		cmp	r3, #3
+ 274 009a C0D1     		bne	.L8
+ 112:main.c        ****         
+ 113:main.c        ****         UART_PutString("----- Distance -----\n"); 
+ 275              		.loc 1 113 0
+ 276 009c 1148     		ldr	r0, .L22+16
+ 277 009e FFF7FEFF 		bl	UART_PutString
+ 278              	.LVL41:
+ 114:main.c        ****         get_serial_speed(&int111, &int222);
+ 279              		.loc 1 114 0
+ 280 00a2 03A8     		add	r0, sp, #12
+ 281 00a4 02A9     		add	r1, sp, #8
+ 282 00a6 FFF7FEFF 		bl	get_serial_speed
+ 283              	.LVL42:
+ 115:main.c        ****         step_response(int111,int222);
+ 284              		.loc 1 115 0
+ 285 00aa 0398     		ldr	r0, [sp, #12]
+ 286 00ac 0299     		ldr	r1, [sp, #8]
+ 287 00ae FFF7FEFF 		bl	step_response
+ 288              	.LVL43:
+ 289 00b2 0024     		movs	r4, #0
+ 290              	.LVL44:
+ 291              	.L16:
+ 116:main.c        ****         
+ 117:main.c        ****         do {                
+ 118:main.c        ****             Print_Values();
+ 292              		.loc 1 118 0
+ 293 00b4 FFF7FEFF 		bl	Print_Values
+ 294              	.LVL45:
+ 119:main.c        ****             if((0u != UART_ReadRxStatus())||(0u != UART_GetRxBufferSize())){trigger1=1;}
+ 295              		.loc 1 119 0
+ 296 00b8 FFF7FEFF 		bl	UART_ReadRxStatus
+ 297              	.LVL46:
+ 298 00bc 18B9     		cbnz	r0, .L19
+ 299              		.loc 1 119 0 is_stmt 0 discriminator 2
+ 300 00be FFF7FEFF 		bl	UART_GetRxBufferSize
+ 301              	.LVL47:
+ 302 00c2 10B9     		cbnz	r0, .L20
+ 303 00c4 02E0     		b	.L15
+ 304              	.L19:
+ 305              		.loc 1 119 0
+ 306 00c6 0124     		movs	r4, #1
+ 307              	.LVL48:
+ 308 00c8 00E0     		b	.L15
+ 309              	.LVL49:
+ 310              	.L20:
+ 311 00ca 0124     		movs	r4, #1
+ 312              	.LVL50:
+ 313              	.L15:
+ 120:main.c        ****         } while(trigger1==0);
+ 314              		.loc 1 120 0 is_stmt 1
+ 315 00cc 002C     		cmp	r4, #0
+ 316 00ce F1D0     		beq	.L16
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccpEov4m.s 			page 9
+
+
+ 317 00d0 A5E7     		b	.L8
+ 318              	.L23:
+ 319 00d2 00BF     		.align	2
+ 320              	.L22:
+ 321 00d4 00000000 		.word	Timer_1_Handler
+ 322 00d8 00000000 		.word	.LC0
+ 323 00dc 14000000 		.word	.LC1
+ 324 00e0 28000000 		.word	.LC2
+ 325 00e4 40000000 		.word	.LC3
+ 326              		.cfi_endproc
+ 327              	.LFE66:
+ 328              		.size	main, .-main
+ 329              		.comm	mystring,50,4
+ 330              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 331              		.align	2
+ 332              	.LC0:
+ 333 0000 2D2D2D2D 		.ascii	"----- Reset -----\012\000"
+ 333      2D205265 
+ 333      73657420 
+ 333      2D2D2D2D 
+ 333      2D0A00
+ 334 0013 00       		.space	1
+ 335              	.LC1:
+ 336 0014 2D2D2D2D 		.ascii	"----- Speed -----\012\000"
+ 336      2D205370 
+ 336      65656420 
+ 336      2D2D2D2D 
+ 336      2D0A00
+ 337 0027 00       		.space	1
+ 338              	.LC2:
+ 339 0028 2D2D2D2D 		.ascii	"----- Update  -----\012\000"
+ 339      2D205570 
+ 339      64617465 
+ 339      20202D2D 
+ 339      2D2D2D0A 
+ 340 003d 000000   		.space	3
+ 341              	.LC3:
+ 342 0040 2D2D2D2D 		.ascii	"----- Distance -----\012\000"
+ 342      2D204469 
+ 342      7374616E 
+ 342      6365202D 
+ 342      2D2D2D2D 
+ 343 0056 0000     		.text
+ 344              	.Letext0:
+ 345              		.file 2 "c:\\program files (x86)\\cypress\\psoc creator\\4.0\\psoc creator\\import\\gnu\\arm\\4.9.
+ 346              		.file 3 "c:\\program files (x86)\\cypress\\psoc creator\\4.0\\psoc creator\\import\\gnu\\arm\\4.9.
+ 347              		.file 4 "Generated_Source\\PSoC5/cytypes.h"
+ 348              		.file 5 "Generated_Source\\PSoC5/core_cm3.h"
+ 349              		.file 6 "Generated_Source\\PSoC5/PWM_M1.h"
+ 350              		.file 7 "Generated_Source\\PSoC5/PWM_M2.h"
+ 351              		.file 8 "Generated_Source\\PSoC5/UART.h"
+ 352              		.file 9 "Generated_Source\\PSoC5/M1Clock.h"
+ 353              		.file 10 "Generated_Source\\PSoC5/MClock.h"
+ 354              		.file 11 "Generated_Source\\PSoC5/M1QuadDec.h"
+ 355              		.file 12 "Generated_Source\\PSoC5/CyLib.h"
+ 356              		.file 13 "Generated_Source\\PSoC5/M2QuadDec.h"
+ 357              		.file 14 "Generated_Source\\PSoC5/Timer_1.h"
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccpEov4m.s 			page 10
+
+
+ 358              		.file 15 "Generated_Source\\PSoC5/isr_1ms.h"
+ 359              		.section	.debug_info,"",%progbits
+ 360              	.Ldebug_info0:
+ 361 0000 CE050000 		.4byte	0x5ce
+ 362 0004 0400     		.2byte	0x4
+ 363 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 364 000a 04       		.byte	0x4
+ 365 000b 01       		.uleb128 0x1
+ 366 000c 93020000 		.4byte	.LASF67
+ 367 0010 01       		.byte	0x1
+ 368 0011 88030000 		.4byte	.LASF68
+ 369 0015 E6000000 		.4byte	.LASF69
+ 370 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 371 001d 00000000 		.4byte	0
+ 372 0021 00000000 		.4byte	.Ldebug_line0
+ 373 0025 02       		.uleb128 0x2
+ 374 0026 01       		.byte	0x1
+ 375 0027 06       		.byte	0x6
+ 376 0028 21010000 		.4byte	.LASF0
+ 377 002c 02       		.uleb128 0x2
+ 378 002d 01       		.byte	0x1
+ 379 002e 08       		.byte	0x8
+ 380 002f 8F010000 		.4byte	.LASF1
+ 381 0033 02       		.uleb128 0x2
+ 382 0034 02       		.byte	0x2
+ 383 0035 05       		.byte	0x5
+ 384 0036 2C000000 		.4byte	.LASF2
+ 385 003a 02       		.uleb128 0x2
+ 386 003b 02       		.byte	0x2
+ 387 003c 07       		.byte	0x7
+ 388 003d 7B020000 		.4byte	.LASF3
+ 389 0041 03       		.uleb128 0x3
+ 390 0042 D1030000 		.4byte	.LASF9
+ 391 0046 02       		.byte	0x2
+ 392 0047 3F       		.byte	0x3f
+ 393 0048 4C000000 		.4byte	0x4c
+ 394 004c 02       		.uleb128 0x2
+ 395 004d 04       		.byte	0x4
+ 396 004e 05       		.byte	0x5
+ 397 004f 64010000 		.4byte	.LASF4
+ 398 0053 02       		.uleb128 0x2
+ 399 0054 04       		.byte	0x4
+ 400 0055 07       		.byte	0x7
+ 401 0056 8F030000 		.4byte	.LASF5
+ 402 005a 02       		.uleb128 0x2
+ 403 005b 08       		.byte	0x8
+ 404 005c 05       		.byte	0x5
+ 405 005d 79000000 		.4byte	.LASF6
+ 406 0061 02       		.uleb128 0x2
+ 407 0062 08       		.byte	0x8
+ 408 0063 07       		.byte	0x7
+ 409 0064 2C020000 		.4byte	.LASF7
+ 410 0068 04       		.uleb128 0x4
+ 411 0069 04       		.byte	0x4
+ 412 006a 05       		.byte	0x5
+ 413 006b 696E7400 		.ascii	"int\000"
+ 414 006f 02       		.uleb128 0x2
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccpEov4m.s 			page 11
+
+
+ 415 0070 04       		.byte	0x4
+ 416 0071 07       		.byte	0x7
+ 417 0072 43020000 		.4byte	.LASF8
+ 418 0076 03       		.uleb128 0x3
+ 419 0077 3F030000 		.4byte	.LASF10
+ 420 007b 03       		.byte	0x3
+ 421 007c 2C       		.byte	0x2c
+ 422 007d 41000000 		.4byte	0x41
+ 423 0081 05       		.uleb128 0x5
+ 424 0082 E0000000 		.4byte	.LASF11
+ 425 0086 04       		.byte	0x4
+ 426 0087 9201     		.2byte	0x192
+ 427 0089 2C000000 		.4byte	0x2c
+ 428 008d 05       		.uleb128 0x5
+ 429 008e 53030000 		.4byte	.LASF12
+ 430 0092 04       		.byte	0x4
+ 431 0093 9301     		.2byte	0x193
+ 432 0095 3A000000 		.4byte	0x3a
+ 433 0099 05       		.uleb128 0x5
+ 434 009a BE030000 		.4byte	.LASF13
+ 435 009e 04       		.byte	0x4
+ 436 009f 9401     		.2byte	0x194
+ 437 00a1 53000000 		.4byte	0x53
+ 438 00a5 05       		.uleb128 0x5
+ 439 00a6 B2030000 		.4byte	.LASF14
+ 440 00aa 04       		.byte	0x4
+ 441 00ab 9701     		.2byte	0x197
+ 442 00ad 4C000000 		.4byte	0x4c
+ 443 00b1 02       		.uleb128 0x2
+ 444 00b2 04       		.byte	0x4
+ 445 00b3 04       		.byte	0x4
+ 446 00b4 3D010000 		.4byte	.LASF15
+ 447 00b8 02       		.uleb128 0x2
+ 448 00b9 08       		.byte	0x8
+ 449 00ba 04       		.byte	0x4
+ 450 00bb ED030000 		.4byte	.LASF16
+ 451 00bf 05       		.uleb128 0x5
+ 452 00c0 61000000 		.4byte	.LASF17
+ 453 00c4 04       		.byte	0x4
+ 454 00c5 A301     		.2byte	0x1a3
+ 455 00c7 CB000000 		.4byte	0xcb
+ 456 00cb 02       		.uleb128 0x2
+ 457 00cc 01       		.byte	0x1
+ 458 00cd 08       		.byte	0x8
+ 459 00ce 8E020000 		.4byte	.LASF18
+ 460 00d2 05       		.uleb128 0x5
+ 461 00d3 D9010000 		.4byte	.LASF19
+ 462 00d7 04       		.byte	0x4
+ 463 00d8 4E02     		.2byte	0x24e
+ 464 00da DE000000 		.4byte	0xde
+ 465 00de 06       		.uleb128 0x6
+ 466 00df 04       		.byte	0x4
+ 467 00e0 E4000000 		.4byte	0xe4
+ 468 00e4 07       		.uleb128 0x7
+ 469 00e5 02       		.uleb128 0x2
+ 470 00e6 04       		.byte	0x4
+ 471 00e7 07       		.byte	0x7
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccpEov4m.s 			page 12
+
+
+ 472 00e8 36000000 		.4byte	.LASF20
+ 473 00ec 02       		.uleb128 0x2
+ 474 00ed 08       		.byte	0x8
+ 475 00ee 04       		.byte	0x4
+ 476 00ef BB010000 		.4byte	.LASF21
+ 477 00f3 08       		.uleb128 0x8
+ 478 00f4 2D010000 		.4byte	.LASF70
+ 479 00f8 01       		.byte	0x1
+ 480 00f9 38       		.byte	0x38
+ 481 00fa 00000000 		.4byte	.LFB65
+ 482 00fe 0E000000 		.4byte	.LFE65-.LFB65
+ 483 0102 01       		.uleb128 0x1
+ 484 0103 9C       		.byte	0x9c
+ 485 0104 25010000 		.4byte	0x125
+ 486 0108 09       		.uleb128 0x9
+ 487 0109 08000000 		.4byte	.LVL0
+ 488 010d 75040000 		.4byte	0x475
+ 489 0111 1B010000 		.4byte	0x11b
+ 490 0115 0A       		.uleb128 0xa
+ 491 0116 01       		.uleb128 0x1
+ 492 0117 50       		.byte	0x50
+ 493 0118 01       		.uleb128 0x1
+ 494 0119 4E       		.byte	0x4e
+ 495 011a 00       		.byte	0
+ 496 011b 0B       		.uleb128 0xb
+ 497 011c 0C000000 		.4byte	.LVL1
+ 498 0120 82040000 		.4byte	0x482
+ 499 0124 00       		.byte	0
+ 500 0125 0C       		.uleb128 0xc
+ 501 0126 75020000 		.4byte	.LASF22
+ 502 012a 01       		.byte	0x1
+ 503 012b 1C       		.byte	0x1c
+ 504 012c 00000000 		.4byte	.LFB63
+ 505 0130 54000000 		.4byte	.LFE63-.LFB63
+ 506 0134 01       		.uleb128 0x1
+ 507 0135 9C       		.byte	0x9c
+ 508 0136 03020000 		.4byte	0x203
+ 509 013a 0B       		.uleb128 0xb
+ 510 013b 06000000 		.4byte	.LVL2
+ 511 013f 8D040000 		.4byte	0x48d
+ 512 0143 0B       		.uleb128 0xb
+ 513 0144 0A000000 		.4byte	.LVL3
+ 514 0148 94040000 		.4byte	0x494
+ 515 014c 0B       		.uleb128 0xb
+ 516 014d 0E000000 		.4byte	.LVL4
+ 517 0151 9B040000 		.4byte	0x49b
+ 518 0155 0B       		.uleb128 0xb
+ 519 0156 12000000 		.4byte	.LVL5
+ 520 015a A2040000 		.4byte	0x4a2
+ 521 015e 0B       		.uleb128 0xb
+ 522 015f 16000000 		.4byte	.LVL6
+ 523 0163 A9040000 		.4byte	0x4a9
+ 524 0167 0B       		.uleb128 0xb
+ 525 0168 1A000000 		.4byte	.LVL7
+ 526 016c B0040000 		.4byte	0x4b0
+ 527 0170 0B       		.uleb128 0xb
+ 528 0171 1E000000 		.4byte	.LVL8
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccpEov4m.s 			page 13
+
+
+ 529 0175 B7040000 		.4byte	0x4b7
+ 530 0179 09       		.uleb128 0x9
+ 531 017a 26000000 		.4byte	.LVL9
+ 532 017e BE040000 		.4byte	0x4be
+ 533 0182 8E010000 		.4byte	0x18e
+ 534 0186 0A       		.uleb128 0xa
+ 535 0187 01       		.uleb128 0x1
+ 536 0188 50       		.byte	0x50
+ 537 0189 03       		.uleb128 0x3
+ 538 018a 0A       		.byte	0xa
+ 539 018b E803     		.2byte	0x3e8
+ 540 018d 00       		.byte	0
+ 541 018e 09       		.uleb128 0x9
+ 542 018f 2C000000 		.4byte	.LVL10
+ 543 0193 CF040000 		.4byte	0x4cf
+ 544 0197 A1010000 		.4byte	0x1a1
+ 545 019b 0A       		.uleb128 0xa
+ 546 019c 01       		.uleb128 0x1
+ 547 019d 50       		.byte	0x50
+ 548 019e 01       		.uleb128 0x1
+ 549 019f 30       		.byte	0x30
+ 550 01a0 00       		.byte	0
+ 551 01a1 09       		.uleb128 0x9
+ 552 01a2 34000000 		.4byte	.LVL11
+ 553 01a6 BE040000 		.4byte	0x4be
+ 554 01aa B6010000 		.4byte	0x1b6
+ 555 01ae 0A       		.uleb128 0xa
+ 556 01af 01       		.uleb128 0x1
+ 557 01b0 50       		.byte	0x50
+ 558 01b1 03       		.uleb128 0x3
+ 559 01b2 0A       		.byte	0xa
+ 560 01b3 E803     		.2byte	0x3e8
+ 561 01b5 00       		.byte	0
+ 562 01b6 0B       		.uleb128 0xb
+ 563 01b7 38000000 		.4byte	.LVL12
+ 564 01bb E0040000 		.4byte	0x4e0
+ 565 01bf 0B       		.uleb128 0xb
+ 566 01c0 3C000000 		.4byte	.LVL13
+ 567 01c4 E7040000 		.4byte	0x4e7
+ 568 01c8 09       		.uleb128 0x9
+ 569 01c9 44000000 		.4byte	.LVL14
+ 570 01cd BE040000 		.4byte	0x4be
+ 571 01d1 DD010000 		.4byte	0x1dd
+ 572 01d5 0A       		.uleb128 0xa
+ 573 01d6 01       		.uleb128 0x1
+ 574 01d7 50       		.byte	0x50
+ 575 01d8 03       		.uleb128 0x3
+ 576 01d9 0A       		.byte	0xa
+ 577 01da E803     		.2byte	0x3e8
+ 578 01dc 00       		.byte	0
+ 579 01dd 09       		.uleb128 0x9
+ 580 01de 4A000000 		.4byte	.LVL15
+ 581 01e2 EE040000 		.4byte	0x4ee
+ 582 01e6 F0010000 		.4byte	0x1f0
+ 583 01ea 0A       		.uleb128 0xa
+ 584 01eb 01       		.uleb128 0x1
+ 585 01ec 50       		.byte	0x50
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccpEov4m.s 			page 14
+
+
+ 586 01ed 01       		.uleb128 0x1
+ 587 01ee 30       		.byte	0x30
+ 588 01ef 00       		.byte	0
+ 589 01f0 0B       		.uleb128 0xb
+ 590 01f1 4E000000 		.4byte	.LVL16
+ 591 01f5 FF040000 		.4byte	0x4ff
+ 592 01f9 0B       		.uleb128 0xb
+ 593 01fa 52000000 		.4byte	.LVL17
+ 594 01fe 06050000 		.4byte	0x506
+ 595 0202 00       		.byte	0
+ 596 0203 0C       		.uleb128 0xc
+ 597 0204 DB030000 		.4byte	.LASF23
+ 598 0208 01       		.byte	0x1
+ 599 0209 35       		.byte	0x35
+ 600 020a 00000000 		.4byte	.LFB64
+ 601 020e 0C000000 		.4byte	.LFE64-.LFB64
+ 602 0212 01       		.uleb128 0x1
+ 603 0213 9C       		.byte	0x9c
+ 604 0214 2B020000 		.4byte	0x22b
+ 605 0218 0B       		.uleb128 0xb
+ 606 0219 06000000 		.4byte	.LVL18
+ 607 021d 0D050000 		.4byte	0x50d
+ 608 0221 0B       		.uleb128 0xb
+ 609 0222 0A000000 		.4byte	.LVL19
+ 610 0226 14050000 		.4byte	0x514
+ 611 022a 00       		.byte	0
+ 612 022b 0D       		.uleb128 0xd
+ 613 022c 5C000000 		.4byte	.LASF71
+ 614 0230 01       		.byte	0x1
+ 615 0231 41       		.byte	0x41
+ 616 0232 68000000 		.4byte	0x68
+ 617 0236 00000000 		.4byte	.LFB66
+ 618 023a E8000000 		.4byte	.LFE66-.LFB66
+ 619 023e 01       		.uleb128 0x1
+ 620 023f 9C       		.byte	0x9c
+ 621 0240 43040000 		.4byte	0x443
+ 622 0244 0E       		.uleb128 0xe
+ 623 0245 73747200 		.ascii	"str\000"
+ 624 0249 01       		.byte	0x1
+ 625 024a 46       		.byte	0x46
+ 626 024b 43040000 		.4byte	0x443
+ 627 024f 0F       		.uleb128 0xf
+ 628 0250 07000000 		.4byte	.LASF24
+ 629 0254 01       		.byte	0x1
+ 630 0255 49       		.byte	0x49
+ 631 0256 68000000 		.4byte	0x68
+ 632 025a 00       		.byte	0
+ 633 025b 10       		.uleb128 0x10
+ 634 025c 86010000 		.4byte	.LASF25
+ 635 0260 01       		.byte	0x1
+ 636 0261 4B       		.byte	0x4b
+ 637 0262 68000000 		.4byte	0x68
+ 638 0266 00000000 		.4byte	.LLST0
+ 639 026a 11       		.uleb128 0x11
+ 640 026b 6D010000 		.4byte	.LASF26
+ 641 026f 01       		.byte	0x1
+ 642 0270 4C       		.byte	0x4c
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccpEov4m.s 			page 15
+
+
+ 643 0271 68000000 		.4byte	0x68
+ 644 0275 02       		.uleb128 0x2
+ 645 0276 91       		.byte	0x91
+ 646 0277 74       		.sleb128 -12
+ 647 0278 11       		.uleb128 0x11
+ 648 0279 43010000 		.4byte	.LASF27
+ 649 027d 01       		.byte	0x1
+ 650 027e 4D       		.byte	0x4d
+ 651 027f 68000000 		.4byte	0x68
+ 652 0283 02       		.uleb128 0x2
+ 653 0284 91       		.byte	0x91
+ 654 0285 70       		.sleb128 -16
+ 655 0286 0F       		.uleb128 0xf
+ 656 0287 48010000 		.4byte	.LASF28
+ 657 028b 01       		.byte	0x1
+ 658 028c 4E       		.byte	0x4e
+ 659 028d 68000000 		.4byte	0x68
+ 660 0291 00       		.byte	0
+ 661 0292 11       		.uleb128 0x11
+ 662 0293 5D010000 		.4byte	.LASF29
+ 663 0297 01       		.byte	0x1
+ 664 0298 4F       		.byte	0x4f
+ 665 0299 68000000 		.4byte	0x68
+ 666 029d 02       		.uleb128 0x2
+ 667 029e 91       		.byte	0x91
+ 668 029f 6C       		.sleb128 -20
+ 669 02a0 11       		.uleb128 0x11
+ 670 02a1 CA000000 		.4byte	.LASF30
+ 671 02a5 01       		.byte	0x1
+ 672 02a6 50       		.byte	0x50
+ 673 02a7 B8000000 		.4byte	0xb8
+ 674 02ab 02       		.uleb128 0x2
+ 675 02ac 91       		.byte	0x91
+ 676 02ad 60       		.sleb128 -32
+ 677 02ae 11       		.uleb128 0x11
+ 678 02af E6010000 		.4byte	.LASF31
+ 679 02b3 01       		.byte	0x1
+ 680 02b4 51       		.byte	0x51
+ 681 02b5 B8000000 		.4byte	0xb8
+ 682 02b9 02       		.uleb128 0x2
+ 683 02ba 91       		.byte	0x91
+ 684 02bb 58       		.sleb128 -40
+ 685 02bc 11       		.uleb128 0x11
+ 686 02bd B8030000 		.4byte	.LASF32
+ 687 02c1 01       		.byte	0x1
+ 688 02c2 52       		.byte	0x52
+ 689 02c3 B8000000 		.4byte	0xb8
+ 690 02c7 02       		.uleb128 0x2
+ 691 02c8 91       		.byte	0x91
+ 692 02c9 50       		.sleb128 -48
+ 693 02ca 11       		.uleb128 0x11
+ 694 02cb 4D010000 		.4byte	.LASF33
+ 695 02cf 01       		.byte	0x1
+ 696 02d0 53       		.byte	0x53
+ 697 02d1 4C000000 		.4byte	0x4c
+ 698 02d5 02       		.uleb128 0x2
+ 699 02d6 91       		.byte	0x91
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccpEov4m.s 			page 16
+
+
+ 700 02d7 4C       		.sleb128 -52
+ 701 02d8 11       		.uleb128 0x11
+ 702 02d9 00000000 		.4byte	.LASF34
+ 703 02dd 01       		.byte	0x1
+ 704 02de 54       		.byte	0x54
+ 705 02df 4C000000 		.4byte	0x4c
+ 706 02e3 02       		.uleb128 0x2
+ 707 02e4 91       		.byte	0x91
+ 708 02e5 48       		.sleb128 -56
+ 709 02e6 0E       		.uleb128 0xe
+ 710 02e7 6900     		.ascii	"i\000"
+ 711 02e9 01       		.byte	0x1
+ 712 02ea 55       		.byte	0x55
+ 713 02eb 68000000 		.4byte	0x68
+ 714 02ef 0B       		.uleb128 0xb
+ 715 02f0 0A000000 		.4byte	.LVL20
+ 716 02f4 25010000 		.4byte	0x125
+ 717 02f8 09       		.uleb128 0x9
+ 718 02f9 10000000 		.4byte	.LVL21
+ 719 02fd 1B050000 		.4byte	0x51b
+ 720 0301 0F030000 		.4byte	0x30f
+ 721 0305 0A       		.uleb128 0xa
+ 722 0306 01       		.uleb128 0x1
+ 723 0307 50       		.byte	0x50
+ 724 0308 05       		.uleb128 0x5
+ 725 0309 03       		.byte	0x3
+ 726 030a 00000000 		.4byte	Timer_1_Handler
+ 727 030e 00       		.byte	0
+ 728 030f 09       		.uleb128 0x9
+ 729 0310 18000000 		.4byte	.LVL22
+ 730 0314 2C050000 		.4byte	0x52c
+ 731 0318 24030000 		.4byte	0x324
+ 732 031c 0A       		.uleb128 0xa
+ 733 031d 01       		.uleb128 0x1
+ 734 031e 50       		.byte	0x50
+ 735 031f 03       		.uleb128 0x3
+ 736 0320 0A       		.byte	0xa
+ 737 0321 E02E     		.2byte	0x2ee0
+ 738 0323 00       		.byte	0
+ 739 0324 09       		.uleb128 0x9
+ 740 0325 24000000 		.4byte	.LVL24
+ 741 0329 3D050000 		.4byte	0x53d
+ 742 032d 38030000 		.4byte	0x338
+ 743 0331 0A       		.uleb128 0xa
+ 744 0332 01       		.uleb128 0x1
+ 745 0333 50       		.byte	0x50
+ 746 0334 02       		.uleb128 0x2
+ 747 0335 91       		.byte	0x91
+ 748 0336 6C       		.sleb128 -20
+ 749 0337 00       		.byte	0
+ 750 0338 09       		.uleb128 0x9
+ 751 0339 2E000000 		.4byte	.LVL25
+ 752 033d 4E050000 		.4byte	0x54e
+ 753 0341 4F030000 		.4byte	0x34f
+ 754 0345 0A       		.uleb128 0xa
+ 755 0346 01       		.uleb128 0x1
+ 756 0347 50       		.byte	0x50
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccpEov4m.s 			page 17
+
+
+ 757 0348 05       		.uleb128 0x5
+ 758 0349 03       		.byte	0x3
+ 759 034a 00000000 		.4byte	.LC0
+ 760 034e 00       		.byte	0
+ 761 034f 0B       		.uleb128 0xb
+ 762 0350 32000000 		.4byte	.LVL26
+ 763 0354 6A050000 		.4byte	0x56a
+ 764 0358 09       		.uleb128 0x9
+ 765 0359 3E000000 		.4byte	.LVL27
+ 766 035d 4E050000 		.4byte	0x54e
+ 767 0361 6F030000 		.4byte	0x36f
+ 768 0365 0A       		.uleb128 0xa
+ 769 0366 01       		.uleb128 0x1
+ 770 0367 50       		.byte	0x50
+ 771 0368 05       		.uleb128 0x5
+ 772 0369 03       		.byte	0x3
+ 773 036a 14000000 		.4byte	.LC1
+ 774 036e 00       		.byte	0
+ 775 036f 09       		.uleb128 0x9
+ 776 0370 46000000 		.4byte	.LVL28
+ 777 0374 71050000 		.4byte	0x571
+ 778 0378 89030000 		.4byte	0x389
+ 779 037c 0A       		.uleb128 0xa
+ 780 037d 01       		.uleb128 0x1
+ 781 037e 51       		.byte	0x51
+ 782 037f 02       		.uleb128 0x2
+ 783 0380 91       		.byte	0x91
+ 784 0381 70       		.sleb128 -16
+ 785 0382 0A       		.uleb128 0xa
+ 786 0383 01       		.uleb128 0x1
+ 787 0384 50       		.byte	0x50
+ 788 0385 02       		.uleb128 0x2
+ 789 0386 91       		.byte	0x91
+ 790 0387 74       		.sleb128 -12
+ 791 0388 00       		.byte	0
+ 792 0389 0B       		.uleb128 0xb
+ 793 038a 4E000000 		.4byte	.LVL29
+ 794 038e 7E050000 		.4byte	0x57e
+ 795 0392 0B       		.uleb128 0xb
+ 796 0393 54000000 		.4byte	.LVL31
+ 797 0397 8B050000 		.4byte	0x58b
+ 798 039b 0B       		.uleb128 0xb
+ 799 039c 58000000 		.4byte	.LVL32
+ 800 03a0 98050000 		.4byte	0x598
+ 801 03a4 0B       		.uleb128 0xb
+ 802 03a5 5E000000 		.4byte	.LVL33
+ 803 03a9 A3050000 		.4byte	0x5a3
+ 804 03ad 09       		.uleb128 0x9
+ 805 03ae 78000000 		.4byte	.LVL38
+ 806 03b2 4E050000 		.4byte	0x54e
+ 807 03b6 C4030000 		.4byte	0x3c4
+ 808 03ba 0A       		.uleb128 0xa
+ 809 03bb 01       		.uleb128 0x1
+ 810 03bc 50       		.byte	0x50
+ 811 03bd 05       		.uleb128 0x5
+ 812 03be 03       		.byte	0x3
+ 813 03bf 28000000 		.4byte	.LC2
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccpEov4m.s 			page 18
+
+
+ 814 03c3 00       		.byte	0
+ 815 03c4 09       		.uleb128 0x9
+ 816 03c5 82000000 		.4byte	.LVL39
+ 817 03c9 AE050000 		.4byte	0x5ae
+ 818 03cd E4030000 		.4byte	0x3e4
+ 819 03d1 0A       		.uleb128 0xa
+ 820 03d2 01       		.uleb128 0x1
+ 821 03d3 52       		.byte	0x52
+ 822 03d4 02       		.uleb128 0x2
+ 823 03d5 91       		.byte	0x91
+ 824 03d6 50       		.sleb128 -48
+ 825 03d7 0A       		.uleb128 0xa
+ 826 03d8 01       		.uleb128 0x1
+ 827 03d9 51       		.byte	0x51
+ 828 03da 02       		.uleb128 0x2
+ 829 03db 91       		.byte	0x91
+ 830 03dc 58       		.sleb128 -40
+ 831 03dd 0A       		.uleb128 0xa
+ 832 03de 01       		.uleb128 0x1
+ 833 03df 50       		.byte	0x50
+ 834 03e0 02       		.uleb128 0x2
+ 835 03e1 91       		.byte	0x91
+ 836 03e2 60       		.sleb128 -32
+ 837 03e3 00       		.byte	0
+ 838 03e4 0B       		.uleb128 0xb
+ 839 03e5 96000000 		.4byte	.LVL40
+ 840 03e9 BB050000 		.4byte	0x5bb
+ 841 03ed 09       		.uleb128 0x9
+ 842 03ee A2000000 		.4byte	.LVL41
+ 843 03f2 4E050000 		.4byte	0x54e
+ 844 03f6 04040000 		.4byte	0x404
+ 845 03fa 0A       		.uleb128 0xa
+ 846 03fb 01       		.uleb128 0x1
+ 847 03fc 50       		.byte	0x50
+ 848 03fd 05       		.uleb128 0x5
+ 849 03fe 03       		.byte	0x3
+ 850 03ff 40000000 		.4byte	.LC3
+ 851 0403 00       		.byte	0
+ 852 0404 09       		.uleb128 0x9
+ 853 0405 AA000000 		.4byte	.LVL42
+ 854 0409 71050000 		.4byte	0x571
+ 855 040d 1E040000 		.4byte	0x41e
+ 856 0411 0A       		.uleb128 0xa
+ 857 0412 01       		.uleb128 0x1
+ 858 0413 51       		.byte	0x51
+ 859 0414 02       		.uleb128 0x2
+ 860 0415 91       		.byte	0x91
+ 861 0416 48       		.sleb128 -56
+ 862 0417 0A       		.uleb128 0xa
+ 863 0418 01       		.uleb128 0x1
+ 864 0419 50       		.byte	0x50
+ 865 041a 02       		.uleb128 0x2
+ 866 041b 91       		.byte	0x91
+ 867 041c 4C       		.sleb128 -52
+ 868 041d 00       		.byte	0
+ 869 041e 0B       		.uleb128 0xb
+ 870 041f B2000000 		.4byte	.LVL43
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccpEov4m.s 			page 19
+
+
+ 871 0423 C8050000 		.4byte	0x5c8
+ 872 0427 0B       		.uleb128 0xb
+ 873 0428 B8000000 		.4byte	.LVL45
+ 874 042c 8B050000 		.4byte	0x58b
+ 875 0430 0B       		.uleb128 0xb
+ 876 0431 BC000000 		.4byte	.LVL46
+ 877 0435 98050000 		.4byte	0x598
+ 878 0439 0B       		.uleb128 0xb
+ 879 043a C2000000 		.4byte	.LVL47
+ 880 043e A3050000 		.4byte	0x5a3
+ 881 0442 00       		.byte	0
+ 882 0443 12       		.uleb128 0x12
+ 883 0444 CB000000 		.4byte	0xcb
+ 884 0448 53040000 		.4byte	0x453
+ 885 044c 13       		.uleb128 0x13
+ 886 044d E5000000 		.4byte	0xe5
+ 887 0451 31       		.byte	0x31
+ 888 0452 00       		.byte	0
+ 889 0453 14       		.uleb128 0x14
+ 890 0454 F4030000 		.4byte	.LASF35
+ 891 0458 05       		.byte	0x5
+ 892 0459 9606     		.2byte	0x696
+ 893 045b 5F040000 		.4byte	0x45f
+ 894 045f 15       		.uleb128 0x15
+ 895 0460 76000000 		.4byte	0x76
+ 896 0464 16       		.uleb128 0x16
+ 897 0465 54010000 		.4byte	.LASF36
+ 898 0469 01       		.byte	0x1
+ 899 046a 19       		.byte	0x19
+ 900 046b 43040000 		.4byte	0x443
+ 901 046f 05       		.uleb128 0x5
+ 902 0470 03       		.byte	0x3
+ 903 0471 00000000 		.4byte	mystring
+ 904 0475 17       		.uleb128 0x17
+ 905 0476 C5030000 		.4byte	.LASF58
+ 906 047a 01       		.byte	0x1
+ 907 047b 0F       		.byte	0xf
+ 908 047c 82040000 		.4byte	0x482
+ 909 0480 18       		.uleb128 0x18
+ 910 0481 00       		.byte	0
+ 911 0482 19       		.uleb128 0x19
+ 912 0483 AF000000 		.4byte	.LASF62
+ 913 0487 0E       		.byte	0xe
+ 914 0488 5E       		.byte	0x5e
+ 915 0489 81000000 		.4byte	0x81
+ 916 048d 1A       		.uleb128 0x1a
+ 917 048e 93000000 		.4byte	.LASF37
+ 918 0492 06       		.byte	0x6
+ 919 0493 92       		.byte	0x92
+ 920 0494 1A       		.uleb128 0x1a
+ 921 0495 7B030000 		.4byte	.LASF38
+ 922 0499 07       		.byte	0x7
+ 923 049a 92       		.byte	0x92
+ 924 049b 1A       		.uleb128 0x1a
+ 925 049c 34030000 		.4byte	.LASF39
+ 926 04a0 08       		.byte	0x8
+ 927 04a1 54       		.byte	0x54
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccpEov4m.s 			page 20
+
+
+ 928 04a2 1A       		.uleb128 0x1a
+ 929 04a3 09040000 		.4byte	.LASF40
+ 930 04a7 09       		.byte	0x9
+ 931 04a8 27       		.byte	0x27
+ 932 04a9 1A       		.uleb128 0x1a
+ 933 04aa 1F000000 		.4byte	.LASF41
+ 934 04ae 0A       		.byte	0xa
+ 935 04af 27       		.byte	0x27
+ 936 04b0 1A       		.uleb128 0x1a
+ 937 04b1 D0000000 		.4byte	.LASF42
+ 938 04b5 0B       		.byte	0xb
+ 939 04b6 48       		.byte	0x48
+ 940 04b7 1A       		.uleb128 0x1a
+ 941 04b8 5A030000 		.4byte	.LASF43
+ 942 04bc 0B       		.byte	0xb
+ 943 04bd 4A       		.byte	0x4a
+ 944 04be 1B       		.uleb128 0x1b
+ 945 04bf 01040000 		.4byte	.LASF44
+ 946 04c3 0C       		.byte	0xc
+ 947 04c4 76       		.byte	0x76
+ 948 04c5 CF040000 		.4byte	0x4cf
+ 949 04c9 1C       		.uleb128 0x1c
+ 950 04ca 99000000 		.4byte	0x99
+ 951 04ce 00       		.byte	0
+ 952 04cf 1B       		.uleb128 0x1b
+ 953 04d0 9D010000 		.4byte	.LASF45
+ 954 04d4 0B       		.byte	0xb
+ 955 04d5 4F       		.byte	0x4f
+ 956 04d6 E0040000 		.4byte	0x4e0
+ 957 04da 1C       		.uleb128 0x1c
+ 958 04db A5000000 		.4byte	0xa5
+ 959 04df 00       		.byte	0
+ 960 04e0 1A       		.uleb128 0x1a
+ 961 04e1 65020000 		.4byte	.LASF46
+ 962 04e5 0D       		.byte	0xd
+ 963 04e6 48       		.byte	0x48
+ 964 04e7 1A       		.uleb128 0x1a
+ 965 04e8 A1030000 		.4byte	.LASF47
+ 966 04ec 0D       		.byte	0xd
+ 967 04ed 4A       		.byte	0x4a
+ 968 04ee 1B       		.uleb128 0x1b
+ 969 04ef 50020000 		.4byte	.LASF48
+ 970 04f3 0D       		.byte	0xd
+ 971 04f4 4F       		.byte	0x4f
+ 972 04f5 FF040000 		.4byte	0x4ff
+ 973 04f9 1C       		.uleb128 0x1c
+ 974 04fa A5000000 		.4byte	0xa5
+ 975 04fe 00       		.byte	0
+ 976 04ff 1A       		.uleb128 0x1a
+ 977 0500 10020000 		.4byte	.LASF49
+ 978 0504 0E       		.byte	0xe
+ 979 0505 5A       		.byte	0x5a
+ 980 0506 1A       		.uleb128 0x1a
+ 981 0507 EC010000 		.4byte	.LASF50
+ 982 050b 0F       		.byte	0xf
+ 983 050c 23       		.byte	0x23
+ 984 050d 1A       		.uleb128 0x1a
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccpEov4m.s 			page 21
+
+
+ 985 050e 47030000 		.4byte	.LASF51
+ 986 0512 06       		.byte	0x6
+ 987 0513 93       		.byte	0x93
+ 988 0514 1A       		.uleb128 0x1a
+ 989 0515 87000000 		.4byte	.LASF52
+ 990 0519 07       		.byte	0x7
+ 991 051a 93       		.byte	0x93
+ 992 051b 1B       		.uleb128 0x1b
+ 993 051c 0F000000 		.4byte	.LASF53
+ 994 0520 0F       		.byte	0xf
+ 995 0521 18       		.byte	0x18
+ 996 0522 2C050000 		.4byte	0x52c
+ 997 0526 1C       		.uleb128 0x1c
+ 998 0527 D2000000 		.4byte	0xd2
+ 999 052b 00       		.byte	0
+ 1000 052c 1B       		.uleb128 0x1b
+ 1001 052d 72010000 		.4byte	.LASF54
+ 1002 0531 0E       		.byte	0xe
+ 1003 0532 68       		.byte	0x68
+ 1004 0533 3D050000 		.4byte	0x53d
+ 1005 0537 1C       		.uleb128 0x1c
+ 1006 0538 99000000 		.4byte	0x99
+ 1007 053c 00       		.byte	0
+ 1008 053d 1D       		.uleb128 0x1d
+ 1009 053e C7010000 		.4byte	.LASF55
+ 1010 0542 01       		.byte	0x1
+ 1011 0543 12       		.byte	0x12
+ 1012 0544 68000000 		.4byte	0x68
+ 1013 0548 4E050000 		.4byte	0x54e
+ 1014 054c 18       		.uleb128 0x18
+ 1015 054d 00       		.byte	0
+ 1016 054e 1B       		.uleb128 0x1b
+ 1017 054f A0000000 		.4byte	.LASF56
+ 1018 0553 08       		.byte	0x8
+ 1019 0554 8B       		.byte	0x8b
+ 1020 0555 5F050000 		.4byte	0x55f
+ 1021 0559 1C       		.uleb128 0x1c
+ 1022 055a 5F050000 		.4byte	0x55f
+ 1023 055e 00       		.byte	0
+ 1024 055f 06       		.uleb128 0x6
+ 1025 0560 04       		.byte	0x4
+ 1026 0561 65050000 		.4byte	0x565
+ 1027 0565 1E       		.uleb128 0x1e
+ 1028 0566 BF000000 		.4byte	0xbf
+ 1029 056a 1A       		.uleb128 0x1a
+ 1030 056b 6B030000 		.4byte	.LASF57
+ 1031 056f 0C       		.byte	0xc
+ 1032 0570 7B       		.byte	0x7b
+ 1033 0571 17       		.uleb128 0x17
+ 1034 0572 3F000000 		.4byte	.LASF59
+ 1035 0576 01       		.byte	0x1
+ 1036 0577 13       		.byte	0x13
+ 1037 0578 7E050000 		.4byte	0x57e
+ 1038 057c 18       		.uleb128 0x18
+ 1039 057d 00       		.byte	0
+ 1040 057e 17       		.uleb128 0x17
+ 1041 057f B2010000 		.4byte	.LASF60
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccpEov4m.s 			page 22
+
+
+ 1042 0583 01       		.byte	0x1
+ 1043 0584 11       		.byte	0x11
+ 1044 0585 8B050000 		.4byte	0x58b
+ 1045 0589 18       		.uleb128 0x18
+ 1046 058a 00       		.byte	0
+ 1047 058b 17       		.uleb128 0x17
+ 1048 058c E0030000 		.4byte	.LASF61
+ 1049 0590 01       		.byte	0x1
+ 1050 0591 10       		.byte	0x10
+ 1051 0592 98050000 		.4byte	0x598
+ 1052 0596 18       		.uleb128 0x18
+ 1053 0597 00       		.byte	0
+ 1054 0598 19       		.uleb128 0x19
+ 1055 0599 67000000 		.4byte	.LASF63
+ 1056 059d 08       		.byte	0x8
+ 1057 059e 70       		.byte	0x70
+ 1058 059f 81000000 		.4byte	0x81
+ 1059 05a3 19       		.uleb128 0x19
+ 1060 05a4 FB010000 		.4byte	.LASF64
+ 1061 05a8 08       		.byte	0x8
+ 1062 05a9 73       		.byte	0x73
+ 1063 05aa 8D000000 		.4byte	0x8d
+ 1064 05ae 17       		.uleb128 0x17
+ 1065 05af 21030000 		.4byte	.LASF65
+ 1066 05b3 01       		.byte	0x1
+ 1067 05b4 14       		.byte	0x14
+ 1068 05b5 BB050000 		.4byte	0x5bb
+ 1069 05b9 18       		.uleb128 0x18
+ 1070 05ba 00       		.byte	0
+ 1071 05bb 17       		.uleb128 0x17
+ 1072 05bc 50000000 		.4byte	.LASF66
+ 1073 05c0 01       		.byte	0x1
+ 1074 05c1 15       		.byte	0x15
+ 1075 05c2 C8050000 		.4byte	0x5c8
+ 1076 05c6 18       		.uleb128 0x18
+ 1077 05c7 00       		.byte	0
+ 1078 05c8 1F       		.uleb128 0x1f
+ 1079 05c9 1E020000 		.4byte	.LASF72
+ 1080 05cd 01       		.byte	0x1
+ 1081 05ce 16       		.byte	0x16
+ 1082 05cf 18       		.uleb128 0x18
+ 1083 05d0 00       		.byte	0
+ 1084 05d1 00       		.byte	0
+ 1085              		.section	.debug_abbrev,"",%progbits
+ 1086              	.Ldebug_abbrev0:
+ 1087 0000 01       		.uleb128 0x1
+ 1088 0001 11       		.uleb128 0x11
+ 1089 0002 01       		.byte	0x1
+ 1090 0003 25       		.uleb128 0x25
+ 1091 0004 0E       		.uleb128 0xe
+ 1092 0005 13       		.uleb128 0x13
+ 1093 0006 0B       		.uleb128 0xb
+ 1094 0007 03       		.uleb128 0x3
+ 1095 0008 0E       		.uleb128 0xe
+ 1096 0009 1B       		.uleb128 0x1b
+ 1097 000a 0E       		.uleb128 0xe
+ 1098 000b 55       		.uleb128 0x55
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccpEov4m.s 			page 23
+
+
+ 1099 000c 17       		.uleb128 0x17
+ 1100 000d 11       		.uleb128 0x11
+ 1101 000e 01       		.uleb128 0x1
+ 1102 000f 10       		.uleb128 0x10
+ 1103 0010 17       		.uleb128 0x17
+ 1104 0011 00       		.byte	0
+ 1105 0012 00       		.byte	0
+ 1106 0013 02       		.uleb128 0x2
+ 1107 0014 24       		.uleb128 0x24
+ 1108 0015 00       		.byte	0
+ 1109 0016 0B       		.uleb128 0xb
+ 1110 0017 0B       		.uleb128 0xb
+ 1111 0018 3E       		.uleb128 0x3e
+ 1112 0019 0B       		.uleb128 0xb
+ 1113 001a 03       		.uleb128 0x3
+ 1114 001b 0E       		.uleb128 0xe
+ 1115 001c 00       		.byte	0
+ 1116 001d 00       		.byte	0
+ 1117 001e 03       		.uleb128 0x3
+ 1118 001f 16       		.uleb128 0x16
+ 1119 0020 00       		.byte	0
+ 1120 0021 03       		.uleb128 0x3
+ 1121 0022 0E       		.uleb128 0xe
+ 1122 0023 3A       		.uleb128 0x3a
+ 1123 0024 0B       		.uleb128 0xb
+ 1124 0025 3B       		.uleb128 0x3b
+ 1125 0026 0B       		.uleb128 0xb
+ 1126 0027 49       		.uleb128 0x49
+ 1127 0028 13       		.uleb128 0x13
+ 1128 0029 00       		.byte	0
+ 1129 002a 00       		.byte	0
+ 1130 002b 04       		.uleb128 0x4
+ 1131 002c 24       		.uleb128 0x24
+ 1132 002d 00       		.byte	0
+ 1133 002e 0B       		.uleb128 0xb
+ 1134 002f 0B       		.uleb128 0xb
+ 1135 0030 3E       		.uleb128 0x3e
+ 1136 0031 0B       		.uleb128 0xb
+ 1137 0032 03       		.uleb128 0x3
+ 1138 0033 08       		.uleb128 0x8
+ 1139 0034 00       		.byte	0
+ 1140 0035 00       		.byte	0
+ 1141 0036 05       		.uleb128 0x5
+ 1142 0037 16       		.uleb128 0x16
+ 1143 0038 00       		.byte	0
+ 1144 0039 03       		.uleb128 0x3
+ 1145 003a 0E       		.uleb128 0xe
+ 1146 003b 3A       		.uleb128 0x3a
+ 1147 003c 0B       		.uleb128 0xb
+ 1148 003d 3B       		.uleb128 0x3b
+ 1149 003e 05       		.uleb128 0x5
+ 1150 003f 49       		.uleb128 0x49
+ 1151 0040 13       		.uleb128 0x13
+ 1152 0041 00       		.byte	0
+ 1153 0042 00       		.byte	0
+ 1154 0043 06       		.uleb128 0x6
+ 1155 0044 0F       		.uleb128 0xf
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccpEov4m.s 			page 24
+
+
+ 1156 0045 00       		.byte	0
+ 1157 0046 0B       		.uleb128 0xb
+ 1158 0047 0B       		.uleb128 0xb
+ 1159 0048 49       		.uleb128 0x49
+ 1160 0049 13       		.uleb128 0x13
+ 1161 004a 00       		.byte	0
+ 1162 004b 00       		.byte	0
+ 1163 004c 07       		.uleb128 0x7
+ 1164 004d 15       		.uleb128 0x15
+ 1165 004e 00       		.byte	0
+ 1166 004f 27       		.uleb128 0x27
+ 1167 0050 19       		.uleb128 0x19
+ 1168 0051 00       		.byte	0
+ 1169 0052 00       		.byte	0
+ 1170 0053 08       		.uleb128 0x8
+ 1171 0054 2E       		.uleb128 0x2e
+ 1172 0055 01       		.byte	0x1
+ 1173 0056 3F       		.uleb128 0x3f
+ 1174 0057 19       		.uleb128 0x19
+ 1175 0058 03       		.uleb128 0x3
+ 1176 0059 0E       		.uleb128 0xe
+ 1177 005a 3A       		.uleb128 0x3a
+ 1178 005b 0B       		.uleb128 0xb
+ 1179 005c 3B       		.uleb128 0x3b
+ 1180 005d 0B       		.uleb128 0xb
+ 1181 005e 27       		.uleb128 0x27
+ 1182 005f 19       		.uleb128 0x19
+ 1183 0060 11       		.uleb128 0x11
+ 1184 0061 01       		.uleb128 0x1
+ 1185 0062 12       		.uleb128 0x12
+ 1186 0063 06       		.uleb128 0x6
+ 1187 0064 40       		.uleb128 0x40
+ 1188 0065 18       		.uleb128 0x18
+ 1189 0066 9742     		.uleb128 0x2117
+ 1190 0068 19       		.uleb128 0x19
+ 1191 0069 01       		.uleb128 0x1
+ 1192 006a 13       		.uleb128 0x13
+ 1193 006b 00       		.byte	0
+ 1194 006c 00       		.byte	0
+ 1195 006d 09       		.uleb128 0x9
+ 1196 006e 898201   		.uleb128 0x4109
+ 1197 0071 01       		.byte	0x1
+ 1198 0072 11       		.uleb128 0x11
+ 1199 0073 01       		.uleb128 0x1
+ 1200 0074 31       		.uleb128 0x31
+ 1201 0075 13       		.uleb128 0x13
+ 1202 0076 01       		.uleb128 0x1
+ 1203 0077 13       		.uleb128 0x13
+ 1204 0078 00       		.byte	0
+ 1205 0079 00       		.byte	0
+ 1206 007a 0A       		.uleb128 0xa
+ 1207 007b 8A8201   		.uleb128 0x410a
+ 1208 007e 00       		.byte	0
+ 1209 007f 02       		.uleb128 0x2
+ 1210 0080 18       		.uleb128 0x18
+ 1211 0081 9142     		.uleb128 0x2111
+ 1212 0083 18       		.uleb128 0x18
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccpEov4m.s 			page 25
+
+
+ 1213 0084 00       		.byte	0
+ 1214 0085 00       		.byte	0
+ 1215 0086 0B       		.uleb128 0xb
+ 1216 0087 898201   		.uleb128 0x4109
+ 1217 008a 00       		.byte	0
+ 1218 008b 11       		.uleb128 0x11
+ 1219 008c 01       		.uleb128 0x1
+ 1220 008d 31       		.uleb128 0x31
+ 1221 008e 13       		.uleb128 0x13
+ 1222 008f 00       		.byte	0
+ 1223 0090 00       		.byte	0
+ 1224 0091 0C       		.uleb128 0xc
+ 1225 0092 2E       		.uleb128 0x2e
+ 1226 0093 01       		.byte	0x1
+ 1227 0094 3F       		.uleb128 0x3f
+ 1228 0095 19       		.uleb128 0x19
+ 1229 0096 03       		.uleb128 0x3
+ 1230 0097 0E       		.uleb128 0xe
+ 1231 0098 3A       		.uleb128 0x3a
+ 1232 0099 0B       		.uleb128 0xb
+ 1233 009a 3B       		.uleb128 0x3b
+ 1234 009b 0B       		.uleb128 0xb
+ 1235 009c 11       		.uleb128 0x11
+ 1236 009d 01       		.uleb128 0x1
+ 1237 009e 12       		.uleb128 0x12
+ 1238 009f 06       		.uleb128 0x6
+ 1239 00a0 40       		.uleb128 0x40
+ 1240 00a1 18       		.uleb128 0x18
+ 1241 00a2 9742     		.uleb128 0x2117
+ 1242 00a4 19       		.uleb128 0x19
+ 1243 00a5 01       		.uleb128 0x1
+ 1244 00a6 13       		.uleb128 0x13
+ 1245 00a7 00       		.byte	0
+ 1246 00a8 00       		.byte	0
+ 1247 00a9 0D       		.uleb128 0xd
+ 1248 00aa 2E       		.uleb128 0x2e
+ 1249 00ab 01       		.byte	0x1
+ 1250 00ac 3F       		.uleb128 0x3f
+ 1251 00ad 19       		.uleb128 0x19
+ 1252 00ae 03       		.uleb128 0x3
+ 1253 00af 0E       		.uleb128 0xe
+ 1254 00b0 3A       		.uleb128 0x3a
+ 1255 00b1 0B       		.uleb128 0xb
+ 1256 00b2 3B       		.uleb128 0x3b
+ 1257 00b3 0B       		.uleb128 0xb
+ 1258 00b4 27       		.uleb128 0x27
+ 1259 00b5 19       		.uleb128 0x19
+ 1260 00b6 49       		.uleb128 0x49
+ 1261 00b7 13       		.uleb128 0x13
+ 1262 00b8 11       		.uleb128 0x11
+ 1263 00b9 01       		.uleb128 0x1
+ 1264 00ba 12       		.uleb128 0x12
+ 1265 00bb 06       		.uleb128 0x6
+ 1266 00bc 40       		.uleb128 0x40
+ 1267 00bd 18       		.uleb128 0x18
+ 1268 00be 9742     		.uleb128 0x2117
+ 1269 00c0 19       		.uleb128 0x19
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccpEov4m.s 			page 26
+
+
+ 1270 00c1 01       		.uleb128 0x1
+ 1271 00c2 13       		.uleb128 0x13
+ 1272 00c3 00       		.byte	0
+ 1273 00c4 00       		.byte	0
+ 1274 00c5 0E       		.uleb128 0xe
+ 1275 00c6 34       		.uleb128 0x34
+ 1276 00c7 00       		.byte	0
+ 1277 00c8 03       		.uleb128 0x3
+ 1278 00c9 08       		.uleb128 0x8
+ 1279 00ca 3A       		.uleb128 0x3a
+ 1280 00cb 0B       		.uleb128 0xb
+ 1281 00cc 3B       		.uleb128 0x3b
+ 1282 00cd 0B       		.uleb128 0xb
+ 1283 00ce 49       		.uleb128 0x49
+ 1284 00cf 13       		.uleb128 0x13
+ 1285 00d0 00       		.byte	0
+ 1286 00d1 00       		.byte	0
+ 1287 00d2 0F       		.uleb128 0xf
+ 1288 00d3 34       		.uleb128 0x34
+ 1289 00d4 00       		.byte	0
+ 1290 00d5 03       		.uleb128 0x3
+ 1291 00d6 0E       		.uleb128 0xe
+ 1292 00d7 3A       		.uleb128 0x3a
+ 1293 00d8 0B       		.uleb128 0xb
+ 1294 00d9 3B       		.uleb128 0x3b
+ 1295 00da 0B       		.uleb128 0xb
+ 1296 00db 49       		.uleb128 0x49
+ 1297 00dc 13       		.uleb128 0x13
+ 1298 00dd 1C       		.uleb128 0x1c
+ 1299 00de 0B       		.uleb128 0xb
+ 1300 00df 00       		.byte	0
+ 1301 00e0 00       		.byte	0
+ 1302 00e1 10       		.uleb128 0x10
+ 1303 00e2 34       		.uleb128 0x34
+ 1304 00e3 00       		.byte	0
+ 1305 00e4 03       		.uleb128 0x3
+ 1306 00e5 0E       		.uleb128 0xe
+ 1307 00e6 3A       		.uleb128 0x3a
+ 1308 00e7 0B       		.uleb128 0xb
+ 1309 00e8 3B       		.uleb128 0x3b
+ 1310 00e9 0B       		.uleb128 0xb
+ 1311 00ea 49       		.uleb128 0x49
+ 1312 00eb 13       		.uleb128 0x13
+ 1313 00ec 02       		.uleb128 0x2
+ 1314 00ed 17       		.uleb128 0x17
+ 1315 00ee 00       		.byte	0
+ 1316 00ef 00       		.byte	0
+ 1317 00f0 11       		.uleb128 0x11
+ 1318 00f1 34       		.uleb128 0x34
+ 1319 00f2 00       		.byte	0
+ 1320 00f3 03       		.uleb128 0x3
+ 1321 00f4 0E       		.uleb128 0xe
+ 1322 00f5 3A       		.uleb128 0x3a
+ 1323 00f6 0B       		.uleb128 0xb
+ 1324 00f7 3B       		.uleb128 0x3b
+ 1325 00f8 0B       		.uleb128 0xb
+ 1326 00f9 49       		.uleb128 0x49
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccpEov4m.s 			page 27
+
+
+ 1327 00fa 13       		.uleb128 0x13
+ 1328 00fb 02       		.uleb128 0x2
+ 1329 00fc 18       		.uleb128 0x18
+ 1330 00fd 00       		.byte	0
+ 1331 00fe 00       		.byte	0
+ 1332 00ff 12       		.uleb128 0x12
+ 1333 0100 01       		.uleb128 0x1
+ 1334 0101 01       		.byte	0x1
+ 1335 0102 49       		.uleb128 0x49
+ 1336 0103 13       		.uleb128 0x13
+ 1337 0104 01       		.uleb128 0x1
+ 1338 0105 13       		.uleb128 0x13
+ 1339 0106 00       		.byte	0
+ 1340 0107 00       		.byte	0
+ 1341 0108 13       		.uleb128 0x13
+ 1342 0109 21       		.uleb128 0x21
+ 1343 010a 00       		.byte	0
+ 1344 010b 49       		.uleb128 0x49
+ 1345 010c 13       		.uleb128 0x13
+ 1346 010d 2F       		.uleb128 0x2f
+ 1347 010e 0B       		.uleb128 0xb
+ 1348 010f 00       		.byte	0
+ 1349 0110 00       		.byte	0
+ 1350 0111 14       		.uleb128 0x14
+ 1351 0112 34       		.uleb128 0x34
+ 1352 0113 00       		.byte	0
+ 1353 0114 03       		.uleb128 0x3
+ 1354 0115 0E       		.uleb128 0xe
+ 1355 0116 3A       		.uleb128 0x3a
+ 1356 0117 0B       		.uleb128 0xb
+ 1357 0118 3B       		.uleb128 0x3b
+ 1358 0119 05       		.uleb128 0x5
+ 1359 011a 49       		.uleb128 0x49
+ 1360 011b 13       		.uleb128 0x13
+ 1361 011c 3F       		.uleb128 0x3f
+ 1362 011d 19       		.uleb128 0x19
+ 1363 011e 3C       		.uleb128 0x3c
+ 1364 011f 19       		.uleb128 0x19
+ 1365 0120 00       		.byte	0
+ 1366 0121 00       		.byte	0
+ 1367 0122 15       		.uleb128 0x15
+ 1368 0123 35       		.uleb128 0x35
+ 1369 0124 00       		.byte	0
+ 1370 0125 49       		.uleb128 0x49
+ 1371 0126 13       		.uleb128 0x13
+ 1372 0127 00       		.byte	0
+ 1373 0128 00       		.byte	0
+ 1374 0129 16       		.uleb128 0x16
+ 1375 012a 34       		.uleb128 0x34
+ 1376 012b 00       		.byte	0
+ 1377 012c 03       		.uleb128 0x3
+ 1378 012d 0E       		.uleb128 0xe
+ 1379 012e 3A       		.uleb128 0x3a
+ 1380 012f 0B       		.uleb128 0xb
+ 1381 0130 3B       		.uleb128 0x3b
+ 1382 0131 0B       		.uleb128 0xb
+ 1383 0132 49       		.uleb128 0x49
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccpEov4m.s 			page 28
+
+
+ 1384 0133 13       		.uleb128 0x13
+ 1385 0134 3F       		.uleb128 0x3f
+ 1386 0135 19       		.uleb128 0x19
+ 1387 0136 02       		.uleb128 0x2
+ 1388 0137 18       		.uleb128 0x18
+ 1389 0138 00       		.byte	0
+ 1390 0139 00       		.byte	0
+ 1391 013a 17       		.uleb128 0x17
+ 1392 013b 2E       		.uleb128 0x2e
+ 1393 013c 01       		.byte	0x1
+ 1394 013d 3F       		.uleb128 0x3f
+ 1395 013e 19       		.uleb128 0x19
+ 1396 013f 03       		.uleb128 0x3
+ 1397 0140 0E       		.uleb128 0xe
+ 1398 0141 3A       		.uleb128 0x3a
+ 1399 0142 0B       		.uleb128 0xb
+ 1400 0143 3B       		.uleb128 0x3b
+ 1401 0144 0B       		.uleb128 0xb
+ 1402 0145 3C       		.uleb128 0x3c
+ 1403 0146 19       		.uleb128 0x19
+ 1404 0147 01       		.uleb128 0x1
+ 1405 0148 13       		.uleb128 0x13
+ 1406 0149 00       		.byte	0
+ 1407 014a 00       		.byte	0
+ 1408 014b 18       		.uleb128 0x18
+ 1409 014c 18       		.uleb128 0x18
+ 1410 014d 00       		.byte	0
+ 1411 014e 00       		.byte	0
+ 1412 014f 00       		.byte	0
+ 1413 0150 19       		.uleb128 0x19
+ 1414 0151 2E       		.uleb128 0x2e
+ 1415 0152 00       		.byte	0
+ 1416 0153 3F       		.uleb128 0x3f
+ 1417 0154 19       		.uleb128 0x19
+ 1418 0155 03       		.uleb128 0x3
+ 1419 0156 0E       		.uleb128 0xe
+ 1420 0157 3A       		.uleb128 0x3a
+ 1421 0158 0B       		.uleb128 0xb
+ 1422 0159 3B       		.uleb128 0x3b
+ 1423 015a 0B       		.uleb128 0xb
+ 1424 015b 27       		.uleb128 0x27
+ 1425 015c 19       		.uleb128 0x19
+ 1426 015d 49       		.uleb128 0x49
+ 1427 015e 13       		.uleb128 0x13
+ 1428 015f 3C       		.uleb128 0x3c
+ 1429 0160 19       		.uleb128 0x19
+ 1430 0161 00       		.byte	0
+ 1431 0162 00       		.byte	0
+ 1432 0163 1A       		.uleb128 0x1a
+ 1433 0164 2E       		.uleb128 0x2e
+ 1434 0165 00       		.byte	0
+ 1435 0166 3F       		.uleb128 0x3f
+ 1436 0167 19       		.uleb128 0x19
+ 1437 0168 03       		.uleb128 0x3
+ 1438 0169 0E       		.uleb128 0xe
+ 1439 016a 3A       		.uleb128 0x3a
+ 1440 016b 0B       		.uleb128 0xb
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccpEov4m.s 			page 29
+
+
+ 1441 016c 3B       		.uleb128 0x3b
+ 1442 016d 0B       		.uleb128 0xb
+ 1443 016e 27       		.uleb128 0x27
+ 1444 016f 19       		.uleb128 0x19
+ 1445 0170 3C       		.uleb128 0x3c
+ 1446 0171 19       		.uleb128 0x19
+ 1447 0172 00       		.byte	0
+ 1448 0173 00       		.byte	0
+ 1449 0174 1B       		.uleb128 0x1b
+ 1450 0175 2E       		.uleb128 0x2e
+ 1451 0176 01       		.byte	0x1
+ 1452 0177 3F       		.uleb128 0x3f
+ 1453 0178 19       		.uleb128 0x19
+ 1454 0179 03       		.uleb128 0x3
+ 1455 017a 0E       		.uleb128 0xe
+ 1456 017b 3A       		.uleb128 0x3a
+ 1457 017c 0B       		.uleb128 0xb
+ 1458 017d 3B       		.uleb128 0x3b
+ 1459 017e 0B       		.uleb128 0xb
+ 1460 017f 27       		.uleb128 0x27
+ 1461 0180 19       		.uleb128 0x19
+ 1462 0181 3C       		.uleb128 0x3c
+ 1463 0182 19       		.uleb128 0x19
+ 1464 0183 01       		.uleb128 0x1
+ 1465 0184 13       		.uleb128 0x13
+ 1466 0185 00       		.byte	0
+ 1467 0186 00       		.byte	0
+ 1468 0187 1C       		.uleb128 0x1c
+ 1469 0188 05       		.uleb128 0x5
+ 1470 0189 00       		.byte	0
+ 1471 018a 49       		.uleb128 0x49
+ 1472 018b 13       		.uleb128 0x13
+ 1473 018c 00       		.byte	0
+ 1474 018d 00       		.byte	0
+ 1475 018e 1D       		.uleb128 0x1d
+ 1476 018f 2E       		.uleb128 0x2e
+ 1477 0190 01       		.byte	0x1
+ 1478 0191 3F       		.uleb128 0x3f
+ 1479 0192 19       		.uleb128 0x19
+ 1480 0193 03       		.uleb128 0x3
+ 1481 0194 0E       		.uleb128 0xe
+ 1482 0195 3A       		.uleb128 0x3a
+ 1483 0196 0B       		.uleb128 0xb
+ 1484 0197 3B       		.uleb128 0x3b
+ 1485 0198 0B       		.uleb128 0xb
+ 1486 0199 49       		.uleb128 0x49
+ 1487 019a 13       		.uleb128 0x13
+ 1488 019b 3C       		.uleb128 0x3c
+ 1489 019c 19       		.uleb128 0x19
+ 1490 019d 01       		.uleb128 0x1
+ 1491 019e 13       		.uleb128 0x13
+ 1492 019f 00       		.byte	0
+ 1493 01a0 00       		.byte	0
+ 1494 01a1 1E       		.uleb128 0x1e
+ 1495 01a2 26       		.uleb128 0x26
+ 1496 01a3 00       		.byte	0
+ 1497 01a4 49       		.uleb128 0x49
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccpEov4m.s 			page 30
+
+
+ 1498 01a5 13       		.uleb128 0x13
+ 1499 01a6 00       		.byte	0
+ 1500 01a7 00       		.byte	0
+ 1501 01a8 1F       		.uleb128 0x1f
+ 1502 01a9 2E       		.uleb128 0x2e
+ 1503 01aa 01       		.byte	0x1
+ 1504 01ab 3F       		.uleb128 0x3f
+ 1505 01ac 19       		.uleb128 0x19
+ 1506 01ad 03       		.uleb128 0x3
+ 1507 01ae 0E       		.uleb128 0xe
+ 1508 01af 3A       		.uleb128 0x3a
+ 1509 01b0 0B       		.uleb128 0xb
+ 1510 01b1 3B       		.uleb128 0x3b
+ 1511 01b2 0B       		.uleb128 0xb
+ 1512 01b3 3C       		.uleb128 0x3c
+ 1513 01b4 19       		.uleb128 0x19
+ 1514 01b5 00       		.byte	0
+ 1515 01b6 00       		.byte	0
+ 1516 01b7 00       		.byte	0
+ 1517              		.section	.debug_loc,"",%progbits
+ 1518              	.Ldebug_loc0:
+ 1519              	.LLST0:
+ 1520 0000 18000000 		.4byte	.LVL22
+ 1521 0004 50000000 		.4byte	.LVL30
+ 1522 0008 0200     		.2byte	0x2
+ 1523 000a 30       		.byte	0x30
+ 1524 000b 9F       		.byte	0x9f
+ 1525 000c 50000000 		.4byte	.LVL30
+ 1526 0010 64000000 		.4byte	.LVL34
+ 1527 0014 0100     		.2byte	0x1
+ 1528 0016 54       		.byte	0x54
+ 1529 0017 66000000 		.4byte	.LVL35
+ 1530 001b 6E000000 		.4byte	.LVL37
+ 1531 001f 0100     		.2byte	0x1
+ 1532 0021 54       		.byte	0x54
+ 1533 0022 6E000000 		.4byte	.LVL37
+ 1534 0026 B4000000 		.4byte	.LVL44
+ 1535 002a 0200     		.2byte	0x2
+ 1536 002c 30       		.byte	0x30
+ 1537 002d 9F       		.byte	0x9f
+ 1538 002e B4000000 		.4byte	.LVL44
+ 1539 0032 C8000000 		.4byte	.LVL48
+ 1540 0036 0100     		.2byte	0x1
+ 1541 0038 54       		.byte	0x54
+ 1542 0039 CA000000 		.4byte	.LVL49
+ 1543 003d E8000000 		.4byte	.LFE66
+ 1544 0041 0100     		.2byte	0x1
+ 1545 0043 54       		.byte	0x54
+ 1546 0044 00000000 		.4byte	0
+ 1547 0048 00000000 		.4byte	0
+ 1548              		.section	.debug_aranges,"",%progbits
+ 1549 0000 34000000 		.4byte	0x34
+ 1550 0004 0200     		.2byte	0x2
+ 1551 0006 00000000 		.4byte	.Ldebug_info0
+ 1552 000a 04       		.byte	0x4
+ 1553 000b 00       		.byte	0
+ 1554 000c 0000     		.2byte	0
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccpEov4m.s 			page 31
+
+
+ 1555 000e 0000     		.2byte	0
+ 1556 0010 00000000 		.4byte	.LFB65
+ 1557 0014 0E000000 		.4byte	.LFE65-.LFB65
+ 1558 0018 00000000 		.4byte	.LFB63
+ 1559 001c 54000000 		.4byte	.LFE63-.LFB63
+ 1560 0020 00000000 		.4byte	.LFB64
+ 1561 0024 0C000000 		.4byte	.LFE64-.LFB64
+ 1562 0028 00000000 		.4byte	.LFB66
+ 1563 002c E8000000 		.4byte	.LFE66-.LFB66
+ 1564 0030 00000000 		.4byte	0
+ 1565 0034 00000000 		.4byte	0
+ 1566              		.section	.debug_ranges,"",%progbits
+ 1567              	.Ldebug_ranges0:
+ 1568 0000 00000000 		.4byte	.LFB65
+ 1569 0004 0E000000 		.4byte	.LFE65
+ 1570 0008 00000000 		.4byte	.LFB63
+ 1571 000c 54000000 		.4byte	.LFE63
+ 1572 0010 00000000 		.4byte	.LFB64
+ 1573 0014 0C000000 		.4byte	.LFE64
+ 1574 0018 00000000 		.4byte	.LFB66
+ 1575 001c E8000000 		.4byte	.LFE66
+ 1576 0020 00000000 		.4byte	0
+ 1577 0024 00000000 		.4byte	0
+ 1578              		.section	.debug_line,"",%progbits
+ 1579              	.Ldebug_line0:
+ 1580 0000 4A020000 		.section	.debug_str,"MS",%progbits,1
+ 1580      0200C501 
+ 1580      00000201 
+ 1580      FB0E0D00 
+ 1580      01010101 
+ 1581              	.LASF34:
+ 1582 0000 696E7432 		.ascii	"int222\000"
+ 1582      323200
+ 1583              	.LASF24:
+ 1584 0007 636F756E 		.ascii	"counter\000"
+ 1584      74657200 
+ 1585              	.LASF53:
+ 1586 000f 6973725F 		.ascii	"isr_1ms_StartEx\000"
+ 1586      316D735F 
+ 1586      53746172 
+ 1586      74457800 
+ 1587              	.LASF41:
+ 1588 001f 4D436C6F 		.ascii	"MClock_Start\000"
+ 1588      636B5F53 
+ 1588      74617274 
+ 1588      00
+ 1589              	.LASF2:
+ 1590 002c 73686F72 		.ascii	"short int\000"
+ 1590      7420696E 
+ 1590      7400
+ 1591              	.LASF20:
+ 1592 0036 73697A65 		.ascii	"sizetype\000"
+ 1592      74797065 
+ 1592      00
+ 1593              	.LASF59:
+ 1594 003f 6765745F 		.ascii	"get_serial_speed\000"
+ 1594      73657269 
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccpEov4m.s 			page 32
+
+
+ 1594      616C5F73 
+ 1594      70656564 
+ 1594      00
+ 1595              	.LASF66:
+ 1596 0050 74657374 		.ascii	"test_values\000"
+ 1596      5F76616C 
+ 1596      75657300 
+ 1597              	.LASF71:
+ 1598 005c 6D61696E 		.ascii	"main\000"
+ 1598      00
+ 1599              	.LASF17:
+ 1600 0061 63686172 		.ascii	"char8\000"
+ 1600      3800
+ 1601              	.LASF63:
+ 1602 0067 55415254 		.ascii	"UART_ReadRxStatus\000"
+ 1602      5F526561 
+ 1602      64527853 
+ 1602      74617475 
+ 1602      7300
+ 1603              	.LASF6:
+ 1604 0079 6C6F6E67 		.ascii	"long long int\000"
+ 1604      206C6F6E 
+ 1604      6720696E 
+ 1604      7400
+ 1605              	.LASF52:
+ 1606 0087 50574D5F 		.ascii	"PWM_M2_Stop\000"
+ 1606      4D325F53 
+ 1606      746F7000 
+ 1607              	.LASF37:
+ 1608 0093 50574D5F 		.ascii	"PWM_M1_Start\000"
+ 1608      4D315F53 
+ 1608      74617274 
+ 1608      00
+ 1609              	.LASF56:
+ 1610 00a0 55415254 		.ascii	"UART_PutString\000"
+ 1610      5F507574 
+ 1610      53747269 
+ 1610      6E6700
+ 1611              	.LASF62:
+ 1612 00af 54696D65 		.ascii	"Timer_1_ReadStatusRegister\000"
+ 1612      725F315F 
+ 1612      52656164 
+ 1612      53746174 
+ 1612      75735265 
+ 1613              	.LASF30:
+ 1614 00ca 696E7431 		.ascii	"int11\000"
+ 1614      3100
+ 1615              	.LASF42:
+ 1616 00d0 4D315175 		.ascii	"M1QuadDec_Start\000"
+ 1616      61644465 
+ 1616      635F5374 
+ 1616      61727400 
+ 1617              	.LASF11:
+ 1618 00e0 75696E74 		.ascii	"uint8\000"
+ 1618      3800
+ 1619              	.LASF69:
+ 1620 00e6 433A5C55 		.ascii	"C:\\Users\\shevi\\Downloads\\Workspace01\\Workspace"
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccpEov4m.s 			page 33
+
+
+ 1620      73657273 
+ 1620      5C736865 
+ 1620      76695C44 
+ 1620      6F776E6C 
+ 1621 0114 30315C46 		.ascii	"01\\FYP.cydsn\000"
+ 1621      59502E63 
+ 1621      7964736E 
+ 1621      00
+ 1622              	.LASF0:
+ 1623 0121 7369676E 		.ascii	"signed char\000"
+ 1623      65642063 
+ 1623      68617200 
+ 1624              	.LASF70:
+ 1625 012d 54696D65 		.ascii	"Timer_1_Handler\000"
+ 1625      725F315F 
+ 1625      48616E64 
+ 1625      6C657200 
+ 1626              	.LASF15:
+ 1627 013d 666C6F61 		.ascii	"float\000"
+ 1627      7400
+ 1628              	.LASF27:
+ 1629 0143 696E7432 		.ascii	"int2\000"
+ 1629      00
+ 1630              	.LASF28:
+ 1631 0148 696E7433 		.ascii	"int3\000"
+ 1631      00
+ 1632              	.LASF33:
+ 1633 014d 696E7431 		.ascii	"int111\000"
+ 1633      313100
+ 1634              	.LASF36:
+ 1635 0154 6D797374 		.ascii	"mystring\000"
+ 1635      72696E67 
+ 1635      00
+ 1636              	.LASF29:
+ 1637 015d 75706461 		.ascii	"update\000"
+ 1637      746500
+ 1638              	.LASF4:
+ 1639 0164 6C6F6E67 		.ascii	"long int\000"
+ 1639      20696E74 
+ 1639      00
+ 1640              	.LASF26:
+ 1641 016d 696E7431 		.ascii	"int1\000"
+ 1641      00
+ 1642              	.LASF54:
+ 1643 0172 54696D65 		.ascii	"Timer_1_WritePeriod\000"
+ 1643      725F315F 
+ 1643      57726974 
+ 1643      65506572 
+ 1643      696F6400 
+ 1644              	.LASF25:
+ 1645 0186 74726967 		.ascii	"trigger1\000"
+ 1645      67657231 
+ 1645      00
+ 1646              	.LASF1:
+ 1647 018f 756E7369 		.ascii	"unsigned char\000"
+ 1647      676E6564 
+ 1647      20636861 
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccpEov4m.s 			page 34
+
+
+ 1647      7200
+ 1648              	.LASF45:
+ 1649 019d 4D315175 		.ascii	"M1QuadDec_SetCounter\000"
+ 1649      61644465 
+ 1649      635F5365 
+ 1649      74436F75 
+ 1649      6E746572 
+ 1650              	.LASF60:
+ 1651 01b2 6E65775F 		.ascii	"new_path\000"
+ 1651      70617468 
+ 1651      00
+ 1652              	.LASF21:
+ 1653 01bb 6C6F6E67 		.ascii	"long double\000"
+ 1653      20646F75 
+ 1653      626C6500 
+ 1654              	.LASF55:
+ 1655 01c7 6765745F 		.ascii	"get_serial_update\000"
+ 1655      73657269 
+ 1655      616C5F75 
+ 1655      70646174 
+ 1655      6500
+ 1656              	.LASF19:
+ 1657 01d9 63796973 		.ascii	"cyisraddress\000"
+ 1657      72616464 
+ 1657      72657373 
+ 1657      00
+ 1658              	.LASF31:
+ 1659 01e6 696E7432 		.ascii	"int22\000"
+ 1659      3200
+ 1660              	.LASF50:
+ 1661 01ec 6973725F 		.ascii	"isr_1ms_Enable\000"
+ 1661      316D735F 
+ 1661      456E6162 
+ 1661      6C6500
+ 1662              	.LASF64:
+ 1663 01fb 55415254 		.ascii	"UART_GetRxBufferSize\000"
+ 1663      5F476574 
+ 1663      52784275 
+ 1663      66666572 
+ 1663      53697A65 
+ 1664              	.LASF49:
+ 1665 0210 54696D65 		.ascii	"Timer_1_Start\000"
+ 1665      725F315F 
+ 1665      53746172 
+ 1665      7400
+ 1666              	.LASF72:
+ 1667 021e 73746570 		.ascii	"step_response\000"
+ 1667      5F726573 
+ 1667      706F6E73 
+ 1667      6500
+ 1668              	.LASF7:
+ 1669 022c 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 1669      206C6F6E 
+ 1669      6720756E 
+ 1669      7369676E 
+ 1669      65642069 
+ 1670              	.LASF8:
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccpEov4m.s 			page 35
+
+
+ 1671 0243 756E7369 		.ascii	"unsigned int\000"
+ 1671      676E6564 
+ 1671      20696E74 
+ 1671      00
+ 1672              	.LASF48:
+ 1673 0250 4D325175 		.ascii	"M2QuadDec_SetCounter\000"
+ 1673      61644465 
+ 1673      635F5365 
+ 1673      74436F75 
+ 1673      6E746572 
+ 1674              	.LASF46:
+ 1675 0265 4D325175 		.ascii	"M2QuadDec_Start\000"
+ 1675      61644465 
+ 1675      635F5374 
+ 1675      61727400 
+ 1676              	.LASF22:
+ 1677 0275 53657475 		.ascii	"Setup\000"
+ 1677      7000
+ 1678              	.LASF3:
+ 1679 027b 73686F72 		.ascii	"short unsigned int\000"
+ 1679      7420756E 
+ 1679      7369676E 
+ 1679      65642069 
+ 1679      6E7400
+ 1680              	.LASF18:
+ 1681 028e 63686172 		.ascii	"char\000"
+ 1681      00
+ 1682              	.LASF67:
+ 1683 0293 474E5520 		.ascii	"GNU C 4.9.3 20150303 (release) [ARM/embedded-4_9-br"
+ 1683      4320342E 
+ 1683      392E3320 
+ 1683      32303135 
+ 1683      30333033 
+ 1684 02c6 616E6368 		.ascii	"anch revision 221220] -mcpu=cortex-m3 -mthumb -g -O"
+ 1684      20726576 
+ 1684      6973696F 
+ 1684      6E203232 
+ 1684      31323230 
+ 1685 02f9 67202D66 		.ascii	"g -ffunction-sections -ffat-lto-objects\000"
+ 1685      66756E63 
+ 1685      74696F6E 
+ 1685      2D736563 
+ 1685      74696F6E 
+ 1686              	.LASF65:
+ 1687 0321 6765745F 		.ascii	"get_serial_control\000"
+ 1687      73657269 
+ 1687      616C5F63 
+ 1687      6F6E7472 
+ 1687      6F6C00
+ 1688              	.LASF39:
+ 1689 0334 55415254 		.ascii	"UART_Start\000"
+ 1689      5F537461 
+ 1689      727400
+ 1690              	.LASF10:
+ 1691 033f 696E7433 		.ascii	"int32_t\000"
+ 1691      325F7400 
+ 1692              	.LASF51:
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccpEov4m.s 			page 36
+
+
+ 1693 0347 50574D5F 		.ascii	"PWM_M1_Stop\000"
+ 1693      4D315F53 
+ 1693      746F7000 
+ 1694              	.LASF12:
+ 1695 0353 75696E74 		.ascii	"uint16\000"
+ 1695      313600
+ 1696              	.LASF43:
+ 1697 035a 4D315175 		.ascii	"M1QuadDec_Enable\000"
+ 1697      61644465 
+ 1697      635F456E 
+ 1697      61626C65 
+ 1697      00
+ 1698              	.LASF57:
+ 1699 036b 4379536F 		.ascii	"CySoftwareReset\000"
+ 1699      66747761 
+ 1699      72655265 
+ 1699      73657400 
+ 1700              	.LASF38:
+ 1701 037b 50574D5F 		.ascii	"PWM_M2_Start\000"
+ 1701      4D325F53 
+ 1701      74617274 
+ 1701      00
+ 1702              	.LASF68:
+ 1703 0388 6D61696E 		.ascii	"main.c\000"
+ 1703      2E6300
+ 1704              	.LASF5:
+ 1705 038f 6C6F6E67 		.ascii	"long unsigned int\000"
+ 1705      20756E73 
+ 1705      69676E65 
+ 1705      6420696E 
+ 1705      7400
+ 1706              	.LASF47:
+ 1707 03a1 4D325175 		.ascii	"M2QuadDec_Enable\000"
+ 1707      61644465 
+ 1707      635F456E 
+ 1707      61626C65 
+ 1707      00
+ 1708              	.LASF14:
+ 1709 03b2 696E7433 		.ascii	"int32\000"
+ 1709      3200
+ 1710              	.LASF32:
+ 1711 03b8 696E7433 		.ascii	"int33\000"
+ 1711      3300
+ 1712              	.LASF13:
+ 1713 03be 75696E74 		.ascii	"uint32\000"
+ 1713      333200
+ 1714              	.LASF58:
+ 1715 03c5 43686563 		.ascii	"Check_Speed\000"
+ 1715      6B5F5370 
+ 1715      65656400 
+ 1716              	.LASF9:
+ 1717 03d1 5F5F696E 		.ascii	"__int32_t\000"
+ 1717      7433325F 
+ 1717      7400
+ 1718              	.LASF23:
+ 1719 03db 53746F70 		.ascii	"Stop\000"
+ 1719      00
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccpEov4m.s 			page 37
+
+
+ 1720              	.LASF61:
+ 1721 03e0 5072696E 		.ascii	"Print_Values\000"
+ 1721      745F5661 
+ 1721      6C756573 
+ 1721      00
+ 1722              	.LASF16:
+ 1723 03ed 646F7562 		.ascii	"double\000"
+ 1723      6C6500
+ 1724              	.LASF35:
+ 1725 03f4 49544D5F 		.ascii	"ITM_RxBuffer\000"
+ 1725      52784275 
+ 1725      66666572 
+ 1725      00
+ 1726              	.LASF44:
+ 1727 0401 43794465 		.ascii	"CyDelay\000"
+ 1727      6C617900 
+ 1728              	.LASF40:
+ 1729 0409 4D31436C 		.ascii	"M1Clock_Start\000"
+ 1729      6F636B5F 
+ 1729      53746172 
+ 1729      7400
+ 1730              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 4.9.3 20150303 (release) [ARM/embedded-4_9-br

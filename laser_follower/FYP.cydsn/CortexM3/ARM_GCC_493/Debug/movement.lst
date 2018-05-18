@@ -1,0 +1,3035 @@
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccLQTamn.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.file	"movement.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.section	.text.turn_wheel,"ax",%progbits
+  19              		.align	2
+  20              		.global	turn_wheel
+  21              		.thumb
+  22              		.thumb_func
+  23              		.type	turn_wheel, %function
+  24              	turn_wheel:
+  25              	.LFB63:
+  26              		.file 1 "movement.c"
+   1:movement.c    **** // include directives
+   2:movement.c    **** 
+   3:movement.c    **** // RIGHT WHEEL IS MOTOR 2 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+   4:movement.c    **** // speed is a value between 0 and 65535
+   5:movement.c    **** #include "project.h"
+   6:movement.c    **** #include <math.h>
+   7:movement.c    **** #include <stdio.h>
+   8:movement.c    **** #include <stdint.h>
+   9:movement.c    **** #include <stdlib.h>
+  10:movement.c    **** #include <time.h>
+  11:movement.c    ****     
+  12:movement.c    **** char mystring[50];
+  13:movement.c    **** 
+  14:movement.c    **** 
+  15:movement.c    **** /* declare global variables */
+  16:movement.c    **** 
+  17:movement.c    **** 
+  18:movement.c    ****     long int cur_dest_left = 0;
+  19:movement.c    ****     long int cur_dest_right = 0;  
+  20:movement.c    ****     long int prev_dest_right;
+  21:movement.c    ****     long int prev_dest_left;
+  22:movement.c    ****     
+  23:movement.c    ****     long int cur_pos_left;  
+  24:movement.c    ****     long int cur_pos_right;
+  25:movement.c    ****     long int last_pos_right;
+  26:movement.c    ****     long int last_pos_left;
+  27:movement.c    **** 
+  28:movement.c    ****     int volt_motor_left;
+  29:movement.c    ****     int volt_motor_right;
+  30:movement.c    **** 
+  31:movement.c    ****     int adj_motor_left;
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccLQTamn.s 			page 2
+
+
+  32:movement.c    ****     int adj_motor_right;
+  33:movement.c    **** 
+  34:movement.c    ****     int error_left;
+  35:movement.c    ****     int error_right;
+  36:movement.c    **** 
+  37:movement.c    ****     int error_left_prev;
+  38:movement.c    ****     int error_right_prev;
+  39:movement.c    **** 
+  40:movement.c    ****     int error_left_sum;
+  41:movement.c    ****     int error_right_sum;
+  42:movement.c    **** 
+  43:movement.c    ****     double Kp;
+  44:movement.c    ****     double Ki;
+  45:movement.c    ****     double Kd;
+  46:movement.c    **** 
+  47:movement.c    ****     int speed_left;
+  48:movement.c    ****     int speed_right;
+  49:movement.c    **** 
+  50:movement.c    ****     int inc_left;
+  51:movement.c    ****     int inc_right;
+  52:movement.c    **** 
+  53:movement.c    ****     long int time_ms;
+  54:movement.c    ****     long int time_ms_start;
+  55:movement.c    ****     
+  56:movement.c    **** 
+  57:movement.c    **** void turn_wheel(char side, int volt){
+  27              		.loc 1 57 0
+  28              		.cfi_startproc
+  29              		@ args = 0, pretend = 0, frame = 0
+  30              		@ frame_needed = 0, uses_anonymous_args = 0
+  31              	.LVL0:
+  32 0000 38B5     		push	{r3, r4, r5, lr}
+  33              		.cfi_def_cfa_offset 16
+  34              		.cfi_offset 3, -16
+  35              		.cfi_offset 4, -12
+  36              		.cfi_offset 5, -8
+  37              		.cfi_offset 14, -4
+  38 0002 0446     		mov	r4, r0
+  39 0004 0D46     		mov	r5, r1
+  58:movement.c    ****     // turning right wheel
+  59:movement.c    ****     if (side == 'r'){
+  40              		.loc 1 59 0
+  41 0006 7228     		cmp	r0, #114
+  42 0008 21D1     		bne	.L2
+  60:movement.c    ****         Standby_Write(1);
+  43              		.loc 1 60 0
+  44 000a 0120     		movs	r0, #1
+  45              	.LVL1:
+  46 000c FFF7FEFF 		bl	Standby_Write
+  47              	.LVL2:
+  61:movement.c    ****         PWM_M2_WriteCompare(abs(volt));
+  48              		.loc 1 61 0
+  49 0010 85EAE570 		eor	r0, r5, r5, asr #31
+  50 0014 A0EBE570 		sub	r0, r0, r5, asr #31
+  51 0018 80B2     		uxth	r0, r0
+  52 001a FFF7FEFF 		bl	PWM_M2_WriteCompare
+  53              	.LVL3:
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccLQTamn.s 			page 3
+
+
+  62:movement.c    ****         
+  63:movement.c    ****         if (volt > 0)
+  54              		.loc 1 63 0
+  55 001e 002D     		cmp	r5, #0
+  56 0020 06DD     		ble	.L3
+  64:movement.c    ****         {
+  65:movement.c    ****             M2_FWD_Write(0);
+  57              		.loc 1 65 0
+  58 0022 0020     		movs	r0, #0
+  59 0024 FFF7FEFF 		bl	M2_FWD_Write
+  60              	.LVL4:
+  66:movement.c    ****             M2_BWD_Write(1);
+  61              		.loc 1 66 0
+  62 0028 0120     		movs	r0, #1
+  63 002a FFF7FEFF 		bl	M2_BWD_Write
+  64              	.LVL5:
+  65 002e 0EE0     		b	.L2
+  66              	.L3:
+  67:movement.c    ****         }
+  68:movement.c    ****         else if (volt < 0)
+  67              		.loc 1 68 0
+  68 0030 002D     		cmp	r5, #0
+  69 0032 06DA     		bge	.L4
+  69:movement.c    ****         {
+  70:movement.c    ****             M2_FWD_Write(1);
+  70              		.loc 1 70 0
+  71 0034 0120     		movs	r0, #1
+  72 0036 FFF7FEFF 		bl	M2_FWD_Write
+  73              	.LVL6:
+  71:movement.c    ****             M2_BWD_Write(0);
+  74              		.loc 1 71 0
+  75 003a 0020     		movs	r0, #0
+  76 003c FFF7FEFF 		bl	M2_BWD_Write
+  77              	.LVL7:
+  78 0040 05E0     		b	.L2
+  79              	.L4:
+  72:movement.c    ****         }
+  73:movement.c    ****         else
+  74:movement.c    ****         {
+  75:movement.c    ****             M2_FWD_Write(0);
+  80              		.loc 1 75 0
+  81 0042 0020     		movs	r0, #0
+  82 0044 FFF7FEFF 		bl	M2_FWD_Write
+  83              	.LVL8:
+  76:movement.c    ****             M2_BWD_Write(0);
+  84              		.loc 1 76 0
+  85 0048 0020     		movs	r0, #0
+  86 004a FFF7FEFF 		bl	M2_BWD_Write
+  87              	.LVL9:
+  88              	.L2:
+  77:movement.c    ****         }
+  78:movement.c    ****     }
+  79:movement.c    ****     
+  80:movement.c    ****     //turning left wheel
+  81:movement.c    ****     if (side == 'l'){
+  89              		.loc 1 81 0
+  90 004e 6C2C     		cmp	r4, #108
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccLQTamn.s 			page 4
+
+
+  91 0050 21D1     		bne	.L1
+  82:movement.c    ****         Standby_Write(1);
+  92              		.loc 1 82 0
+  93 0052 0120     		movs	r0, #1
+  94 0054 FFF7FEFF 		bl	Standby_Write
+  95              	.LVL10:
+  83:movement.c    ****         PWM_M1_WriteCompare(abs(volt));
+  96              		.loc 1 83 0
+  97 0058 85EAE570 		eor	r0, r5, r5, asr #31
+  98 005c A0EBE570 		sub	r0, r0, r5, asr #31
+  99 0060 80B2     		uxth	r0, r0
+ 100 0062 FFF7FEFF 		bl	PWM_M1_WriteCompare
+ 101              	.LVL11:
+  84:movement.c    ****         
+  85:movement.c    ****         if (volt > 0)
+ 102              		.loc 1 85 0
+ 103 0066 002D     		cmp	r5, #0
+ 104 0068 06DD     		ble	.L6
+  86:movement.c    ****         {
+  87:movement.c    ****             M1_FWD_Write(0);
+ 105              		.loc 1 87 0
+ 106 006a 0020     		movs	r0, #0
+ 107 006c FFF7FEFF 		bl	M1_FWD_Write
+ 108              	.LVL12:
+  88:movement.c    ****             M1_BWD_Write(1);
+ 109              		.loc 1 88 0
+ 110 0070 0120     		movs	r0, #1
+ 111 0072 FFF7FEFF 		bl	M1_BWD_Write
+ 112              	.LVL13:
+ 113 0076 38BD     		pop	{r3, r4, r5, pc}
+ 114              	.LVL14:
+ 115              	.L6:
+  89:movement.c    ****         }
+  90:movement.c    ****         else if (volt < 0)
+ 116              		.loc 1 90 0
+ 117 0078 002D     		cmp	r5, #0
+ 118 007a 06DA     		bge	.L7
+  91:movement.c    ****         {
+  92:movement.c    ****             M1_FWD_Write(1);
+ 119              		.loc 1 92 0
+ 120 007c 0120     		movs	r0, #1
+ 121 007e FFF7FEFF 		bl	M1_FWD_Write
+ 122              	.LVL15:
+  93:movement.c    ****             M1_BWD_Write(0);
+ 123              		.loc 1 93 0
+ 124 0082 0020     		movs	r0, #0
+ 125 0084 FFF7FEFF 		bl	M1_BWD_Write
+ 126              	.LVL16:
+ 127 0088 38BD     		pop	{r3, r4, r5, pc}
+ 128              	.LVL17:
+ 129              	.L7:
+  94:movement.c    ****         }
+  95:movement.c    ****         else
+  96:movement.c    ****         {
+  97:movement.c    ****             M1_FWD_Write(0);
+ 130              		.loc 1 97 0
+ 131 008a 0020     		movs	r0, #0
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccLQTamn.s 			page 5
+
+
+ 132 008c FFF7FEFF 		bl	M1_FWD_Write
+ 133              	.LVL18:
+  98:movement.c    ****             M1_BWD_Write(0);
+ 134              		.loc 1 98 0
+ 135 0090 0020     		movs	r0, #0
+ 136 0092 FFF7FEFF 		bl	M1_BWD_Write
+ 137              	.LVL19:
+ 138              	.L1:
+ 139 0096 38BD     		pop	{r3, r4, r5, pc}
+ 140              		.cfi_endproc
+ 141              	.LFE63:
+ 142              		.size	turn_wheel, .-turn_wheel
+ 143              		.section	.text.stop,"ax",%progbits
+ 144              		.align	2
+ 145              		.global	stop
+ 146              		.thumb
+ 147              		.thumb_func
+ 148              		.type	stop, %function
+ 149              	stop:
+ 150              	.LFB64:
+  99:movement.c    ****         }
+ 100:movement.c    ****     }
+ 101:movement.c    **** }
+ 102:movement.c    **** void stop(){
+ 151              		.loc 1 102 0
+ 152              		.cfi_startproc
+ 153              		@ args = 0, pretend = 0, frame = 0
+ 154              		@ frame_needed = 0, uses_anonymous_args = 0
+ 155 0000 08B5     		push	{r3, lr}
+ 156              		.cfi_def_cfa_offset 8
+ 157              		.cfi_offset 3, -8
+ 158              		.cfi_offset 14, -4
+ 103:movement.c    ****     turn_wheel('r', 0);
+ 159              		.loc 1 103 0
+ 160 0002 7220     		movs	r0, #114
+ 161 0004 0021     		movs	r1, #0
+ 162 0006 FFF7FEFF 		bl	turn_wheel
+ 163              	.LVL20:
+ 104:movement.c    ****     turn_wheel('l', 0);
+ 164              		.loc 1 104 0
+ 165 000a 6C20     		movs	r0, #108
+ 166 000c 0021     		movs	r1, #0
+ 167 000e FFF7FEFF 		bl	turn_wheel
+ 168              	.LVL21:
+ 169 0012 08BD     		pop	{r3, pc}
+ 170              		.cfi_endproc
+ 171              	.LFE64:
+ 172              		.size	stop, .-stop
+ 173              		.section	.text.step_response,"ax",%progbits
+ 174              		.align	2
+ 175              		.global	step_response
+ 176              		.thumb
+ 177              		.thumb_func
+ 178              		.type	step_response, %function
+ 179              	step_response:
+ 180              	.LFB65:
+ 105:movement.c    **** }
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccLQTamn.s 			page 6
+
+
+ 106:movement.c    **** 
+ 107:movement.c    **** void step_response(long int left_dest, long int right_dest){
+ 181              		.loc 1 107 0
+ 182              		.cfi_startproc
+ 183              		@ args = 0, pretend = 0, frame = 0
+ 184              		@ frame_needed = 0, uses_anonymous_args = 0
+ 185              		@ link register save eliminated.
+ 186              	.LVL22:
+ 108:movement.c    ****     
+ 109:movement.c    ****      time_ms_start = time_ms; 
+ 187              		.loc 1 109 0
+ 188 0000 064B     		ldr	r3, .L12
+ 189 0002 1A68     		ldr	r2, [r3]
+ 190 0004 064B     		ldr	r3, .L12+4
+ 191 0006 1A60     		str	r2, [r3]
+ 110:movement.c    ****     
+ 111:movement.c    ****      cur_dest_left = left_dest;   
+ 192              		.loc 1 111 0
+ 193 0008 064B     		ldr	r3, .L12+8
+ 194 000a 1860     		str	r0, [r3]
+ 112:movement.c    ****      cur_dest_right = right_dest;
+ 195              		.loc 1 112 0
+ 196 000c 5960     		str	r1, [r3, #4]
+ 113:movement.c    ****         
+ 114:movement.c    ****      inc_left = 0;
+ 197              		.loc 1 114 0
+ 198 000e 0023     		movs	r3, #0
+ 199 0010 054A     		ldr	r2, .L12+12
+ 200 0012 1360     		str	r3, [r2]
+ 115:movement.c    ****      inc_right = 0;
+ 201              		.loc 1 115 0
+ 202 0014 054A     		ldr	r2, .L12+16
+ 203 0016 1360     		str	r3, [r2]
+ 204 0018 7047     		bx	lr
+ 205              	.L13:
+ 206 001a 00BF     		.align	2
+ 207              	.L12:
+ 208 001c 00000000 		.word	time_ms
+ 209 0020 00000000 		.word	time_ms_start
+ 210 0024 00000000 		.word	.LANCHOR0
+ 211 0028 00000000 		.word	inc_left
+ 212 002c 00000000 		.word	inc_right
+ 213              		.cfi_endproc
+ 214              	.LFE65:
+ 215              		.size	step_response, .-step_response
+ 216              		.section	.text.test_values,"ax",%progbits
+ 217              		.align	2
+ 218              		.global	test_values
+ 219              		.thumb
+ 220              		.thumb_func
+ 221              		.type	test_values, %function
+ 222              	test_values:
+ 223              	.LFB66:
+ 116:movement.c    ****     
+ 117:movement.c    **** }
+ 118:movement.c    **** /*
+ 119:movement.c    **** void Get_StartSpeed(){
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccLQTamn.s 			page 7
+
+
+ 120:movement.c    ****     speed_left = 10*(cur_dest_left - prev_dest_left);
+ 121:movement.c    ****     speed_right = 10*(cur_dest_right - prev_dest_left);
+ 122:movement.c    **** }
+ 123:movement.c    ****   
+ 124:movement.c    **** */
+ 125:movement.c    **** void test_values(double kp, double kd, double ki)
+ 126:movement.c    **** {   Kp=kp;
+ 224              		.loc 1 126 0
+ 225              		.cfi_startproc
+ 226              		@ args = 8, pretend = 0, frame = 0
+ 227              		@ frame_needed = 0, uses_anonymous_args = 0
+ 228              		@ link register save eliminated.
+ 229              	.LVL23:
+ 230 0000 10B4     		push	{r4}
+ 231              		.cfi_def_cfa_offset 4
+ 232              		.cfi_offset 4, -4
+ 233              		.loc 1 126 0
+ 234 0002 074C     		ldr	r4, .L16
+ 235 0004 C4E90001 		strd	r0, [r4]
+ 127:movement.c    ****     Kd=kd;
+ 236              		.loc 1 127 0
+ 237 0008 0649     		ldr	r1, .L16+4
+ 238 000a C1E90023 		strd	r2, [r1]
+ 128:movement.c    ****     Ki=ki;
+ 239              		.loc 1 128 0
+ 240 000e 064B     		ldr	r3, .L16+8
+ 241 0010 DDE90101 		ldrd	r0, [sp, #4]
+ 242              	.LVL24:
+ 243 0014 C3E90001 		strd	r0, [r3]
+ 129:movement.c    **** }
+ 244              		.loc 1 129 0
+ 245 0018 5DF8044B 		ldr	r4, [sp], #4
+ 246              		.cfi_restore 4
+ 247              		.cfi_def_cfa_offset 0
+ 248              	.LVL25:
+ 249 001c 7047     		bx	lr
+ 250              	.L17:
+ 251 001e 00BF     		.align	2
+ 252              	.L16:
+ 253 0020 00000000 		.word	Kp
+ 254 0024 00000000 		.word	Kd
+ 255 0028 00000000 		.word	Ki
+ 256              		.cfi_endproc
+ 257              	.LFE66:
+ 258              		.size	test_values, .-test_values
+ 259              		.section	.text.new_path,"ax",%progbits
+ 260              		.align	2
+ 261              		.global	new_path
+ 262              		.thumb
+ 263              		.thumb_func
+ 264              		.type	new_path, %function
+ 265              	new_path:
+ 266              	.LFB67:
+ 130:movement.c    **** void new_path(int incleft, int incright){
+ 267              		.loc 1 130 0
+ 268              		.cfi_startproc
+ 269              		@ args = 0, pretend = 0, frame = 0
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccLQTamn.s 			page 8
+
+
+ 270              		@ frame_needed = 0, uses_anonymous_args = 0
+ 271              		@ link register save eliminated.
+ 272              	.LVL26:
+ 131:movement.c    ****     
+ 132:movement.c    ****     
+ 133:movement.c    ****     inc_left = incleft;
+ 273              		.loc 1 133 0
+ 274 0000 024B     		ldr	r3, .L19
+ 275 0002 1860     		str	r0, [r3]
+ 134:movement.c    ****     inc_right = incright;
+ 276              		.loc 1 134 0
+ 277 0004 024B     		ldr	r3, .L19+4
+ 278 0006 1960     		str	r1, [r3]
+ 279 0008 7047     		bx	lr
+ 280              	.L20:
+ 281 000a 00BF     		.align	2
+ 282              	.L19:
+ 283 000c 00000000 		.word	inc_left
+ 284 0010 00000000 		.word	inc_right
+ 285              		.cfi_endproc
+ 286              	.LFE67:
+ 287              		.size	new_path, .-new_path
+ 288              		.section	.text.Get_Destination,"ax",%progbits
+ 289              		.align	2
+ 290              		.global	Get_Destination
+ 291              		.thumb
+ 292              		.thumb_func
+ 293              		.type	Get_Destination, %function
+ 294              	Get_Destination:
+ 295              	.LFB68:
+ 135:movement.c    ****     
+ 136:movement.c    ****     
+ 137:movement.c    ****     
+ 138:movement.c    ****     
+ 139:movement.c    ****     /*
+ 140:movement.c    ****     
+ 141:movement.c    ****     int speed = 30;
+ 142:movement.c    ****     inc_left = speed;
+ 143:movement.c    ****     inc_right = speed;
+ 144:movement.c    ****     
+ 145:movement.c    ****     if (cur_dest_right < fin_dest_right){
+ 146:movement.c    ****         direction_right = 1;}
+ 147:movement.c    ****     else{
+ 148:movement.c    ****         direction_right = -1;}
+ 149:movement.c    ****     
+ 150:movement.c    ****     if (cur_dest_left < fin_dest_left){
+ 151:movement.c    ****         direction_left = 1;}
+ 152:movement.c    ****     else{
+ 153:movement.c    ****         direction_left = -1;}
+ 154:movement.c    ****     
+ 155:movement.c    ****     iterations_left = fin_dest_left - cur_dest_left;
+ 156:movement.c    ****     iterations_count_left = 0;
+ 157:movement.c    ****     
+ 158:movement.c    ****     iterations_right = fin_dest_right - cur_dest_right;
+ 159:movement.c    ****     iterations_count_right = 0;
+ 160:movement.c    ****     
+ 161:movement.c    ****     */
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccLQTamn.s 			page 9
+
+
+ 162:movement.c    ****     
+ 163:movement.c    **** }
+ 164:movement.c    **** 
+ 165:movement.c    **** 
+ 166:movement.c    **** 
+ 167:movement.c    **** void Get_Destination(){
+ 296              		.loc 1 167 0
+ 297              		.cfi_startproc
+ 298              		@ args = 0, pretend = 0, frame = 0
+ 299              		@ frame_needed = 0, uses_anonymous_args = 0
+ 300              		@ link register save eliminated.
+ 168:movement.c    ****     
+ 169:movement.c    ****     cur_dest_left = cur_dest_left + inc_left;
+ 301              		.loc 1 169 0
+ 302 0000 054B     		ldr	r3, .L22
+ 303 0002 1968     		ldr	r1, [r3]
+ 304 0004 054A     		ldr	r2, .L22+4
+ 305 0006 1268     		ldr	r2, [r2]
+ 306 0008 0A44     		add	r2, r2, r1
+ 307 000a 1A60     		str	r2, [r3]
+ 170:movement.c    ****     cur_dest_right = cur_dest_right + inc_right;
+ 308              		.loc 1 170 0
+ 309 000c 5968     		ldr	r1, [r3, #4]
+ 310 000e 044A     		ldr	r2, .L22+8
+ 311 0010 1268     		ldr	r2, [r2]
+ 312 0012 0A44     		add	r2, r2, r1
+ 313 0014 5A60     		str	r2, [r3, #4]
+ 314 0016 7047     		bx	lr
+ 315              	.L23:
+ 316              		.align	2
+ 317              	.L22:
+ 318 0018 00000000 		.word	.LANCHOR0
+ 319 001c 00000000 		.word	inc_left
+ 320 0020 00000000 		.word	inc_right
+ 321              		.cfi_endproc
+ 322              	.LFE68:
+ 323              		.size	Get_Destination, .-Get_Destination
+ 324              		.section	.text.Get_Position,"ax",%progbits
+ 325              		.align	2
+ 326              		.global	Get_Position
+ 327              		.thumb
+ 328              		.thumb_func
+ 329              		.type	Get_Position, %function
+ 330              	Get_Position:
+ 331              	.LFB69:
+ 171:movement.c    **** }
+ 172:movement.c    **** void Get_Position(){
+ 332              		.loc 1 172 0
+ 333              		.cfi_startproc
+ 334              		@ args = 0, pretend = 0, frame = 0
+ 335              		@ frame_needed = 0, uses_anonymous_args = 0
+ 336 0000 08B5     		push	{r3, lr}
+ 337              		.cfi_def_cfa_offset 8
+ 338              		.cfi_offset 3, -8
+ 339              		.cfi_offset 14, -4
+ 173:movement.c    ****     cur_pos_right = -64*M2QuadDec_GetCounter();
+ 340              		.loc 1 173 0
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccLQTamn.s 			page 10
+
+
+ 341 0002 FFF7FEFF 		bl	M2QuadDec_GetCounter
+ 342              	.LVL27:
+ 343 0006 4042     		negs	r0, r0
+ 344 0008 8001     		lsls	r0, r0, #6
+ 345 000a 044B     		ldr	r3, .L26
+ 346 000c 1860     		str	r0, [r3]
+ 174:movement.c    ****     cur_pos_left = -64*M1QuadDec_GetCounter();
+ 347              		.loc 1 174 0
+ 348 000e FFF7FEFF 		bl	M1QuadDec_GetCounter
+ 349              	.LVL28:
+ 350 0012 4042     		negs	r0, r0
+ 351 0014 8001     		lsls	r0, r0, #6
+ 352 0016 024B     		ldr	r3, .L26+4
+ 353 0018 1860     		str	r0, [r3]
+ 354 001a 08BD     		pop	{r3, pc}
+ 355              	.L27:
+ 356              		.align	2
+ 357              	.L26:
+ 358 001c 00000000 		.word	cur_pos_right
+ 359 0020 00000000 		.word	cur_pos_left
+ 360              		.cfi_endproc
+ 361              	.LFE69:
+ 362              		.size	Get_Position, .-Get_Position
+ 363              		.section	.text.Get_Error,"ax",%progbits
+ 364              		.align	2
+ 365              		.global	Get_Error
+ 366              		.thumb
+ 367              		.thumb_func
+ 368              		.type	Get_Error, %function
+ 369              	Get_Error:
+ 370              	.LFB70:
+ 175:movement.c    **** }
+ 176:movement.c    **** void Get_Error(){
+ 371              		.loc 1 176 0
+ 372              		.cfi_startproc
+ 373              		@ args = 0, pretend = 0, frame = 0
+ 374              		@ frame_needed = 0, uses_anonymous_args = 0
+ 375              		@ link register save eliminated.
+ 376 0000 10B4     		push	{r4}
+ 377              		.cfi_def_cfa_offset 4
+ 378              		.cfi_offset 4, -4
+ 177:movement.c    ****     error_left_prev = error_left;
+ 379              		.loc 1 177 0
+ 380 0002 0F4C     		ldr	r4, .L30
+ 381 0004 2268     		ldr	r2, [r4]
+ 382 0006 0F4B     		ldr	r3, .L30+4
+ 383 0008 1A60     		str	r2, [r3]
+ 178:movement.c    ****     error_right_prev = error_right;
+ 384              		.loc 1 178 0
+ 385 000a 0F49     		ldr	r1, .L30+8
+ 386 000c 0A68     		ldr	r2, [r1]
+ 387 000e 0F4B     		ldr	r3, .L30+12
+ 388 0010 1A60     		str	r2, [r3]
+ 179:movement.c    ****     
+ 180:movement.c    ****     error_left = cur_dest_left - cur_pos_left;
+ 389              		.loc 1 180 0
+ 390 0012 0F48     		ldr	r0, .L30+16
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccLQTamn.s 			page 11
+
+
+ 391 0014 0368     		ldr	r3, [r0]
+ 392 0016 0F4A     		ldr	r2, .L30+20
+ 393 0018 1268     		ldr	r2, [r2]
+ 394 001a 9A1A     		subs	r2, r3, r2
+ 395 001c 2260     		str	r2, [r4]
+ 181:movement.c    ****     error_right = cur_dest_right - cur_pos_right;
+ 396              		.loc 1 181 0
+ 397 001e 4368     		ldr	r3, [r0, #4]
+ 398 0020 0D48     		ldr	r0, .L30+24
+ 399 0022 0068     		ldr	r0, [r0]
+ 400 0024 1B1A     		subs	r3, r3, r0
+ 401 0026 0B60     		str	r3, [r1]
+ 182:movement.c    ****     
+ 183:movement.c    ****     error_left_sum = error_left_sum + error_left;
+ 402              		.loc 1 183 0
+ 403 0028 0C48     		ldr	r0, .L30+28
+ 404 002a 0168     		ldr	r1, [r0]
+ 405 002c 0A44     		add	r2, r2, r1
+ 406 002e 0260     		str	r2, [r0]
+ 184:movement.c    ****     error_right_sum = error_right_sum + error_right;
+ 407              		.loc 1 184 0
+ 408 0030 0B49     		ldr	r1, .L30+32
+ 409 0032 0A68     		ldr	r2, [r1]
+ 410 0034 1344     		add	r3, r3, r2
+ 411 0036 0B60     		str	r3, [r1]
+ 185:movement.c    **** 
+ 186:movement.c    **** }
+ 412              		.loc 1 186 0
+ 413 0038 5DF8044B 		ldr	r4, [sp], #4
+ 414              		.cfi_restore 4
+ 415              		.cfi_def_cfa_offset 0
+ 416 003c 7047     		bx	lr
+ 417              	.L31:
+ 418 003e 00BF     		.align	2
+ 419              	.L30:
+ 420 0040 00000000 		.word	error_left
+ 421 0044 00000000 		.word	error_left_prev
+ 422 0048 00000000 		.word	error_right
+ 423 004c 00000000 		.word	error_right_prev
+ 424 0050 00000000 		.word	.LANCHOR0
+ 425 0054 00000000 		.word	cur_pos_left
+ 426 0058 00000000 		.word	cur_pos_right
+ 427 005c 00000000 		.word	error_left_sum
+ 428 0060 00000000 		.word	error_right_sum
+ 429              		.cfi_endproc
+ 430              	.LFE70:
+ 431              		.size	Get_Error, .-Get_Error
+ 432              		.global	__aeabi_i2d
+ 433              		.global	__aeabi_dmul
+ 434              		.global	__aeabi_dadd
+ 435              		.global	__aeabi_d2iz
+ 436              		.section	.text.Get_PID,"ax",%progbits
+ 437              		.align	2
+ 438              		.global	Get_PID
+ 439              		.thumb
+ 440              		.thumb_func
+ 441              		.type	Get_PID, %function
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccLQTamn.s 			page 12
+
+
+ 442              	Get_PID:
+ 443              	.LFB71:
+ 187:movement.c    **** 
+ 188:movement.c    **** void Get_PID(){   
+ 444              		.loc 1 188 0
+ 445              		.cfi_startproc
+ 446              		@ args = 0, pretend = 0, frame = 8
+ 447              		@ frame_needed = 0, uses_anonymous_args = 0
+ 448 0000 2DE9F047 		push	{r4, r5, r6, r7, r8, r9, r10, lr}
+ 449              		.cfi_def_cfa_offset 32
+ 450              		.cfi_offset 4, -32
+ 451              		.cfi_offset 5, -28
+ 452              		.cfi_offset 6, -24
+ 453              		.cfi_offset 7, -20
+ 454              		.cfi_offset 8, -16
+ 455              		.cfi_offset 9, -12
+ 456              		.cfi_offset 10, -8
+ 457              		.cfi_offset 14, -4
+ 458 0004 82B0     		sub	sp, sp, #8
+ 459              		.cfi_def_cfa_offset 40
+ 189:movement.c    ****     volt_motor_left =  ( Kp * error_left ) + ( Ki * error_left_sum ) + ( Kd * (error_left - error_l
+ 460              		.loc 1 189 0
+ 461 0006 464B     		ldr	r3, .L38
+ 462 0008 D3F800A0 		ldr	r10, [r3]
+ 463 000c 454B     		ldr	r3, .L38+4
+ 464 000e D3E90067 		ldrd	r6, [r3]
+ 465 0012 5046     		mov	r0, r10
+ 466 0014 FFF7FEFF 		bl	__aeabi_i2d
+ 467              	.LVL29:
+ 468 0018 3246     		mov	r2, r6
+ 469 001a 3B46     		mov	r3, r7
+ 470 001c FFF7FEFF 		bl	__aeabi_dmul
+ 471              	.LVL30:
+ 472 0020 8046     		mov	r8, r0
+ 473 0022 8946     		mov	r9, r1
+ 474 0024 404B     		ldr	r3, .L38+8
+ 475 0026 D3E90045 		ldrd	r4, [r3]
+ 476 002a 404B     		ldr	r3, .L38+12
+ 477 002c 1868     		ldr	r0, [r3]
+ 478 002e FFF7FEFF 		bl	__aeabi_i2d
+ 479              	.LVL31:
+ 480 0032 2246     		mov	r2, r4
+ 481 0034 2B46     		mov	r3, r5
+ 482 0036 FFF7FEFF 		bl	__aeabi_dmul
+ 483              	.LVL32:
+ 484 003a 0246     		mov	r2, r0
+ 485 003c 0B46     		mov	r3, r1
+ 486 003e 4046     		mov	r0, r8
+ 487 0040 4946     		mov	r1, r9
+ 488 0042 FFF7FEFF 		bl	__aeabi_dadd
+ 489              	.LVL33:
+ 490 0046 CDE90001 		strd	r0, [sp]
+ 491 004a 394B     		ldr	r3, .L38+16
+ 492 004c 1868     		ldr	r0, [r3]
+ 493 004e 394B     		ldr	r3, .L38+20
+ 494 0050 D3E90089 		ldrd	r8, [r3]
+ 495 0054 C0EB0A00 		rsb	r0, r0, r10
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccLQTamn.s 			page 13
+
+
+ 496 0058 FFF7FEFF 		bl	__aeabi_i2d
+ 497              	.LVL34:
+ 498 005c 4246     		mov	r2, r8
+ 499 005e 4B46     		mov	r3, r9
+ 500 0060 FFF7FEFF 		bl	__aeabi_dmul
+ 501              	.LVL35:
+ 502 0064 0246     		mov	r2, r0
+ 503 0066 0B46     		mov	r3, r1
+ 504 0068 DDE90001 		ldrd	r0, [sp]
+ 505 006c FFF7FEFF 		bl	__aeabi_dadd
+ 506              	.LVL36:
+ 507 0070 FFF7FEFF 		bl	__aeabi_d2iz
+ 508              	.LVL37:
+ 509 0074 304B     		ldr	r3, .L38+24
+ 510 0076 1860     		str	r0, [r3]
+ 190:movement.c    ****     //volt_motor_left =  adj_motor_left;
+ 191:movement.c    ****     
+ 192:movement.c    ****         if (volt_motor_left < -65535){
+ 511              		.loc 1 192 0
+ 512 0078 10F5803F 		cmn	r0, #65536
+ 513 007c 02DC     		bgt	.L33
+ 193:movement.c    ****             volt_motor_left = -65535;}
+ 514              		.loc 1 193 0
+ 515 007e 2F4A     		ldr	r2, .L38+28
+ 516 0080 1A60     		str	r2, [r3]
+ 517 0082 06E0     		b	.L34
+ 518              	.L33:
+ 194:movement.c    ****         else if (volt_motor_left > 65535){
+ 519              		.loc 1 194 0
+ 520 0084 B0F5803F 		cmp	r0, #65536
+ 521 0088 03DB     		blt	.L34
+ 195:movement.c    ****             volt_motor_left = 65535;}
+ 522              		.loc 1 195 0
+ 523 008a 4FF6FF72 		movw	r2, #65535
+ 524 008e 2A4B     		ldr	r3, .L38+24
+ 525 0090 1A60     		str	r2, [r3]
+ 526              	.L34:
+ 196:movement.c    ****     
+ 197:movement.c    ****     volt_motor_right = ( Kp * error_right ) + ( Ki * error_right_sum ) + ( Kd * (error_right - erro
+ 527              		.loc 1 197 0
+ 528 0092 2B4B     		ldr	r3, .L38+32
+ 529 0094 D3F800A0 		ldr	r10, [r3]
+ 530 0098 5046     		mov	r0, r10
+ 531 009a FFF7FEFF 		bl	__aeabi_i2d
+ 532              	.LVL38:
+ 533 009e 0246     		mov	r2, r0
+ 534 00a0 0B46     		mov	r3, r1
+ 535 00a2 3046     		mov	r0, r6
+ 536 00a4 3946     		mov	r1, r7
+ 537 00a6 FFF7FEFF 		bl	__aeabi_dmul
+ 538              	.LVL39:
+ 539 00aa 0646     		mov	r6, r0
+ 540 00ac 0F46     		mov	r7, r1
+ 541 00ae 254B     		ldr	r3, .L38+36
+ 542 00b0 1868     		ldr	r0, [r3]
+ 543 00b2 FFF7FEFF 		bl	__aeabi_i2d
+ 544              	.LVL40:
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccLQTamn.s 			page 14
+
+
+ 545 00b6 0246     		mov	r2, r0
+ 546 00b8 0B46     		mov	r3, r1
+ 547 00ba 2046     		mov	r0, r4
+ 548 00bc 2946     		mov	r1, r5
+ 549 00be FFF7FEFF 		bl	__aeabi_dmul
+ 550              	.LVL41:
+ 551 00c2 0246     		mov	r2, r0
+ 552 00c4 0B46     		mov	r3, r1
+ 553 00c6 3046     		mov	r0, r6
+ 554 00c8 3946     		mov	r1, r7
+ 555 00ca FFF7FEFF 		bl	__aeabi_dadd
+ 556              	.LVL42:
+ 557 00ce 0446     		mov	r4, r0
+ 558 00d0 0D46     		mov	r5, r1
+ 559 00d2 1D4B     		ldr	r3, .L38+40
+ 560 00d4 1868     		ldr	r0, [r3]
+ 561 00d6 C0EB0A00 		rsb	r0, r0, r10
+ 562 00da FFF7FEFF 		bl	__aeabi_i2d
+ 563              	.LVL43:
+ 564 00de 0246     		mov	r2, r0
+ 565 00e0 0B46     		mov	r3, r1
+ 566 00e2 4046     		mov	r0, r8
+ 567 00e4 4946     		mov	r1, r9
+ 568 00e6 FFF7FEFF 		bl	__aeabi_dmul
+ 569              	.LVL44:
+ 570 00ea 0246     		mov	r2, r0
+ 571 00ec 0B46     		mov	r3, r1
+ 572 00ee 2046     		mov	r0, r4
+ 573 00f0 2946     		mov	r1, r5
+ 574 00f2 FFF7FEFF 		bl	__aeabi_dadd
+ 575              	.LVL45:
+ 576 00f6 FFF7FEFF 		bl	__aeabi_d2iz
+ 577              	.LVL46:
+ 578 00fa 144B     		ldr	r3, .L38+44
+ 579 00fc 1860     		str	r0, [r3]
+ 198:movement.c    ****     //volt_motor_right =  adj_motor_right;
+ 199:movement.c    ****     
+ 200:movement.c    ****         if (volt_motor_right < -65535){
+ 580              		.loc 1 200 0
+ 581 00fe 10F5803F 		cmn	r0, #65536
+ 582 0102 02DC     		bgt	.L35
+ 201:movement.c    ****             volt_motor_right = -65535;}
+ 583              		.loc 1 201 0
+ 584 0104 0D4A     		ldr	r2, .L38+28
+ 585 0106 1A60     		str	r2, [r3]
+ 586 0108 06E0     		b	.L32
+ 587              	.L35:
+ 202:movement.c    ****         else if (volt_motor_right > 65535){
+ 588              		.loc 1 202 0
+ 589 010a B0F5803F 		cmp	r0, #65536
+ 590 010e 03DB     		blt	.L32
+ 203:movement.c    ****             volt_motor_right = 65535;}
+ 591              		.loc 1 203 0
+ 592 0110 4FF6FF72 		movw	r2, #65535
+ 593 0114 0D4B     		ldr	r3, .L38+44
+ 594 0116 1A60     		str	r2, [r3]
+ 595              	.L32:
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccLQTamn.s 			page 15
+
+
+ 204:movement.c    **** }    
+ 596              		.loc 1 204 0
+ 597 0118 02B0     		add	sp, sp, #8
+ 598              		.cfi_def_cfa_offset 32
+ 599              		@ sp needed
+ 600 011a BDE8F087 		pop	{r4, r5, r6, r7, r8, r9, r10, pc}
+ 601              	.L39:
+ 602 011e 00BF     		.align	2
+ 603              	.L38:
+ 604 0120 00000000 		.word	error_left
+ 605 0124 00000000 		.word	Kp
+ 606 0128 00000000 		.word	Ki
+ 607 012c 00000000 		.word	error_left_sum
+ 608 0130 00000000 		.word	error_left_prev
+ 609 0134 00000000 		.word	Kd
+ 610 0138 00000000 		.word	volt_motor_left
+ 611 013c 0100FFFF 		.word	-65535
+ 612 0140 00000000 		.word	error_right
+ 613 0144 00000000 		.word	error_right_sum
+ 614 0148 00000000 		.word	error_right_prev
+ 615 014c 00000000 		.word	volt_motor_right
+ 616              		.cfi_endproc
+ 617              	.LFE71:
+ 618              		.size	Get_PID, .-Get_PID
+ 619              		.section	.text.Adj_Volt,"ax",%progbits
+ 620              		.align	2
+ 621              		.global	Adj_Volt
+ 622              		.thumb
+ 623              		.thumb_func
+ 624              		.type	Adj_Volt, %function
+ 625              	Adj_Volt:
+ 626              	.LFB72:
+ 205:movement.c    **** void Adj_Volt(){
+ 627              		.loc 1 205 0
+ 628              		.cfi_startproc
+ 629              		@ args = 0, pretend = 0, frame = 0
+ 630              		@ frame_needed = 0, uses_anonymous_args = 0
+ 631 0000 08B5     		push	{r3, lr}
+ 632              		.cfi_def_cfa_offset 8
+ 633              		.cfi_offset 3, -8
+ 634              		.cfi_offset 14, -4
+ 206:movement.c    ****     
+ 207:movement.c    ****     turn_wheel('l', volt_motor_left);
+ 635              		.loc 1 207 0
+ 636 0002 6C20     		movs	r0, #108
+ 637 0004 044B     		ldr	r3, .L42
+ 638 0006 1968     		ldr	r1, [r3]
+ 639 0008 FFF7FEFF 		bl	turn_wheel
+ 640              	.LVL47:
+ 208:movement.c    ****     turn_wheel('r', volt_motor_right);
+ 641              		.loc 1 208 0
+ 642 000c 7220     		movs	r0, #114
+ 643 000e 034B     		ldr	r3, .L42+4
+ 644 0010 1968     		ldr	r1, [r3]
+ 645 0012 FFF7FEFF 		bl	turn_wheel
+ 646              	.LVL48:
+ 647 0016 08BD     		pop	{r3, pc}
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccLQTamn.s 			page 16
+
+
+ 648              	.L43:
+ 649              		.align	2
+ 650              	.L42:
+ 651 0018 00000000 		.word	volt_motor_left
+ 652 001c 00000000 		.word	volt_motor_right
+ 653              		.cfi_endproc
+ 654              	.LFE72:
+ 655              		.size	Adj_Volt, .-Adj_Volt
+ 656              		.section	.text.Check_Speed,"ax",%progbits
+ 657              		.align	2
+ 658              		.global	Check_Speed
+ 659              		.thumb
+ 660              		.thumb_func
+ 661              		.type	Check_Speed, %function
+ 662              	Check_Speed:
+ 663              	.LFB73:
+ 209:movement.c    **** }
+ 210:movement.c    **** 
+ 211:movement.c    **** void Check_Speed(){
+ 664              		.loc 1 211 0
+ 665              		.cfi_startproc
+ 666              		@ args = 0, pretend = 0, frame = 0
+ 667              		@ frame_needed = 0, uses_anonymous_args = 0
+ 668 0000 08B5     		push	{r3, lr}
+ 669              		.cfi_def_cfa_offset 8
+ 670              		.cfi_offset 3, -8
+ 671              		.cfi_offset 14, -4
+ 212:movement.c    ****     time_ms = time_ms + 1;
+ 672              		.loc 1 212 0
+ 673 0002 074A     		ldr	r2, .L46
+ 674 0004 1368     		ldr	r3, [r2]
+ 675 0006 0133     		adds	r3, r3, #1
+ 676 0008 1360     		str	r3, [r2]
+ 213:movement.c    ****     Get_Destination();  // update the destination
+ 677              		.loc 1 213 0
+ 678 000a FFF7FEFF 		bl	Get_Destination
+ 679              	.LVL49:
+ 214:movement.c    ****     Get_Position();     // update the position
+ 680              		.loc 1 214 0
+ 681 000e FFF7FEFF 		bl	Get_Position
+ 682              	.LVL50:
+ 215:movement.c    ****     Get_Error();        // update the current and previous errors
+ 683              		.loc 1 215 0
+ 684 0012 FFF7FEFF 		bl	Get_Error
+ 685              	.LVL51:
+ 216:movement.c    ****     Get_PID();          // calculate the current voltages required
+ 686              		.loc 1 216 0
+ 687 0016 FFF7FEFF 		bl	Get_PID
+ 688              	.LVL52:
+ 217:movement.c    ****     Adj_Volt();      // update the speed of the wheVels
+ 689              		.loc 1 217 0
+ 690 001a FFF7FEFF 		bl	Adj_Volt
+ 691              	.LVL53:
+ 692 001e 08BD     		pop	{r3, pc}
+ 693              	.L47:
+ 694              		.align	2
+ 695              	.L46:
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccLQTamn.s 			page 17
+
+
+ 696 0020 00000000 		.word	time_ms
+ 697              		.cfi_endproc
+ 698              	.LFE73:
+ 699              		.size	Check_Speed, .-Check_Speed
+ 700              		.section	.text.Print_Values,"ax",%progbits
+ 701              		.align	2
+ 702              		.global	Print_Values
+ 703              		.thumb
+ 704              		.thumb_func
+ 705              		.type	Print_Values, %function
+ 706              	Print_Values:
+ 707              	.LFB74:
+ 218:movement.c    ****     
+ 219:movement.c    **** }
+ 220:movement.c    **** 
+ 221:movement.c    **** void Print_Values(){
+ 708              		.loc 1 221 0
+ 709              		.cfi_startproc
+ 710              		@ args = 0, pretend = 0, frame = 0
+ 711              		@ frame_needed = 0, uses_anonymous_args = 0
+ 712 0000 10B5     		push	{r4, lr}
+ 713              		.cfi_def_cfa_offset 8
+ 714              		.cfi_offset 4, -8
+ 715              		.cfi_offset 14, -4
+ 716 0002 86B0     		sub	sp, sp, #24
+ 717              		.cfi_def_cfa_offset 32
+ 222:movement.c    ****     sprintf(mystring, "%d|%d|%ld|%ld|%ld|%d|%d|%d\n", error_left, volt_motor_left, cur_pos_left, cu
+ 718              		.loc 1 222 0
+ 719 0004 104B     		ldr	r3, .L50
+ 720 0006 1A68     		ldr	r2, [r3]
+ 721 0008 104C     		ldr	r4, .L50+4
+ 722 000a 114B     		ldr	r3, .L50+8
+ 723 000c 1B68     		ldr	r3, [r3]
+ 724 000e 1149     		ldr	r1, .L50+12
+ 725 0010 0968     		ldr	r1, [r1]
+ 726 0012 0091     		str	r1, [sp]
+ 727 0014 1049     		ldr	r1, .L50+16
+ 728 0016 0968     		ldr	r1, [r1]
+ 729 0018 0191     		str	r1, [sp, #4]
+ 730 001a 1049     		ldr	r1, .L50+20
+ 731 001c 0968     		ldr	r1, [r1]
+ 732 001e 1048     		ldr	r0, .L50+24
+ 733 0020 0068     		ldr	r0, [r0]
+ 734 0022 091A     		subs	r1, r1, r0
+ 735 0024 0291     		str	r1, [sp, #8]
+ 736 0026 0392     		str	r2, [sp, #12]
+ 737 0028 0E49     		ldr	r1, .L50+28
+ 738 002a 0968     		ldr	r1, [r1]
+ 739 002c 511A     		subs	r1, r2, r1
+ 740 002e 0491     		str	r1, [sp, #16]
+ 741 0030 0D49     		ldr	r1, .L50+32
+ 742 0032 0968     		ldr	r1, [r1]
+ 743 0034 0591     		str	r1, [sp, #20]
+ 744 0036 2046     		mov	r0, r4
+ 745 0038 0C49     		ldr	r1, .L50+36
+ 746 003a FFF7FEFF 		bl	sprintf
+ 747              	.LVL54:
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccLQTamn.s 			page 18
+
+
+ 223:movement.c    ****     UART_PutString(mystring);
+ 748              		.loc 1 223 0
+ 749 003e 2046     		mov	r0, r4
+ 750 0040 FFF7FEFF 		bl	UART_PutString
+ 751              	.LVL55:
+ 224:movement.c    ****     
+ 225:movement.c    ****     /*
+ 226:movement.c    ****     sprintf(mystring, "left error:%d     right error: %d\n", error_left, error_right);
+ 227:movement.c    ****     UART_PutString(mystring);
+ 228:movement.c    ****     sprintf(mystring, "left voltage:%d     right voltage: %d\n", volt_motor_left, volt_motor_right)
+ 229:movement.c    ****     UART_PutString(mystring);
+ 230:movement.c    ****     sprintf(mystring, "left position:%ld     right position: %ld\n", cur_pos_left, cur_pos_right);
+ 231:movement.c    ****     UART_PutString(mystring);
+ 232:movement.c    ****     sprintf(mystring, "left destination:%ld     right destination: %ld\n", cur_dest_left, cur_dest_
+ 233:movement.c    ****     UART_PutString(mystring);
+ 234:movement.c    ****     */
+ 235:movement.c    **** }
+ 752              		.loc 1 235 0
+ 753 0044 06B0     		add	sp, sp, #24
+ 754              		.cfi_def_cfa_offset 8
+ 755              		@ sp needed
+ 756 0046 10BD     		pop	{r4, pc}
+ 757              	.L51:
+ 758              		.align	2
+ 759              	.L50:
+ 760 0048 00000000 		.word	error_left
+ 761 004c 00000000 		.word	mystring
+ 762 0050 00000000 		.word	volt_motor_left
+ 763 0054 00000000 		.word	cur_pos_left
+ 764 0058 00000000 		.word	.LANCHOR0
+ 765 005c 00000000 		.word	time_ms
+ 766 0060 00000000 		.word	time_ms_start
+ 767 0064 00000000 		.word	error_left_prev
+ 768 0068 00000000 		.word	error_left_sum
+ 769 006c 00000000 		.word	.LC0
+ 770              		.cfi_endproc
+ 771              	.LFE74:
+ 772              		.size	Print_Values, .-Print_Values
+ 773              		.comm	time_ms_start,4,4
+ 774              		.comm	time_ms,4,4
+ 775              		.comm	inc_right,4,4
+ 776              		.comm	inc_left,4,4
+ 777              		.comm	speed_right,4,4
+ 778              		.comm	speed_left,4,4
+ 779              		.comm	Kd,8,8
+ 780              		.comm	Ki,8,8
+ 781              		.comm	Kp,8,8
+ 782              		.comm	error_right_sum,4,4
+ 783              		.comm	error_left_sum,4,4
+ 784              		.comm	error_right_prev,4,4
+ 785              		.comm	error_left_prev,4,4
+ 786              		.comm	error_right,4,4
+ 787              		.comm	error_left,4,4
+ 788              		.comm	adj_motor_right,4,4
+ 789              		.comm	adj_motor_left,4,4
+ 790              		.comm	volt_motor_right,4,4
+ 791              		.comm	volt_motor_left,4,4
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccLQTamn.s 			page 19
+
+
+ 792              		.comm	last_pos_left,4,4
+ 793              		.comm	last_pos_right,4,4
+ 794              		.comm	cur_pos_right,4,4
+ 795              		.comm	cur_pos_left,4,4
+ 796              		.comm	prev_dest_left,4,4
+ 797              		.comm	prev_dest_right,4,4
+ 798              		.global	cur_dest_right
+ 799              		.global	cur_dest_left
+ 800              		.comm	mystring,50,4
+ 801              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 802              		.align	2
+ 803              	.LC0:
+ 804 0000 25647C25 		.ascii	"%d|%d|%ld|%ld|%ld|%d|%d|%d\012\000"
+ 804      647C256C 
+ 804      647C256C 
+ 804      647C256C 
+ 804      647C2564 
+ 805              		.bss
+ 806              		.align	2
+ 807              		.set	.LANCHOR0,. + 0
+ 808              		.type	cur_dest_left, %object
+ 809              		.size	cur_dest_left, 4
+ 810              	cur_dest_left:
+ 811 0000 00000000 		.space	4
+ 812              		.type	cur_dest_right, %object
+ 813              		.size	cur_dest_right, 4
+ 814              	cur_dest_right:
+ 815 0004 00000000 		.space	4
+ 816              		.text
+ 817              	.Letext0:
+ 818              		.file 2 "c:\\program files (x86)\\cypress\\psoc creator\\4.0\\psoc creator\\import\\gnu\\arm\\4.9.
+ 819              		.file 3 "c:\\program files (x86)\\cypress\\psoc creator\\4.0\\psoc creator\\import\\gnu\\arm\\4.9.
+ 820              		.file 4 "Generated_Source\\PSoC5/cytypes.h"
+ 821              		.file 5 "Generated_Source\\PSoC5/core_cm3.h"
+ 822              		.file 6 "Generated_Source\\PSoC5/Standby.h"
+ 823              		.file 7 "Generated_Source\\PSoC5/PWM_M2.h"
+ 824              		.file 8 "Generated_Source\\PSoC5/M2_FWD.h"
+ 825              		.file 9 "Generated_Source\\PSoC5/M2_BWD.h"
+ 826              		.file 10 "Generated_Source\\PSoC5/PWM_M1.h"
+ 827              		.file 11 "Generated_Source\\PSoC5/M1_FWD.h"
+ 828              		.file 12 "Generated_Source\\PSoC5/M1_BWD.h"
+ 829              		.file 13 "Generated_Source\\PSoC5/M2QuadDec.h"
+ 830              		.file 14 "Generated_Source\\PSoC5/M1QuadDec.h"
+ 831              		.file 15 "Generated_Source\\PSoC5/UART.h"
+ 832              		.file 16 "c:\\program files (x86)\\cypress\\psoc creator\\4.0\\psoc creator\\import\\gnu\\arm\\4.9
+ 833              		.section	.debug_info,"",%progbits
+ 834              	.Ldebug_info0:
+ 835 0000 18070000 		.4byte	0x718
+ 836 0004 0400     		.2byte	0x4
+ 837 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 838 000a 04       		.byte	0x4
+ 839 000b 01       		.uleb128 0x1
+ 840 000c 04030000 		.4byte	.LASF74
+ 841 0010 01       		.byte	0x1
+ 842 0011 0A040000 		.4byte	.LASF75
+ 843 0015 CE010000 		.4byte	.LASF76
+ 844 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccLQTamn.s 			page 20
+
+
+ 845 001d 00000000 		.4byte	0
+ 846 0021 00000000 		.4byte	.Ldebug_line0
+ 847 0025 02       		.uleb128 0x2
+ 848 0026 01       		.byte	0x1
+ 849 0027 06       		.byte	0x6
+ 850 0028 4A020000 		.4byte	.LASF0
+ 851 002c 02       		.uleb128 0x2
+ 852 002d 01       		.byte	0x1
+ 853 002e 08       		.byte	0x8
+ 854 002f B6010000 		.4byte	.LASF1
+ 855 0033 02       		.uleb128 0x2
+ 856 0034 02       		.byte	0x2
+ 857 0035 05       		.byte	0x5
+ 858 0036 EB000000 		.4byte	.LASF2
+ 859 003a 02       		.uleb128 0x2
+ 860 003b 02       		.byte	0x2
+ 861 003c 07       		.byte	0x7
+ 862 003d CC020000 		.4byte	.LASF3
+ 863 0041 03       		.uleb128 0x3
+ 864 0042 00040000 		.4byte	.LASF9
+ 865 0046 02       		.byte	0x2
+ 866 0047 3F       		.byte	0x3f
+ 867 0048 4C000000 		.4byte	0x4c
+ 868 004c 02       		.uleb128 0x2
+ 869 004d 04       		.byte	0x4
+ 870 004e 05       		.byte	0x5
+ 871 004f 76010000 		.4byte	.LASF4
+ 872 0053 02       		.uleb128 0x2
+ 873 0054 04       		.byte	0x4
+ 874 0055 07       		.byte	0x7
+ 875 0056 9C020000 		.4byte	.LASF5
+ 876 005a 02       		.uleb128 0x2
+ 877 005b 08       		.byte	0x8
+ 878 005c 05       		.byte	0x5
+ 879 005d 5F010000 		.4byte	.LASF6
+ 880 0061 02       		.uleb128 0x2
+ 881 0062 08       		.byte	0x8
+ 882 0063 07       		.byte	0x7
+ 883 0064 64020000 		.4byte	.LASF7
+ 884 0068 04       		.uleb128 0x4
+ 885 0069 04       		.byte	0x4
+ 886 006a 05       		.byte	0x5
+ 887 006b 696E7400 		.ascii	"int\000"
+ 888 006f 02       		.uleb128 0x2
+ 889 0070 04       		.byte	0x4
+ 890 0071 07       		.byte	0x7
+ 891 0072 8F020000 		.4byte	.LASF8
+ 892 0076 03       		.uleb128 0x3
+ 893 0077 92030000 		.4byte	.LASF10
+ 894 007b 03       		.byte	0x3
+ 895 007c 2C       		.byte	0x2c
+ 896 007d 41000000 		.4byte	0x41
+ 897 0081 05       		.uleb128 0x5
+ 898 0082 19010000 		.4byte	.LASF11
+ 899 0086 04       		.byte	0x4
+ 900 0087 9201     		.2byte	0x192
+ 901 0089 2C000000 		.4byte	0x2c
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccLQTamn.s 			page 21
+
+
+ 902 008d 05       		.uleb128 0x5
+ 903 008e 09010000 		.4byte	.LASF12
+ 904 0092 04       		.byte	0x4
+ 905 0093 9301     		.2byte	0x193
+ 906 0095 3A000000 		.4byte	0x3a
+ 907 0099 05       		.uleb128 0x5
+ 908 009a CA030000 		.4byte	.LASF13
+ 909 009e 04       		.byte	0x4
+ 910 009f 9701     		.2byte	0x197
+ 911 00a1 4C000000 		.4byte	0x4c
+ 912 00a5 02       		.uleb128 0x2
+ 913 00a6 04       		.byte	0x4
+ 914 00a7 04       		.byte	0x4
+ 915 00a8 4E010000 		.4byte	.LASF14
+ 916 00ac 02       		.uleb128 0x2
+ 917 00ad 08       		.byte	0x8
+ 918 00ae 04       		.byte	0x4
+ 919 00af D0030000 		.4byte	.LASF15
+ 920 00b3 05       		.uleb128 0x5
+ 921 00b4 9A030000 		.4byte	.LASF16
+ 922 00b8 04       		.byte	0x4
+ 923 00b9 A301     		.2byte	0x1a3
+ 924 00bb BF000000 		.4byte	0xbf
+ 925 00bf 02       		.uleb128 0x2
+ 926 00c0 01       		.byte	0x1
+ 927 00c1 08       		.byte	0x8
+ 928 00c2 FF020000 		.4byte	.LASF17
+ 929 00c6 02       		.uleb128 0x2
+ 930 00c7 04       		.byte	0x4
+ 931 00c8 07       		.byte	0x7
+ 932 00c9 73000000 		.4byte	.LASF18
+ 933 00cd 06       		.uleb128 0x6
+ 934 00ce 04       		.byte	0x4
+ 935 00cf BF000000 		.4byte	0xbf
+ 936 00d3 06       		.uleb128 0x6
+ 937 00d4 04       		.byte	0x4
+ 938 00d5 D9000000 		.4byte	0xd9
+ 939 00d9 07       		.uleb128 0x7
+ 940 00da BF000000 		.4byte	0xbf
+ 941 00de 02       		.uleb128 0x2
+ 942 00df 08       		.byte	0x8
+ 943 00e0 04       		.byte	0x4
+ 944 00e1 09020000 		.4byte	.LASF19
+ 945 00e5 08       		.uleb128 0x8
+ 946 00e6 7C000000 		.4byte	.LASF22
+ 947 00ea 01       		.byte	0x1
+ 948 00eb 39       		.byte	0x39
+ 949 00ec 00000000 		.4byte	.LFB63
+ 950 00f0 98000000 		.4byte	.LFE63-.LFB63
+ 951 00f4 01       		.uleb128 0x1
+ 952 00f5 9C       		.byte	0x9c
+ 953 00f6 5B020000 		.4byte	0x25b
+ 954 00fa 09       		.uleb128 0x9
+ 955 00fb 3A040000 		.4byte	.LASF20
+ 956 00ff 01       		.byte	0x1
+ 957 0100 39       		.byte	0x39
+ 958 0101 BF000000 		.4byte	0xbf
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccLQTamn.s 			page 22
+
+
+ 959 0105 00000000 		.4byte	.LLST0
+ 960 0109 09       		.uleb128 0x9
+ 961 010a F5000000 		.4byte	.LASF21
+ 962 010e 01       		.byte	0x1
+ 963 010f 39       		.byte	0x39
+ 964 0110 68000000 		.4byte	0x68
+ 965 0114 21000000 		.4byte	.LLST1
+ 966 0118 0A       		.uleb128 0xa
+ 967 0119 10000000 		.4byte	.LVL2
+ 968 011d 57060000 		.4byte	0x657
+ 969 0121 2B010000 		.4byte	0x12b
+ 970 0125 0B       		.uleb128 0xb
+ 971 0126 01       		.uleb128 0x1
+ 972 0127 50       		.byte	0x50
+ 973 0128 01       		.uleb128 0x1
+ 974 0129 31       		.byte	0x31
+ 975 012a 00       		.byte	0
+ 976 012b 0A       		.uleb128 0xa
+ 977 012c 1E000000 		.4byte	.LVL3
+ 978 0130 68060000 		.4byte	0x668
+ 979 0134 49010000 		.4byte	0x149
+ 980 0138 0B       		.uleb128 0xb
+ 981 0139 01       		.uleb128 0x1
+ 982 013a 50       		.byte	0x50
+ 983 013b 0C       		.uleb128 0xc
+ 984 013c 75       		.byte	0x75
+ 985 013d 00       		.sleb128 0
+ 986 013e 4F       		.byte	0x4f
+ 987 013f 26       		.byte	0x26
+ 988 0140 75       		.byte	0x75
+ 989 0141 00       		.sleb128 0
+ 990 0142 27       		.byte	0x27
+ 991 0143 75       		.byte	0x75
+ 992 0144 00       		.sleb128 0
+ 993 0145 4F       		.byte	0x4f
+ 994 0146 26       		.byte	0x26
+ 995 0147 1C       		.byte	0x1c
+ 996 0148 00       		.byte	0
+ 997 0149 0A       		.uleb128 0xa
+ 998 014a 28000000 		.4byte	.LVL4
+ 999 014e 79060000 		.4byte	0x679
+ 1000 0152 5C010000 		.4byte	0x15c
+ 1001 0156 0B       		.uleb128 0xb
+ 1002 0157 01       		.uleb128 0x1
+ 1003 0158 50       		.byte	0x50
+ 1004 0159 01       		.uleb128 0x1
+ 1005 015a 30       		.byte	0x30
+ 1006 015b 00       		.byte	0
+ 1007 015c 0A       		.uleb128 0xa
+ 1008 015d 2E000000 		.4byte	.LVL5
+ 1009 0161 8A060000 		.4byte	0x68a
+ 1010 0165 6F010000 		.4byte	0x16f
+ 1011 0169 0B       		.uleb128 0xb
+ 1012 016a 01       		.uleb128 0x1
+ 1013 016b 50       		.byte	0x50
+ 1014 016c 01       		.uleb128 0x1
+ 1015 016d 31       		.byte	0x31
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccLQTamn.s 			page 23
+
+
+ 1016 016e 00       		.byte	0
+ 1017 016f 0A       		.uleb128 0xa
+ 1018 0170 3A000000 		.4byte	.LVL6
+ 1019 0174 79060000 		.4byte	0x679
+ 1020 0178 82010000 		.4byte	0x182
+ 1021 017c 0B       		.uleb128 0xb
+ 1022 017d 01       		.uleb128 0x1
+ 1023 017e 50       		.byte	0x50
+ 1024 017f 01       		.uleb128 0x1
+ 1025 0180 31       		.byte	0x31
+ 1026 0181 00       		.byte	0
+ 1027 0182 0A       		.uleb128 0xa
+ 1028 0183 40000000 		.4byte	.LVL7
+ 1029 0187 8A060000 		.4byte	0x68a
+ 1030 018b 95010000 		.4byte	0x195
+ 1031 018f 0B       		.uleb128 0xb
+ 1032 0190 01       		.uleb128 0x1
+ 1033 0191 50       		.byte	0x50
+ 1034 0192 01       		.uleb128 0x1
+ 1035 0193 30       		.byte	0x30
+ 1036 0194 00       		.byte	0
+ 1037 0195 0A       		.uleb128 0xa
+ 1038 0196 48000000 		.4byte	.LVL8
+ 1039 019a 79060000 		.4byte	0x679
+ 1040 019e A8010000 		.4byte	0x1a8
+ 1041 01a2 0B       		.uleb128 0xb
+ 1042 01a3 01       		.uleb128 0x1
+ 1043 01a4 50       		.byte	0x50
+ 1044 01a5 01       		.uleb128 0x1
+ 1045 01a6 30       		.byte	0x30
+ 1046 01a7 00       		.byte	0
+ 1047 01a8 0A       		.uleb128 0xa
+ 1048 01a9 4E000000 		.4byte	.LVL9
+ 1049 01ad 8A060000 		.4byte	0x68a
+ 1050 01b1 BB010000 		.4byte	0x1bb
+ 1051 01b5 0B       		.uleb128 0xb
+ 1052 01b6 01       		.uleb128 0x1
+ 1053 01b7 50       		.byte	0x50
+ 1054 01b8 01       		.uleb128 0x1
+ 1055 01b9 30       		.byte	0x30
+ 1056 01ba 00       		.byte	0
+ 1057 01bb 0A       		.uleb128 0xa
+ 1058 01bc 58000000 		.4byte	.LVL10
+ 1059 01c0 57060000 		.4byte	0x657
+ 1060 01c4 CE010000 		.4byte	0x1ce
+ 1061 01c8 0B       		.uleb128 0xb
+ 1062 01c9 01       		.uleb128 0x1
+ 1063 01ca 50       		.byte	0x50
+ 1064 01cb 01       		.uleb128 0x1
+ 1065 01cc 31       		.byte	0x31
+ 1066 01cd 00       		.byte	0
+ 1067 01ce 0A       		.uleb128 0xa
+ 1068 01cf 66000000 		.4byte	.LVL11
+ 1069 01d3 9B060000 		.4byte	0x69b
+ 1070 01d7 EC010000 		.4byte	0x1ec
+ 1071 01db 0B       		.uleb128 0xb
+ 1072 01dc 01       		.uleb128 0x1
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccLQTamn.s 			page 24
+
+
+ 1073 01dd 50       		.byte	0x50
+ 1074 01de 0C       		.uleb128 0xc
+ 1075 01df 75       		.byte	0x75
+ 1076 01e0 00       		.sleb128 0
+ 1077 01e1 4F       		.byte	0x4f
+ 1078 01e2 26       		.byte	0x26
+ 1079 01e3 75       		.byte	0x75
+ 1080 01e4 00       		.sleb128 0
+ 1081 01e5 27       		.byte	0x27
+ 1082 01e6 75       		.byte	0x75
+ 1083 01e7 00       		.sleb128 0
+ 1084 01e8 4F       		.byte	0x4f
+ 1085 01e9 26       		.byte	0x26
+ 1086 01ea 1C       		.byte	0x1c
+ 1087 01eb 00       		.byte	0
+ 1088 01ec 0A       		.uleb128 0xa
+ 1089 01ed 70000000 		.4byte	.LVL12
+ 1090 01f1 AC060000 		.4byte	0x6ac
+ 1091 01f5 FF010000 		.4byte	0x1ff
+ 1092 01f9 0B       		.uleb128 0xb
+ 1093 01fa 01       		.uleb128 0x1
+ 1094 01fb 50       		.byte	0x50
+ 1095 01fc 01       		.uleb128 0x1
+ 1096 01fd 30       		.byte	0x30
+ 1097 01fe 00       		.byte	0
+ 1098 01ff 0A       		.uleb128 0xa
+ 1099 0200 76000000 		.4byte	.LVL13
+ 1100 0204 BD060000 		.4byte	0x6bd
+ 1101 0208 12020000 		.4byte	0x212
+ 1102 020c 0B       		.uleb128 0xb
+ 1103 020d 01       		.uleb128 0x1
+ 1104 020e 50       		.byte	0x50
+ 1105 020f 01       		.uleb128 0x1
+ 1106 0210 31       		.byte	0x31
+ 1107 0211 00       		.byte	0
+ 1108 0212 0A       		.uleb128 0xa
+ 1109 0213 82000000 		.4byte	.LVL15
+ 1110 0217 AC060000 		.4byte	0x6ac
+ 1111 021b 25020000 		.4byte	0x225
+ 1112 021f 0B       		.uleb128 0xb
+ 1113 0220 01       		.uleb128 0x1
+ 1114 0221 50       		.byte	0x50
+ 1115 0222 01       		.uleb128 0x1
+ 1116 0223 31       		.byte	0x31
+ 1117 0224 00       		.byte	0
+ 1118 0225 0A       		.uleb128 0xa
+ 1119 0226 88000000 		.4byte	.LVL16
+ 1120 022a BD060000 		.4byte	0x6bd
+ 1121 022e 38020000 		.4byte	0x238
+ 1122 0232 0B       		.uleb128 0xb
+ 1123 0233 01       		.uleb128 0x1
+ 1124 0234 50       		.byte	0x50
+ 1125 0235 01       		.uleb128 0x1
+ 1126 0236 30       		.byte	0x30
+ 1127 0237 00       		.byte	0
+ 1128 0238 0A       		.uleb128 0xa
+ 1129 0239 90000000 		.4byte	.LVL18
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccLQTamn.s 			page 25
+
+
+ 1130 023d AC060000 		.4byte	0x6ac
+ 1131 0241 4B020000 		.4byte	0x24b
+ 1132 0245 0B       		.uleb128 0xb
+ 1133 0246 01       		.uleb128 0x1
+ 1134 0247 50       		.byte	0x50
+ 1135 0248 01       		.uleb128 0x1
+ 1136 0249 30       		.byte	0x30
+ 1137 024a 00       		.byte	0
+ 1138 024b 0C       		.uleb128 0xc
+ 1139 024c 96000000 		.4byte	.LVL19
+ 1140 0250 BD060000 		.4byte	0x6bd
+ 1141 0254 0B       		.uleb128 0xb
+ 1142 0255 01       		.uleb128 0x1
+ 1143 0256 50       		.byte	0x50
+ 1144 0257 01       		.uleb128 0x1
+ 1145 0258 30       		.byte	0x30
+ 1146 0259 00       		.byte	0
+ 1147 025a 00       		.byte	0
+ 1148 025b 0D       		.uleb128 0xd
+ 1149 025c FA020000 		.4byte	.LASF30
+ 1150 0260 01       		.byte	0x1
+ 1151 0261 66       		.byte	0x66
+ 1152 0262 00000000 		.4byte	.LFB64
+ 1153 0266 14000000 		.4byte	.LFE64-.LFB64
+ 1154 026a 01       		.uleb128 0x1
+ 1155 026b 9C       		.byte	0x9c
+ 1156 026c 9F020000 		.4byte	0x29f
+ 1157 0270 0A       		.uleb128 0xa
+ 1158 0271 0A000000 		.4byte	.LVL20
+ 1159 0275 E5000000 		.4byte	0xe5
+ 1160 0279 89020000 		.4byte	0x289
+ 1161 027d 0B       		.uleb128 0xb
+ 1162 027e 01       		.uleb128 0x1
+ 1163 027f 51       		.byte	0x51
+ 1164 0280 01       		.uleb128 0x1
+ 1165 0281 30       		.byte	0x30
+ 1166 0282 0B       		.uleb128 0xb
+ 1167 0283 01       		.uleb128 0x1
+ 1168 0284 50       		.byte	0x50
+ 1169 0285 02       		.uleb128 0x2
+ 1170 0286 08       		.byte	0x8
+ 1171 0287 72       		.byte	0x72
+ 1172 0288 00       		.byte	0
+ 1173 0289 0C       		.uleb128 0xc
+ 1174 028a 12000000 		.4byte	.LVL21
+ 1175 028e E5000000 		.4byte	0xe5
+ 1176 0292 0B       		.uleb128 0xb
+ 1177 0293 01       		.uleb128 0x1
+ 1178 0294 51       		.byte	0x51
+ 1179 0295 01       		.uleb128 0x1
+ 1180 0296 30       		.byte	0x30
+ 1181 0297 0B       		.uleb128 0xb
+ 1182 0298 01       		.uleb128 0x1
+ 1183 0299 50       		.byte	0x50
+ 1184 029a 02       		.uleb128 0x2
+ 1185 029b 08       		.byte	0x8
+ 1186 029c 6C       		.byte	0x6c
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccLQTamn.s 			page 26
+
+
+ 1187 029d 00       		.byte	0
+ 1188 029e 00       		.byte	0
+ 1189 029f 08       		.uleb128 0x8
+ 1190 02a0 56020000 		.4byte	.LASF23
+ 1191 02a4 01       		.byte	0x1
+ 1192 02a5 6B       		.byte	0x6b
+ 1193 02a6 00000000 		.4byte	.LFB65
+ 1194 02aa 30000000 		.4byte	.LFE65-.LFB65
+ 1195 02ae 01       		.uleb128 0x1
+ 1196 02af 9C       		.byte	0x9c
+ 1197 02b0 CF020000 		.4byte	0x2cf
+ 1198 02b4 0E       		.uleb128 0xe
+ 1199 02b5 C4010000 		.4byte	.LASF24
+ 1200 02b9 01       		.byte	0x1
+ 1201 02ba 6B       		.byte	0x6b
+ 1202 02bb 4C000000 		.4byte	0x4c
+ 1203 02bf 01       		.uleb128 0x1
+ 1204 02c0 50       		.byte	0x50
+ 1205 02c1 0E       		.uleb128 0xe
+ 1206 02c2 10000000 		.4byte	.LASF25
+ 1207 02c6 01       		.byte	0x1
+ 1208 02c7 6B       		.byte	0x6b
+ 1209 02c8 4C000000 		.4byte	0x4c
+ 1210 02cc 01       		.uleb128 0x1
+ 1211 02cd 51       		.byte	0x51
+ 1212 02ce 00       		.byte	0
+ 1213 02cf 08       		.uleb128 0x8
+ 1214 02d0 87000000 		.4byte	.LASF26
+ 1215 02d4 01       		.byte	0x1
+ 1216 02d5 7D       		.byte	0x7d
+ 1217 02d6 00000000 		.4byte	.LFB66
+ 1218 02da 2C000000 		.4byte	.LFE66-.LFB66
+ 1219 02de 01       		.uleb128 0x1
+ 1220 02df 9C       		.byte	0x9c
+ 1221 02e0 12030000 		.4byte	0x312
+ 1222 02e4 0F       		.uleb128 0xf
+ 1223 02e5 6B7000   		.ascii	"kp\000"
+ 1224 02e8 01       		.byte	0x1
+ 1225 02e9 7D       		.byte	0x7d
+ 1226 02ea AC000000 		.4byte	0xac
+ 1227 02ee 3F000000 		.4byte	.LLST2
+ 1228 02f2 10       		.uleb128 0x10
+ 1229 02f3 6B6400   		.ascii	"kd\000"
+ 1230 02f6 01       		.byte	0x1
+ 1231 02f7 7D       		.byte	0x7d
+ 1232 02f8 AC000000 		.4byte	0xac
+ 1233 02fc 06       		.uleb128 0x6
+ 1234 02fd 52       		.byte	0x52
+ 1235 02fe 93       		.byte	0x93
+ 1236 02ff 04       		.uleb128 0x4
+ 1237 0300 53       		.byte	0x53
+ 1238 0301 93       		.byte	0x93
+ 1239 0302 04       		.uleb128 0x4
+ 1240 0303 0F       		.uleb128 0xf
+ 1241 0304 6B6900   		.ascii	"ki\000"
+ 1242 0307 01       		.byte	0x1
+ 1243 0308 7D       		.byte	0x7d
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccLQTamn.s 			page 27
+
+
+ 1244 0309 AC000000 		.4byte	0xac
+ 1245 030d 66000000 		.4byte	.LLST3
+ 1246 0311 00       		.byte	0
+ 1247 0312 08       		.uleb128 0x8
+ 1248 0313 61040000 		.4byte	.LASF27
+ 1249 0317 01       		.byte	0x1
+ 1250 0318 82       		.byte	0x82
+ 1251 0319 00000000 		.4byte	.LFB67
+ 1252 031d 14000000 		.4byte	.LFE67-.LFB67
+ 1253 0321 01       		.uleb128 0x1
+ 1254 0322 9C       		.byte	0x9c
+ 1255 0323 42030000 		.4byte	0x342
+ 1256 0327 0E       		.uleb128 0xe
+ 1257 0328 AE010000 		.4byte	.LASF28
+ 1258 032c 01       		.byte	0x1
+ 1259 032d 82       		.byte	0x82
+ 1260 032e 68000000 		.4byte	0x68
+ 1261 0332 01       		.uleb128 0x1
+ 1262 0333 50       		.byte	0x50
+ 1263 0334 0E       		.uleb128 0xe
+ 1264 0335 C1030000 		.4byte	.LASF29
+ 1265 0339 01       		.byte	0x1
+ 1266 033a 82       		.byte	0x82
+ 1267 033b 68000000 		.4byte	0x68
+ 1268 033f 01       		.uleb128 0x1
+ 1269 0340 51       		.byte	0x51
+ 1270 0341 00       		.byte	0
+ 1271 0342 11       		.uleb128 0x11
+ 1272 0343 AE020000 		.4byte	.LASF32
+ 1273 0347 01       		.byte	0x1
+ 1274 0348 A7       		.byte	0xa7
+ 1275 0349 00000000 		.4byte	.LFB68
+ 1276 034d 24000000 		.4byte	.LFE68-.LFB68
+ 1277 0351 01       		.uleb128 0x1
+ 1278 0352 9C       		.byte	0x9c
+ 1279 0353 0D       		.uleb128 0xd
+ 1280 0354 F3030000 		.4byte	.LASF31
+ 1281 0358 01       		.byte	0x1
+ 1282 0359 AC       		.byte	0xac
+ 1283 035a 00000000 		.4byte	.LFB69
+ 1284 035e 24000000 		.4byte	.LFE69-.LFB69
+ 1285 0362 01       		.uleb128 0x1
+ 1286 0363 9C       		.byte	0x9c
+ 1287 0364 7B030000 		.4byte	0x37b
+ 1288 0368 12       		.uleb128 0x12
+ 1289 0369 06000000 		.4byte	.LVL27
+ 1290 036d CE060000 		.4byte	0x6ce
+ 1291 0371 12       		.uleb128 0x12
+ 1292 0372 12000000 		.4byte	.LVL28
+ 1293 0376 D9060000 		.4byte	0x6d9
+ 1294 037a 00       		.byte	0
+ 1295 037b 11       		.uleb128 0x11
+ 1296 037c 22040000 		.4byte	.LASF33
+ 1297 0380 01       		.byte	0x1
+ 1298 0381 B0       		.byte	0xb0
+ 1299 0382 00000000 		.4byte	.LFB70
+ 1300 0386 64000000 		.4byte	.LFE70-.LFB70
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccLQTamn.s 			page 28
+
+
+ 1301 038a 01       		.uleb128 0x1
+ 1302 038b 9C       		.byte	0x9c
+ 1303 038c 13       		.uleb128 0x13
+ 1304 038d B5000000 		.4byte	.LASF34
+ 1305 0391 01       		.byte	0x1
+ 1306 0392 BC       		.byte	0xbc
+ 1307 0393 00000000 		.4byte	.LFB71
+ 1308 0397 50010000 		.4byte	.LFE71-.LFB71
+ 1309 039b 01       		.uleb128 0x1
+ 1310 039c 9C       		.byte	0x9c
+ 1311 039d 0D       		.uleb128 0xd
+ 1312 039e 10010000 		.4byte	.LASF35
+ 1313 03a2 01       		.byte	0x1
+ 1314 03a3 CD       		.byte	0xcd
+ 1315 03a4 00000000 		.4byte	.LFB72
+ 1316 03a8 20000000 		.4byte	.LFE72-.LFB72
+ 1317 03ac 01       		.uleb128 0x1
+ 1318 03ad 9C       		.byte	0x9c
+ 1319 03ae D7030000 		.4byte	0x3d7
+ 1320 03b2 0A       		.uleb128 0xa
+ 1321 03b3 0C000000 		.4byte	.LVL47
+ 1322 03b7 E5000000 		.4byte	0xe5
+ 1323 03bb C6030000 		.4byte	0x3c6
+ 1324 03bf 0B       		.uleb128 0xb
+ 1325 03c0 01       		.uleb128 0x1
+ 1326 03c1 50       		.byte	0x50
+ 1327 03c2 02       		.uleb128 0x2
+ 1328 03c3 08       		.byte	0x8
+ 1329 03c4 6C       		.byte	0x6c
+ 1330 03c5 00       		.byte	0
+ 1331 03c6 0C       		.uleb128 0xc
+ 1332 03c7 16000000 		.4byte	.LVL48
+ 1333 03cb E5000000 		.4byte	0xe5
+ 1334 03cf 0B       		.uleb128 0xb
+ 1335 03d0 01       		.uleb128 0x1
+ 1336 03d1 50       		.byte	0x50
+ 1337 03d2 02       		.uleb128 0x2
+ 1338 03d3 08       		.byte	0x8
+ 1339 03d4 72       		.byte	0x72
+ 1340 03d5 00       		.byte	0
+ 1341 03d6 00       		.byte	0
+ 1342 03d7 0D       		.uleb128 0xd
+ 1343 03d8 D7030000 		.4byte	.LASF36
+ 1344 03dc 01       		.byte	0x1
+ 1345 03dd D3       		.byte	0xd3
+ 1346 03de 00000000 		.4byte	.LFB73
+ 1347 03e2 24000000 		.4byte	.LFE73-.LFB73
+ 1348 03e6 01       		.uleb128 0x1
+ 1349 03e7 9C       		.byte	0x9c
+ 1350 03e8 1A040000 		.4byte	0x41a
+ 1351 03ec 12       		.uleb128 0x12
+ 1352 03ed 0E000000 		.4byte	.LVL49
+ 1353 03f1 42030000 		.4byte	0x342
+ 1354 03f5 12       		.uleb128 0x12
+ 1355 03f6 12000000 		.4byte	.LVL50
+ 1356 03fa 53030000 		.4byte	0x353
+ 1357 03fe 12       		.uleb128 0x12
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccLQTamn.s 			page 29
+
+
+ 1358 03ff 16000000 		.4byte	.LVL51
+ 1359 0403 7B030000 		.4byte	0x37b
+ 1360 0407 12       		.uleb128 0x12
+ 1361 0408 1A000000 		.4byte	.LVL52
+ 1362 040c 8C030000 		.4byte	0x38c
+ 1363 0410 12       		.uleb128 0x12
+ 1364 0411 1E000000 		.4byte	.LVL53
+ 1365 0415 9D030000 		.4byte	0x39d
+ 1366 0419 00       		.byte	0
+ 1367 041a 0D       		.uleb128 0xd
+ 1368 041b 15040000 		.4byte	.LASF37
+ 1369 041f 01       		.byte	0x1
+ 1370 0420 DD       		.byte	0xdd
+ 1371 0421 00000000 		.4byte	.LFB74
+ 1372 0425 70000000 		.4byte	.LFE74-.LFB74
+ 1373 0429 01       		.uleb128 0x1
+ 1374 042a 9C       		.byte	0x9c
+ 1375 042b 5D040000 		.4byte	0x45d
+ 1376 042f 0A       		.uleb128 0xa
+ 1377 0430 3E000000 		.4byte	.LVL54
+ 1378 0434 E4060000 		.4byte	0x6e4
+ 1379 0438 4C040000 		.4byte	0x44c
+ 1380 043c 0B       		.uleb128 0xb
+ 1381 043d 01       		.uleb128 0x1
+ 1382 043e 51       		.byte	0x51
+ 1383 043f 05       		.uleb128 0x5
+ 1384 0440 03       		.byte	0x3
+ 1385 0441 00000000 		.4byte	.LC0
+ 1386 0445 0B       		.uleb128 0xb
+ 1387 0446 01       		.uleb128 0x1
+ 1388 0447 50       		.byte	0x50
+ 1389 0448 02       		.uleb128 0x2
+ 1390 0449 74       		.byte	0x74
+ 1391 044a 00       		.sleb128 0
+ 1392 044b 00       		.byte	0
+ 1393 044c 0C       		.uleb128 0xc
+ 1394 044d 44000000 		.4byte	.LVL55
+ 1395 0451 FF060000 		.4byte	0x6ff
+ 1396 0455 0B       		.uleb128 0xb
+ 1397 0456 01       		.uleb128 0x1
+ 1398 0457 50       		.byte	0x50
+ 1399 0458 02       		.uleb128 0x2
+ 1400 0459 74       		.byte	0x74
+ 1401 045a 00       		.sleb128 0
+ 1402 045b 00       		.byte	0
+ 1403 045c 00       		.byte	0
+ 1404 045d 14       		.uleb128 0x14
+ 1405 045e 3F040000 		.4byte	.LASF38
+ 1406 0462 05       		.byte	0x5
+ 1407 0463 9606     		.2byte	0x696
+ 1408 0465 69040000 		.4byte	0x469
+ 1409 0469 15       		.uleb128 0x15
+ 1410 046a 76000000 		.4byte	0x76
+ 1411 046e 16       		.uleb128 0x16
+ 1412 046f BF000000 		.4byte	0xbf
+ 1413 0473 7E040000 		.4byte	0x47e
+ 1414 0477 17       		.uleb128 0x17
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccLQTamn.s 			page 30
+
+
+ 1415 0478 C6000000 		.4byte	0xc6
+ 1416 047c 31       		.byte	0x31
+ 1417 047d 00       		.byte	0
+ 1418 047e 18       		.uleb128 0x18
+ 1419 047f 6D010000 		.4byte	.LASF39
+ 1420 0483 01       		.byte	0x1
+ 1421 0484 0C       		.byte	0xc
+ 1422 0485 6E040000 		.4byte	0x46e
+ 1423 0489 05       		.uleb128 0x5
+ 1424 048a 03       		.byte	0x3
+ 1425 048b 00000000 		.4byte	mystring
+ 1426 048f 18       		.uleb128 0x18
+ 1427 0490 A0010000 		.4byte	.LASF40
+ 1428 0494 01       		.byte	0x1
+ 1429 0495 12       		.byte	0x12
+ 1430 0496 4C000000 		.4byte	0x4c
+ 1431 049a 05       		.uleb128 0x5
+ 1432 049b 03       		.byte	0x3
+ 1433 049c 00000000 		.4byte	cur_dest_left
+ 1434 04a0 18       		.uleb128 0x18
+ 1435 04a1 A8030000 		.4byte	.LASF41
+ 1436 04a5 01       		.byte	0x1
+ 1437 04a6 13       		.byte	0x13
+ 1438 04a7 4C000000 		.4byte	0x4c
+ 1439 04ab 05       		.uleb128 0x5
+ 1440 04ac 03       		.byte	0x3
+ 1441 04ad 00000000 		.4byte	cur_dest_right
+ 1442 04b1 18       		.uleb128 0x18
+ 1443 04b2 24020000 		.4byte	.LASF42
+ 1444 04b6 01       		.byte	0x1
+ 1445 04b7 14       		.byte	0x14
+ 1446 04b8 4C000000 		.4byte	0x4c
+ 1447 04bc 05       		.uleb128 0x5
+ 1448 04bd 03       		.byte	0x3
+ 1449 04be 00000000 		.4byte	prev_dest_right
+ 1450 04c2 18       		.uleb128 0x18
+ 1451 04c3 EB020000 		.4byte	.LASF43
+ 1452 04c7 01       		.byte	0x1
+ 1453 04c8 15       		.byte	0x15
+ 1454 04c9 4C000000 		.4byte	0x4c
+ 1455 04cd 05       		.uleb128 0x5
+ 1456 04ce 03       		.byte	0x3
+ 1457 04cf 00000000 		.4byte	prev_dest_left
+ 1458 04d3 18       		.uleb128 0x18
+ 1459 04d4 41010000 		.4byte	.LASF44
+ 1460 04d8 01       		.byte	0x1
+ 1461 04d9 17       		.byte	0x17
+ 1462 04da 4C000000 		.4byte	0x4c
+ 1463 04de 05       		.uleb128 0x5
+ 1464 04df 03       		.byte	0x3
+ 1465 04e0 00000000 		.4byte	cur_pos_left
+ 1466 04e4 18       		.uleb128 0x18
+ 1467 04e5 BE020000 		.4byte	.LASF45
+ 1468 04e9 01       		.byte	0x1
+ 1469 04ea 18       		.byte	0x18
+ 1470 04eb 4C000000 		.4byte	0x4c
+ 1471 04ef 05       		.uleb128 0x5
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccLQTamn.s 			page 31
+
+
+ 1472 04f0 03       		.byte	0x3
+ 1473 04f1 00000000 		.4byte	cur_pos_right
+ 1474 04f5 18       		.uleb128 0x18
+ 1475 04f6 1B000000 		.4byte	.LASF46
+ 1476 04fa 01       		.byte	0x1
+ 1477 04fb 19       		.byte	0x19
+ 1478 04fc 4C000000 		.4byte	0x4c
+ 1479 0500 05       		.uleb128 0x5
+ 1480 0501 03       		.byte	0x3
+ 1481 0502 00000000 		.4byte	last_pos_right
+ 1482 0506 18       		.uleb128 0x18
+ 1483 0507 2C040000 		.4byte	.LASF47
+ 1484 050b 01       		.byte	0x1
+ 1485 050c 1A       		.byte	0x1a
+ 1486 050d 4C000000 		.4byte	0x4c
+ 1487 0511 05       		.uleb128 0x5
+ 1488 0512 03       		.byte	0x3
+ 1489 0513 00000000 		.4byte	last_pos_left
+ 1490 0517 18       		.uleb128 0x18
+ 1491 0518 DB000000 		.4byte	.LASF48
+ 1492 051c 01       		.byte	0x1
+ 1493 051d 1C       		.byte	0x1c
+ 1494 051e 68000000 		.4byte	0x68
+ 1495 0522 05       		.uleb128 0x5
+ 1496 0523 03       		.byte	0x3
+ 1497 0524 00000000 		.4byte	volt_motor_left
+ 1498 0528 18       		.uleb128 0x18
+ 1499 0529 49000000 		.4byte	.LASF49
+ 1500 052d 01       		.byte	0x1
+ 1501 052e 1D       		.byte	0x1d
+ 1502 052f 68000000 		.4byte	0x68
+ 1503 0533 05       		.uleb128 0x5
+ 1504 0534 03       		.byte	0x3
+ 1505 0535 00000000 		.4byte	volt_motor_right
+ 1506 0539 18       		.uleb128 0x18
+ 1507 053a 15020000 		.4byte	.LASF50
+ 1508 053e 01       		.byte	0x1
+ 1509 053f 1F       		.byte	0x1f
+ 1510 0540 68000000 		.4byte	0x68
+ 1511 0544 05       		.uleb128 0x5
+ 1512 0545 03       		.byte	0x3
+ 1513 0546 00000000 		.4byte	adj_motor_left
+ 1514 054a 18       		.uleb128 0x18
+ 1515 054b 2A000000 		.4byte	.LASF51
+ 1516 054f 01       		.byte	0x1
+ 1517 0550 20       		.byte	0x20
+ 1518 0551 68000000 		.4byte	0x68
+ 1519 0555 05       		.uleb128 0x5
+ 1520 0556 03       		.byte	0x3
+ 1521 0557 00000000 		.4byte	adj_motor_right
+ 1522 055b 18       		.uleb128 0x18
+ 1523 055c 54010000 		.4byte	.LASF52
+ 1524 0560 01       		.byte	0x1
+ 1525 0561 22       		.byte	0x22
+ 1526 0562 68000000 		.4byte	0x68
+ 1527 0566 05       		.uleb128 0x5
+ 1528 0567 03       		.byte	0x3
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccLQTamn.s 			page 32
+
+
+ 1529 0568 00000000 		.4byte	error_left
+ 1530 056c 18       		.uleb128 0x18
+ 1531 056d DF020000 		.4byte	.LASF53
+ 1532 0571 01       		.byte	0x1
+ 1533 0572 23       		.byte	0x23
+ 1534 0573 68000000 		.4byte	0x68
+ 1535 0577 05       		.uleb128 0x5
+ 1536 0578 03       		.byte	0x3
+ 1537 0579 00000000 		.4byte	error_right
+ 1538 057d 18       		.uleb128 0x18
+ 1539 057e 00000000 		.4byte	.LASF54
+ 1540 0582 01       		.byte	0x1
+ 1541 0583 25       		.byte	0x25
+ 1542 0584 68000000 		.4byte	0x68
+ 1543 0588 05       		.uleb128 0x5
+ 1544 0589 03       		.byte	0x3
+ 1545 058a 00000000 		.4byte	error_left_prev
+ 1546 058e 18       		.uleb128 0x18
+ 1547 058f BD000000 		.4byte	.LASF55
+ 1548 0593 01       		.byte	0x1
+ 1549 0594 26       		.byte	0x26
+ 1550 0595 68000000 		.4byte	0x68
+ 1551 0599 05       		.uleb128 0x5
+ 1552 059a 03       		.byte	0x3
+ 1553 059b 00000000 		.4byte	error_right_prev
+ 1554 059f 18       		.uleb128 0x18
+ 1555 05a0 3A000000 		.4byte	.LASF56
+ 1556 05a4 01       		.byte	0x1
+ 1557 05a5 28       		.byte	0x28
+ 1558 05a6 68000000 		.4byte	0x68
+ 1559 05aa 05       		.uleb128 0x5
+ 1560 05ab 03       		.byte	0x3
+ 1561 05ac 00000000 		.4byte	error_left_sum
+ 1562 05b0 18       		.uleb128 0x18
+ 1563 05b1 E3030000 		.4byte	.LASF57
+ 1564 05b5 01       		.byte	0x1
+ 1565 05b6 29       		.byte	0x29
+ 1566 05b7 68000000 		.4byte	0x68
+ 1567 05bb 05       		.uleb128 0x5
+ 1568 05bc 03       		.byte	0x3
+ 1569 05bd 00000000 		.4byte	error_right_sum
+ 1570 05c1 19       		.uleb128 0x19
+ 1571 05c2 4B7000   		.ascii	"Kp\000"
+ 1572 05c5 01       		.byte	0x1
+ 1573 05c6 2B       		.byte	0x2b
+ 1574 05c7 AC000000 		.4byte	0xac
+ 1575 05cb 05       		.uleb128 0x5
+ 1576 05cc 03       		.byte	0x3
+ 1577 05cd 00000000 		.4byte	Kp
+ 1578 05d1 19       		.uleb128 0x19
+ 1579 05d2 4B6900   		.ascii	"Ki\000"
+ 1580 05d5 01       		.byte	0x1
+ 1581 05d6 2C       		.byte	0x2c
+ 1582 05d7 AC000000 		.4byte	0xac
+ 1583 05db 05       		.uleb128 0x5
+ 1584 05dc 03       		.byte	0x3
+ 1585 05dd 00000000 		.4byte	Ki
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccLQTamn.s 			page 33
+
+
+ 1586 05e1 19       		.uleb128 0x19
+ 1587 05e2 4B6400   		.ascii	"Kd\000"
+ 1588 05e5 01       		.byte	0x1
+ 1589 05e6 2D       		.byte	0x2d
+ 1590 05e7 AC000000 		.4byte	0xac
+ 1591 05eb 05       		.uleb128 0x5
+ 1592 05ec 03       		.byte	0x3
+ 1593 05ed 00000000 		.4byte	Kd
+ 1594 05f1 18       		.uleb128 0x18
+ 1595 05f2 5A000000 		.4byte	.LASF58
+ 1596 05f6 01       		.byte	0x1
+ 1597 05f7 2F       		.byte	0x2f
+ 1598 05f8 68000000 		.4byte	0x68
+ 1599 05fc 05       		.uleb128 0x5
+ 1600 05fd 03       		.byte	0x3
+ 1601 05fe 00000000 		.4byte	speed_left
+ 1602 0602 18       		.uleb128 0x18
+ 1603 0603 55040000 		.4byte	.LASF59
+ 1604 0607 01       		.byte	0x1
+ 1605 0608 30       		.byte	0x30
+ 1606 0609 68000000 		.4byte	0x68
+ 1607 060d 05       		.uleb128 0x5
+ 1608 060e 03       		.byte	0x3
+ 1609 060f 00000000 		.4byte	speed_right
+ 1610 0613 18       		.uleb128 0x18
+ 1611 0614 4C040000 		.4byte	.LASF60
+ 1612 0618 01       		.byte	0x1
+ 1613 0619 32       		.byte	0x32
+ 1614 061a 68000000 		.4byte	0x68
+ 1615 061e 05       		.uleb128 0x5
+ 1616 061f 03       		.byte	0x3
+ 1617 0620 00000000 		.4byte	inc_left
+ 1618 0624 18       		.uleb128 0x18
+ 1619 0625 B7030000 		.4byte	.LASF61
+ 1620 0629 01       		.byte	0x1
+ 1621 062a 33       		.byte	0x33
+ 1622 062b 68000000 		.4byte	0x68
+ 1623 062f 05       		.uleb128 0x5
+ 1624 0630 03       		.byte	0x3
+ 1625 0631 00000000 		.4byte	inc_right
+ 1626 0635 18       		.uleb128 0x18
+ 1627 0636 A0030000 		.4byte	.LASF62
+ 1628 063a 01       		.byte	0x1
+ 1629 063b 35       		.byte	0x35
+ 1630 063c 4C000000 		.4byte	0x4c
+ 1631 0640 05       		.uleb128 0x5
+ 1632 0641 03       		.byte	0x3
+ 1633 0642 00000000 		.4byte	time_ms
+ 1634 0646 18       		.uleb128 0x18
+ 1635 0647 3C020000 		.4byte	.LASF63
+ 1636 064b 01       		.byte	0x1
+ 1637 064c 36       		.byte	0x36
+ 1638 064d 4C000000 		.4byte	0x4c
+ 1639 0651 05       		.uleb128 0x5
+ 1640 0652 03       		.byte	0x3
+ 1641 0653 00000000 		.4byte	time_ms_start
+ 1642 0657 1A       		.uleb128 0x1a
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccLQTamn.s 			page 34
+
+
+ 1643 0658 65000000 		.4byte	.LASF64
+ 1644 065c 06       		.byte	0x6
+ 1645 065d 26       		.byte	0x26
+ 1646 065e 68060000 		.4byte	0x668
+ 1647 0662 1B       		.uleb128 0x1b
+ 1648 0663 81000000 		.4byte	0x81
+ 1649 0667 00       		.byte	0
+ 1650 0668 1A       		.uleb128 0x1a
+ 1651 0669 8C010000 		.4byte	.LASF65
+ 1652 066d 07       		.byte	0x7
+ 1653 066e C3       		.byte	0xc3
+ 1654 066f 79060000 		.4byte	0x679
+ 1655 0673 1B       		.uleb128 0x1b
+ 1656 0674 8D000000 		.4byte	0x8d
+ 1657 0678 00       		.byte	0
+ 1658 0679 1A       		.uleb128 0x1a
+ 1659 067a CE000000 		.4byte	.LASF66
+ 1660 067e 08       		.byte	0x8
+ 1661 067f 26       		.byte	0x26
+ 1662 0680 8A060000 		.4byte	0x68a
+ 1663 0684 1B       		.uleb128 0x1b
+ 1664 0685 81000000 		.4byte	0x81
+ 1665 0689 00       		.byte	0
+ 1666 068a 1A       		.uleb128 0x1a
+ 1667 068b 7F010000 		.4byte	.LASF67
+ 1668 068f 09       		.byte	0x9
+ 1669 0690 26       		.byte	0x26
+ 1670 0691 9B060000 		.4byte	0x69b
+ 1671 0695 1B       		.uleb128 0x1b
+ 1672 0696 81000000 		.4byte	0x81
+ 1673 069a 00       		.byte	0
+ 1674 069b 1A       		.uleb128 0x1a
+ 1675 069c 7B020000 		.4byte	.LASF68
+ 1676 06a0 0A       		.byte	0xa
+ 1677 06a1 C3       		.byte	0xc3
+ 1678 06a2 AC060000 		.4byte	0x6ac
+ 1679 06a6 1B       		.uleb128 0x1b
+ 1680 06a7 8D000000 		.4byte	0x8d
+ 1681 06ab 00       		.byte	0
+ 1682 06ac 1A       		.uleb128 0x1a
+ 1683 06ad 1F010000 		.4byte	.LASF69
+ 1684 06b1 0B       		.byte	0xb
+ 1685 06b2 26       		.byte	0x26
+ 1686 06b3 BD060000 		.4byte	0x6bd
+ 1687 06b7 1B       		.uleb128 0x1b
+ 1688 06b8 81000000 		.4byte	0x81
+ 1689 06bc 00       		.byte	0
+ 1690 06bd 1A       		.uleb128 0x1a
+ 1691 06be A8000000 		.4byte	.LASF70
+ 1692 06c2 0C       		.byte	0xc
+ 1693 06c3 26       		.byte	0x26
+ 1694 06c4 CE060000 		.4byte	0x6ce
+ 1695 06c8 1B       		.uleb128 0x1b
+ 1696 06c9 81000000 		.4byte	0x81
+ 1697 06cd 00       		.byte	0
+ 1698 06ce 1C       		.uleb128 0x1c
+ 1699 06cf 2C010000 		.4byte	.LASF71
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccLQTamn.s 			page 35
+
+
+ 1700 06d3 0D       		.byte	0xd
+ 1701 06d4 4E       		.byte	0x4e
+ 1702 06d5 99000000 		.4byte	0x99
+ 1703 06d9 1C       		.uleb128 0x1c
+ 1704 06da 93000000 		.4byte	.LASF72
+ 1705 06de 0E       		.byte	0xe
+ 1706 06df 4E       		.byte	0x4e
+ 1707 06e0 99000000 		.4byte	0x99
+ 1708 06e4 1D       		.uleb128 0x1d
+ 1709 06e5 34020000 		.4byte	.LASF77
+ 1710 06e9 10       		.byte	0x10
+ 1711 06ea DE       		.byte	0xde
+ 1712 06eb 68000000 		.4byte	0x68
+ 1713 06ef FF060000 		.4byte	0x6ff
+ 1714 06f3 1B       		.uleb128 0x1b
+ 1715 06f4 CD000000 		.4byte	0xcd
+ 1716 06f8 1B       		.uleb128 0x1b
+ 1717 06f9 D3000000 		.4byte	0xd3
+ 1718 06fd 1E       		.uleb128 0x1e
+ 1719 06fe 00       		.byte	0
+ 1720 06ff 1A       		.uleb128 0x1a
+ 1721 0700 FA000000 		.4byte	.LASF73
+ 1722 0704 0F       		.byte	0xf
+ 1723 0705 8B       		.byte	0x8b
+ 1724 0706 10070000 		.4byte	0x710
+ 1725 070a 1B       		.uleb128 0x1b
+ 1726 070b 10070000 		.4byte	0x710
+ 1727 070f 00       		.byte	0
+ 1728 0710 06       		.uleb128 0x6
+ 1729 0711 04       		.byte	0x4
+ 1730 0712 16070000 		.4byte	0x716
+ 1731 0716 07       		.uleb128 0x7
+ 1732 0717 B3000000 		.4byte	0xb3
+ 1733 071b 00       		.byte	0
+ 1734              		.section	.debug_abbrev,"",%progbits
+ 1735              	.Ldebug_abbrev0:
+ 1736 0000 01       		.uleb128 0x1
+ 1737 0001 11       		.uleb128 0x11
+ 1738 0002 01       		.byte	0x1
+ 1739 0003 25       		.uleb128 0x25
+ 1740 0004 0E       		.uleb128 0xe
+ 1741 0005 13       		.uleb128 0x13
+ 1742 0006 0B       		.uleb128 0xb
+ 1743 0007 03       		.uleb128 0x3
+ 1744 0008 0E       		.uleb128 0xe
+ 1745 0009 1B       		.uleb128 0x1b
+ 1746 000a 0E       		.uleb128 0xe
+ 1747 000b 55       		.uleb128 0x55
+ 1748 000c 17       		.uleb128 0x17
+ 1749 000d 11       		.uleb128 0x11
+ 1750 000e 01       		.uleb128 0x1
+ 1751 000f 10       		.uleb128 0x10
+ 1752 0010 17       		.uleb128 0x17
+ 1753 0011 00       		.byte	0
+ 1754 0012 00       		.byte	0
+ 1755 0013 02       		.uleb128 0x2
+ 1756 0014 24       		.uleb128 0x24
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccLQTamn.s 			page 36
+
+
+ 1757 0015 00       		.byte	0
+ 1758 0016 0B       		.uleb128 0xb
+ 1759 0017 0B       		.uleb128 0xb
+ 1760 0018 3E       		.uleb128 0x3e
+ 1761 0019 0B       		.uleb128 0xb
+ 1762 001a 03       		.uleb128 0x3
+ 1763 001b 0E       		.uleb128 0xe
+ 1764 001c 00       		.byte	0
+ 1765 001d 00       		.byte	0
+ 1766 001e 03       		.uleb128 0x3
+ 1767 001f 16       		.uleb128 0x16
+ 1768 0020 00       		.byte	0
+ 1769 0021 03       		.uleb128 0x3
+ 1770 0022 0E       		.uleb128 0xe
+ 1771 0023 3A       		.uleb128 0x3a
+ 1772 0024 0B       		.uleb128 0xb
+ 1773 0025 3B       		.uleb128 0x3b
+ 1774 0026 0B       		.uleb128 0xb
+ 1775 0027 49       		.uleb128 0x49
+ 1776 0028 13       		.uleb128 0x13
+ 1777 0029 00       		.byte	0
+ 1778 002a 00       		.byte	0
+ 1779 002b 04       		.uleb128 0x4
+ 1780 002c 24       		.uleb128 0x24
+ 1781 002d 00       		.byte	0
+ 1782 002e 0B       		.uleb128 0xb
+ 1783 002f 0B       		.uleb128 0xb
+ 1784 0030 3E       		.uleb128 0x3e
+ 1785 0031 0B       		.uleb128 0xb
+ 1786 0032 03       		.uleb128 0x3
+ 1787 0033 08       		.uleb128 0x8
+ 1788 0034 00       		.byte	0
+ 1789 0035 00       		.byte	0
+ 1790 0036 05       		.uleb128 0x5
+ 1791 0037 16       		.uleb128 0x16
+ 1792 0038 00       		.byte	0
+ 1793 0039 03       		.uleb128 0x3
+ 1794 003a 0E       		.uleb128 0xe
+ 1795 003b 3A       		.uleb128 0x3a
+ 1796 003c 0B       		.uleb128 0xb
+ 1797 003d 3B       		.uleb128 0x3b
+ 1798 003e 05       		.uleb128 0x5
+ 1799 003f 49       		.uleb128 0x49
+ 1800 0040 13       		.uleb128 0x13
+ 1801 0041 00       		.byte	0
+ 1802 0042 00       		.byte	0
+ 1803 0043 06       		.uleb128 0x6
+ 1804 0044 0F       		.uleb128 0xf
+ 1805 0045 00       		.byte	0
+ 1806 0046 0B       		.uleb128 0xb
+ 1807 0047 0B       		.uleb128 0xb
+ 1808 0048 49       		.uleb128 0x49
+ 1809 0049 13       		.uleb128 0x13
+ 1810 004a 00       		.byte	0
+ 1811 004b 00       		.byte	0
+ 1812 004c 07       		.uleb128 0x7
+ 1813 004d 26       		.uleb128 0x26
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccLQTamn.s 			page 37
+
+
+ 1814 004e 00       		.byte	0
+ 1815 004f 49       		.uleb128 0x49
+ 1816 0050 13       		.uleb128 0x13
+ 1817 0051 00       		.byte	0
+ 1818 0052 00       		.byte	0
+ 1819 0053 08       		.uleb128 0x8
+ 1820 0054 2E       		.uleb128 0x2e
+ 1821 0055 01       		.byte	0x1
+ 1822 0056 3F       		.uleb128 0x3f
+ 1823 0057 19       		.uleb128 0x19
+ 1824 0058 03       		.uleb128 0x3
+ 1825 0059 0E       		.uleb128 0xe
+ 1826 005a 3A       		.uleb128 0x3a
+ 1827 005b 0B       		.uleb128 0xb
+ 1828 005c 3B       		.uleb128 0x3b
+ 1829 005d 0B       		.uleb128 0xb
+ 1830 005e 27       		.uleb128 0x27
+ 1831 005f 19       		.uleb128 0x19
+ 1832 0060 11       		.uleb128 0x11
+ 1833 0061 01       		.uleb128 0x1
+ 1834 0062 12       		.uleb128 0x12
+ 1835 0063 06       		.uleb128 0x6
+ 1836 0064 40       		.uleb128 0x40
+ 1837 0065 18       		.uleb128 0x18
+ 1838 0066 9742     		.uleb128 0x2117
+ 1839 0068 19       		.uleb128 0x19
+ 1840 0069 01       		.uleb128 0x1
+ 1841 006a 13       		.uleb128 0x13
+ 1842 006b 00       		.byte	0
+ 1843 006c 00       		.byte	0
+ 1844 006d 09       		.uleb128 0x9
+ 1845 006e 05       		.uleb128 0x5
+ 1846 006f 00       		.byte	0
+ 1847 0070 03       		.uleb128 0x3
+ 1848 0071 0E       		.uleb128 0xe
+ 1849 0072 3A       		.uleb128 0x3a
+ 1850 0073 0B       		.uleb128 0xb
+ 1851 0074 3B       		.uleb128 0x3b
+ 1852 0075 0B       		.uleb128 0xb
+ 1853 0076 49       		.uleb128 0x49
+ 1854 0077 13       		.uleb128 0x13
+ 1855 0078 02       		.uleb128 0x2
+ 1856 0079 17       		.uleb128 0x17
+ 1857 007a 00       		.byte	0
+ 1858 007b 00       		.byte	0
+ 1859 007c 0A       		.uleb128 0xa
+ 1860 007d 898201   		.uleb128 0x4109
+ 1861 0080 01       		.byte	0x1
+ 1862 0081 11       		.uleb128 0x11
+ 1863 0082 01       		.uleb128 0x1
+ 1864 0083 31       		.uleb128 0x31
+ 1865 0084 13       		.uleb128 0x13
+ 1866 0085 01       		.uleb128 0x1
+ 1867 0086 13       		.uleb128 0x13
+ 1868 0087 00       		.byte	0
+ 1869 0088 00       		.byte	0
+ 1870 0089 0B       		.uleb128 0xb
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccLQTamn.s 			page 38
+
+
+ 1871 008a 8A8201   		.uleb128 0x410a
+ 1872 008d 00       		.byte	0
+ 1873 008e 02       		.uleb128 0x2
+ 1874 008f 18       		.uleb128 0x18
+ 1875 0090 9142     		.uleb128 0x2111
+ 1876 0092 18       		.uleb128 0x18
+ 1877 0093 00       		.byte	0
+ 1878 0094 00       		.byte	0
+ 1879 0095 0C       		.uleb128 0xc
+ 1880 0096 898201   		.uleb128 0x4109
+ 1881 0099 01       		.byte	0x1
+ 1882 009a 11       		.uleb128 0x11
+ 1883 009b 01       		.uleb128 0x1
+ 1884 009c 31       		.uleb128 0x31
+ 1885 009d 13       		.uleb128 0x13
+ 1886 009e 00       		.byte	0
+ 1887 009f 00       		.byte	0
+ 1888 00a0 0D       		.uleb128 0xd
+ 1889 00a1 2E       		.uleb128 0x2e
+ 1890 00a2 01       		.byte	0x1
+ 1891 00a3 3F       		.uleb128 0x3f
+ 1892 00a4 19       		.uleb128 0x19
+ 1893 00a5 03       		.uleb128 0x3
+ 1894 00a6 0E       		.uleb128 0xe
+ 1895 00a7 3A       		.uleb128 0x3a
+ 1896 00a8 0B       		.uleb128 0xb
+ 1897 00a9 3B       		.uleb128 0x3b
+ 1898 00aa 0B       		.uleb128 0xb
+ 1899 00ab 11       		.uleb128 0x11
+ 1900 00ac 01       		.uleb128 0x1
+ 1901 00ad 12       		.uleb128 0x12
+ 1902 00ae 06       		.uleb128 0x6
+ 1903 00af 40       		.uleb128 0x40
+ 1904 00b0 18       		.uleb128 0x18
+ 1905 00b1 9742     		.uleb128 0x2117
+ 1906 00b3 19       		.uleb128 0x19
+ 1907 00b4 01       		.uleb128 0x1
+ 1908 00b5 13       		.uleb128 0x13
+ 1909 00b6 00       		.byte	0
+ 1910 00b7 00       		.byte	0
+ 1911 00b8 0E       		.uleb128 0xe
+ 1912 00b9 05       		.uleb128 0x5
+ 1913 00ba 00       		.byte	0
+ 1914 00bb 03       		.uleb128 0x3
+ 1915 00bc 0E       		.uleb128 0xe
+ 1916 00bd 3A       		.uleb128 0x3a
+ 1917 00be 0B       		.uleb128 0xb
+ 1918 00bf 3B       		.uleb128 0x3b
+ 1919 00c0 0B       		.uleb128 0xb
+ 1920 00c1 49       		.uleb128 0x49
+ 1921 00c2 13       		.uleb128 0x13
+ 1922 00c3 02       		.uleb128 0x2
+ 1923 00c4 18       		.uleb128 0x18
+ 1924 00c5 00       		.byte	0
+ 1925 00c6 00       		.byte	0
+ 1926 00c7 0F       		.uleb128 0xf
+ 1927 00c8 05       		.uleb128 0x5
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccLQTamn.s 			page 39
+
+
+ 1928 00c9 00       		.byte	0
+ 1929 00ca 03       		.uleb128 0x3
+ 1930 00cb 08       		.uleb128 0x8
+ 1931 00cc 3A       		.uleb128 0x3a
+ 1932 00cd 0B       		.uleb128 0xb
+ 1933 00ce 3B       		.uleb128 0x3b
+ 1934 00cf 0B       		.uleb128 0xb
+ 1935 00d0 49       		.uleb128 0x49
+ 1936 00d1 13       		.uleb128 0x13
+ 1937 00d2 02       		.uleb128 0x2
+ 1938 00d3 17       		.uleb128 0x17
+ 1939 00d4 00       		.byte	0
+ 1940 00d5 00       		.byte	0
+ 1941 00d6 10       		.uleb128 0x10
+ 1942 00d7 05       		.uleb128 0x5
+ 1943 00d8 00       		.byte	0
+ 1944 00d9 03       		.uleb128 0x3
+ 1945 00da 08       		.uleb128 0x8
+ 1946 00db 3A       		.uleb128 0x3a
+ 1947 00dc 0B       		.uleb128 0xb
+ 1948 00dd 3B       		.uleb128 0x3b
+ 1949 00de 0B       		.uleb128 0xb
+ 1950 00df 49       		.uleb128 0x49
+ 1951 00e0 13       		.uleb128 0x13
+ 1952 00e1 02       		.uleb128 0x2
+ 1953 00e2 18       		.uleb128 0x18
+ 1954 00e3 00       		.byte	0
+ 1955 00e4 00       		.byte	0
+ 1956 00e5 11       		.uleb128 0x11
+ 1957 00e6 2E       		.uleb128 0x2e
+ 1958 00e7 00       		.byte	0
+ 1959 00e8 3F       		.uleb128 0x3f
+ 1960 00e9 19       		.uleb128 0x19
+ 1961 00ea 03       		.uleb128 0x3
+ 1962 00eb 0E       		.uleb128 0xe
+ 1963 00ec 3A       		.uleb128 0x3a
+ 1964 00ed 0B       		.uleb128 0xb
+ 1965 00ee 3B       		.uleb128 0x3b
+ 1966 00ef 0B       		.uleb128 0xb
+ 1967 00f0 11       		.uleb128 0x11
+ 1968 00f1 01       		.uleb128 0x1
+ 1969 00f2 12       		.uleb128 0x12
+ 1970 00f3 06       		.uleb128 0x6
+ 1971 00f4 40       		.uleb128 0x40
+ 1972 00f5 18       		.uleb128 0x18
+ 1973 00f6 9742     		.uleb128 0x2117
+ 1974 00f8 19       		.uleb128 0x19
+ 1975 00f9 00       		.byte	0
+ 1976 00fa 00       		.byte	0
+ 1977 00fb 12       		.uleb128 0x12
+ 1978 00fc 898201   		.uleb128 0x4109
+ 1979 00ff 00       		.byte	0
+ 1980 0100 11       		.uleb128 0x11
+ 1981 0101 01       		.uleb128 0x1
+ 1982 0102 31       		.uleb128 0x31
+ 1983 0103 13       		.uleb128 0x13
+ 1984 0104 00       		.byte	0
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccLQTamn.s 			page 40
+
+
+ 1985 0105 00       		.byte	0
+ 1986 0106 13       		.uleb128 0x13
+ 1987 0107 2E       		.uleb128 0x2e
+ 1988 0108 00       		.byte	0
+ 1989 0109 3F       		.uleb128 0x3f
+ 1990 010a 19       		.uleb128 0x19
+ 1991 010b 03       		.uleb128 0x3
+ 1992 010c 0E       		.uleb128 0xe
+ 1993 010d 3A       		.uleb128 0x3a
+ 1994 010e 0B       		.uleb128 0xb
+ 1995 010f 3B       		.uleb128 0x3b
+ 1996 0110 0B       		.uleb128 0xb
+ 1997 0111 11       		.uleb128 0x11
+ 1998 0112 01       		.uleb128 0x1
+ 1999 0113 12       		.uleb128 0x12
+ 2000 0114 06       		.uleb128 0x6
+ 2001 0115 40       		.uleb128 0x40
+ 2002 0116 18       		.uleb128 0x18
+ 2003 0117 9642     		.uleb128 0x2116
+ 2004 0119 19       		.uleb128 0x19
+ 2005 011a 00       		.byte	0
+ 2006 011b 00       		.byte	0
+ 2007 011c 14       		.uleb128 0x14
+ 2008 011d 34       		.uleb128 0x34
+ 2009 011e 00       		.byte	0
+ 2010 011f 03       		.uleb128 0x3
+ 2011 0120 0E       		.uleb128 0xe
+ 2012 0121 3A       		.uleb128 0x3a
+ 2013 0122 0B       		.uleb128 0xb
+ 2014 0123 3B       		.uleb128 0x3b
+ 2015 0124 05       		.uleb128 0x5
+ 2016 0125 49       		.uleb128 0x49
+ 2017 0126 13       		.uleb128 0x13
+ 2018 0127 3F       		.uleb128 0x3f
+ 2019 0128 19       		.uleb128 0x19
+ 2020 0129 3C       		.uleb128 0x3c
+ 2021 012a 19       		.uleb128 0x19
+ 2022 012b 00       		.byte	0
+ 2023 012c 00       		.byte	0
+ 2024 012d 15       		.uleb128 0x15
+ 2025 012e 35       		.uleb128 0x35
+ 2026 012f 00       		.byte	0
+ 2027 0130 49       		.uleb128 0x49
+ 2028 0131 13       		.uleb128 0x13
+ 2029 0132 00       		.byte	0
+ 2030 0133 00       		.byte	0
+ 2031 0134 16       		.uleb128 0x16
+ 2032 0135 01       		.uleb128 0x1
+ 2033 0136 01       		.byte	0x1
+ 2034 0137 49       		.uleb128 0x49
+ 2035 0138 13       		.uleb128 0x13
+ 2036 0139 01       		.uleb128 0x1
+ 2037 013a 13       		.uleb128 0x13
+ 2038 013b 00       		.byte	0
+ 2039 013c 00       		.byte	0
+ 2040 013d 17       		.uleb128 0x17
+ 2041 013e 21       		.uleb128 0x21
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccLQTamn.s 			page 41
+
+
+ 2042 013f 00       		.byte	0
+ 2043 0140 49       		.uleb128 0x49
+ 2044 0141 13       		.uleb128 0x13
+ 2045 0142 2F       		.uleb128 0x2f
+ 2046 0143 0B       		.uleb128 0xb
+ 2047 0144 00       		.byte	0
+ 2048 0145 00       		.byte	0
+ 2049 0146 18       		.uleb128 0x18
+ 2050 0147 34       		.uleb128 0x34
+ 2051 0148 00       		.byte	0
+ 2052 0149 03       		.uleb128 0x3
+ 2053 014a 0E       		.uleb128 0xe
+ 2054 014b 3A       		.uleb128 0x3a
+ 2055 014c 0B       		.uleb128 0xb
+ 2056 014d 3B       		.uleb128 0x3b
+ 2057 014e 0B       		.uleb128 0xb
+ 2058 014f 49       		.uleb128 0x49
+ 2059 0150 13       		.uleb128 0x13
+ 2060 0151 3F       		.uleb128 0x3f
+ 2061 0152 19       		.uleb128 0x19
+ 2062 0153 02       		.uleb128 0x2
+ 2063 0154 18       		.uleb128 0x18
+ 2064 0155 00       		.byte	0
+ 2065 0156 00       		.byte	0
+ 2066 0157 19       		.uleb128 0x19
+ 2067 0158 34       		.uleb128 0x34
+ 2068 0159 00       		.byte	0
+ 2069 015a 03       		.uleb128 0x3
+ 2070 015b 08       		.uleb128 0x8
+ 2071 015c 3A       		.uleb128 0x3a
+ 2072 015d 0B       		.uleb128 0xb
+ 2073 015e 3B       		.uleb128 0x3b
+ 2074 015f 0B       		.uleb128 0xb
+ 2075 0160 49       		.uleb128 0x49
+ 2076 0161 13       		.uleb128 0x13
+ 2077 0162 3F       		.uleb128 0x3f
+ 2078 0163 19       		.uleb128 0x19
+ 2079 0164 02       		.uleb128 0x2
+ 2080 0165 18       		.uleb128 0x18
+ 2081 0166 00       		.byte	0
+ 2082 0167 00       		.byte	0
+ 2083 0168 1A       		.uleb128 0x1a
+ 2084 0169 2E       		.uleb128 0x2e
+ 2085 016a 01       		.byte	0x1
+ 2086 016b 3F       		.uleb128 0x3f
+ 2087 016c 19       		.uleb128 0x19
+ 2088 016d 03       		.uleb128 0x3
+ 2089 016e 0E       		.uleb128 0xe
+ 2090 016f 3A       		.uleb128 0x3a
+ 2091 0170 0B       		.uleb128 0xb
+ 2092 0171 3B       		.uleb128 0x3b
+ 2093 0172 0B       		.uleb128 0xb
+ 2094 0173 27       		.uleb128 0x27
+ 2095 0174 19       		.uleb128 0x19
+ 2096 0175 3C       		.uleb128 0x3c
+ 2097 0176 19       		.uleb128 0x19
+ 2098 0177 01       		.uleb128 0x1
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccLQTamn.s 			page 42
+
+
+ 2099 0178 13       		.uleb128 0x13
+ 2100 0179 00       		.byte	0
+ 2101 017a 00       		.byte	0
+ 2102 017b 1B       		.uleb128 0x1b
+ 2103 017c 05       		.uleb128 0x5
+ 2104 017d 00       		.byte	0
+ 2105 017e 49       		.uleb128 0x49
+ 2106 017f 13       		.uleb128 0x13
+ 2107 0180 00       		.byte	0
+ 2108 0181 00       		.byte	0
+ 2109 0182 1C       		.uleb128 0x1c
+ 2110 0183 2E       		.uleb128 0x2e
+ 2111 0184 00       		.byte	0
+ 2112 0185 3F       		.uleb128 0x3f
+ 2113 0186 19       		.uleb128 0x19
+ 2114 0187 03       		.uleb128 0x3
+ 2115 0188 0E       		.uleb128 0xe
+ 2116 0189 3A       		.uleb128 0x3a
+ 2117 018a 0B       		.uleb128 0xb
+ 2118 018b 3B       		.uleb128 0x3b
+ 2119 018c 0B       		.uleb128 0xb
+ 2120 018d 27       		.uleb128 0x27
+ 2121 018e 19       		.uleb128 0x19
+ 2122 018f 49       		.uleb128 0x49
+ 2123 0190 13       		.uleb128 0x13
+ 2124 0191 3C       		.uleb128 0x3c
+ 2125 0192 19       		.uleb128 0x19
+ 2126 0193 00       		.byte	0
+ 2127 0194 00       		.byte	0
+ 2128 0195 1D       		.uleb128 0x1d
+ 2129 0196 2E       		.uleb128 0x2e
+ 2130 0197 01       		.byte	0x1
+ 2131 0198 3F       		.uleb128 0x3f
+ 2132 0199 19       		.uleb128 0x19
+ 2133 019a 03       		.uleb128 0x3
+ 2134 019b 0E       		.uleb128 0xe
+ 2135 019c 3A       		.uleb128 0x3a
+ 2136 019d 0B       		.uleb128 0xb
+ 2137 019e 3B       		.uleb128 0x3b
+ 2138 019f 0B       		.uleb128 0xb
+ 2139 01a0 27       		.uleb128 0x27
+ 2140 01a1 19       		.uleb128 0x19
+ 2141 01a2 49       		.uleb128 0x49
+ 2142 01a3 13       		.uleb128 0x13
+ 2143 01a4 3C       		.uleb128 0x3c
+ 2144 01a5 19       		.uleb128 0x19
+ 2145 01a6 01       		.uleb128 0x1
+ 2146 01a7 13       		.uleb128 0x13
+ 2147 01a8 00       		.byte	0
+ 2148 01a9 00       		.byte	0
+ 2149 01aa 1E       		.uleb128 0x1e
+ 2150 01ab 18       		.uleb128 0x18
+ 2151 01ac 00       		.byte	0
+ 2152 01ad 00       		.byte	0
+ 2153 01ae 00       		.byte	0
+ 2154 01af 00       		.byte	0
+ 2155              		.section	.debug_loc,"",%progbits
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccLQTamn.s 			page 43
+
+
+ 2156              	.Ldebug_loc0:
+ 2157              	.LLST0:
+ 2158 0000 00000000 		.4byte	.LVL0
+ 2159 0004 0C000000 		.4byte	.LVL1
+ 2160 0008 0100     		.2byte	0x1
+ 2161 000a 50       		.byte	0x50
+ 2162 000b 0C000000 		.4byte	.LVL1
+ 2163 000f 98000000 		.4byte	.LFE63
+ 2164 0013 0400     		.2byte	0x4
+ 2165 0015 F3       		.byte	0xf3
+ 2166 0016 01       		.uleb128 0x1
+ 2167 0017 50       		.byte	0x50
+ 2168 0018 9F       		.byte	0x9f
+ 2169 0019 00000000 		.4byte	0
+ 2170 001d 00000000 		.4byte	0
+ 2171              	.LLST1:
+ 2172 0021 00000000 		.4byte	.LVL0
+ 2173 0025 0F000000 		.4byte	.LVL2-1
+ 2174 0029 0100     		.2byte	0x1
+ 2175 002b 51       		.byte	0x51
+ 2176 002c 0F000000 		.4byte	.LVL2-1
+ 2177 0030 98000000 		.4byte	.LFE63
+ 2178 0034 0100     		.2byte	0x1
+ 2179 0036 55       		.byte	0x55
+ 2180 0037 00000000 		.4byte	0
+ 2181 003b 00000000 		.4byte	0
+ 2182              	.LLST2:
+ 2183 003f 00000000 		.4byte	.LVL23
+ 2184 0043 14000000 		.4byte	.LVL24
+ 2185 0047 0600     		.2byte	0x6
+ 2186 0049 50       		.byte	0x50
+ 2187 004a 93       		.byte	0x93
+ 2188 004b 04       		.uleb128 0x4
+ 2189 004c 51       		.byte	0x51
+ 2190 004d 93       		.byte	0x93
+ 2191 004e 04       		.uleb128 0x4
+ 2192 004f 14000000 		.4byte	.LVL24
+ 2193 0053 2C000000 		.4byte	.LFE66
+ 2194 0057 0500     		.2byte	0x5
+ 2195 0059 03       		.byte	0x3
+ 2196 005a 00000000 		.4byte	Kp
+ 2197 005e 00000000 		.4byte	0
+ 2198 0062 00000000 		.4byte	0
+ 2199              	.LLST3:
+ 2200 0066 00000000 		.4byte	.LVL23
+ 2201 006a 1C000000 		.4byte	.LVL25
+ 2202 006e 0200     		.2byte	0x2
+ 2203 0070 91       		.byte	0x91
+ 2204 0071 00       		.sleb128 0
+ 2205 0072 1C000000 		.4byte	.LVL25
+ 2206 0076 2C000000 		.4byte	.LFE66
+ 2207 007a 0200     		.2byte	0x2
+ 2208 007c 7D       		.byte	0x7d
+ 2209 007d 00       		.sleb128 0
+ 2210 007e 00000000 		.4byte	0
+ 2211 0082 00000000 		.4byte	0
+ 2212              		.section	.debug_aranges,"",%progbits
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccLQTamn.s 			page 44
+
+
+ 2213 0000 74000000 		.4byte	0x74
+ 2214 0004 0200     		.2byte	0x2
+ 2215 0006 00000000 		.4byte	.Ldebug_info0
+ 2216 000a 04       		.byte	0x4
+ 2217 000b 00       		.byte	0
+ 2218 000c 0000     		.2byte	0
+ 2219 000e 0000     		.2byte	0
+ 2220 0010 00000000 		.4byte	.LFB63
+ 2221 0014 98000000 		.4byte	.LFE63-.LFB63
+ 2222 0018 00000000 		.4byte	.LFB64
+ 2223 001c 14000000 		.4byte	.LFE64-.LFB64
+ 2224 0020 00000000 		.4byte	.LFB65
+ 2225 0024 30000000 		.4byte	.LFE65-.LFB65
+ 2226 0028 00000000 		.4byte	.LFB66
+ 2227 002c 2C000000 		.4byte	.LFE66-.LFB66
+ 2228 0030 00000000 		.4byte	.LFB67
+ 2229 0034 14000000 		.4byte	.LFE67-.LFB67
+ 2230 0038 00000000 		.4byte	.LFB68
+ 2231 003c 24000000 		.4byte	.LFE68-.LFB68
+ 2232 0040 00000000 		.4byte	.LFB69
+ 2233 0044 24000000 		.4byte	.LFE69-.LFB69
+ 2234 0048 00000000 		.4byte	.LFB70
+ 2235 004c 64000000 		.4byte	.LFE70-.LFB70
+ 2236 0050 00000000 		.4byte	.LFB71
+ 2237 0054 50010000 		.4byte	.LFE71-.LFB71
+ 2238 0058 00000000 		.4byte	.LFB72
+ 2239 005c 20000000 		.4byte	.LFE72-.LFB72
+ 2240 0060 00000000 		.4byte	.LFB73
+ 2241 0064 24000000 		.4byte	.LFE73-.LFB73
+ 2242 0068 00000000 		.4byte	.LFB74
+ 2243 006c 70000000 		.4byte	.LFE74-.LFB74
+ 2244 0070 00000000 		.4byte	0
+ 2245 0074 00000000 		.4byte	0
+ 2246              		.section	.debug_ranges,"",%progbits
+ 2247              	.Ldebug_ranges0:
+ 2248 0000 00000000 		.4byte	.LFB63
+ 2249 0004 98000000 		.4byte	.LFE63
+ 2250 0008 00000000 		.4byte	.LFB64
+ 2251 000c 14000000 		.4byte	.LFE64
+ 2252 0010 00000000 		.4byte	.LFB65
+ 2253 0014 30000000 		.4byte	.LFE65
+ 2254 0018 00000000 		.4byte	.LFB66
+ 2255 001c 2C000000 		.4byte	.LFE66
+ 2256 0020 00000000 		.4byte	.LFB67
+ 2257 0024 14000000 		.4byte	.LFE67
+ 2258 0028 00000000 		.4byte	.LFB68
+ 2259 002c 24000000 		.4byte	.LFE68
+ 2260 0030 00000000 		.4byte	.LFB69
+ 2261 0034 24000000 		.4byte	.LFE69
+ 2262 0038 00000000 		.4byte	.LFB70
+ 2263 003c 64000000 		.4byte	.LFE70
+ 2264 0040 00000000 		.4byte	.LFB71
+ 2265 0044 50010000 		.4byte	.LFE71
+ 2266 0048 00000000 		.4byte	.LFB72
+ 2267 004c 20000000 		.4byte	.LFE72
+ 2268 0050 00000000 		.4byte	.LFB73
+ 2269 0054 24000000 		.4byte	.LFE73
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccLQTamn.s 			page 45
+
+
+ 2270 0058 00000000 		.4byte	.LFB74
+ 2271 005c 70000000 		.4byte	.LFE74
+ 2272 0060 00000000 		.4byte	0
+ 2273 0064 00000000 		.4byte	0
+ 2274              		.section	.debug_line,"",%progbits
+ 2275              	.Ldebug_line0:
+ 2276 0000 E3020000 		.section	.debug_str,"MS",%progbits,1
+ 2276      0200D301 
+ 2276      00000201 
+ 2276      FB0E0D00 
+ 2276      01010101 
+ 2277              	.LASF54:
+ 2278 0000 6572726F 		.ascii	"error_left_prev\000"
+ 2278      725F6C65 
+ 2278      66745F70 
+ 2278      72657600 
+ 2279              	.LASF25:
+ 2280 0010 72696768 		.ascii	"right_dest\000"
+ 2280      745F6465 
+ 2280      737400
+ 2281              	.LASF46:
+ 2282 001b 6C617374 		.ascii	"last_pos_right\000"
+ 2282      5F706F73 
+ 2282      5F726967 
+ 2282      687400
+ 2283              	.LASF51:
+ 2284 002a 61646A5F 		.ascii	"adj_motor_right\000"
+ 2284      6D6F746F 
+ 2284      725F7269 
+ 2284      67687400 
+ 2285              	.LASF56:
+ 2286 003a 6572726F 		.ascii	"error_left_sum\000"
+ 2286      725F6C65 
+ 2286      66745F73 
+ 2286      756D00
+ 2287              	.LASF49:
+ 2288 0049 766F6C74 		.ascii	"volt_motor_right\000"
+ 2288      5F6D6F74 
+ 2288      6F725F72 
+ 2288      69676874 
+ 2288      00
+ 2289              	.LASF58:
+ 2290 005a 73706565 		.ascii	"speed_left\000"
+ 2290      645F6C65 
+ 2290      667400
+ 2291              	.LASF64:
+ 2292 0065 5374616E 		.ascii	"Standby_Write\000"
+ 2292      6462795F 
+ 2292      57726974 
+ 2292      6500
+ 2293              	.LASF18:
+ 2294 0073 73697A65 		.ascii	"sizetype\000"
+ 2294      74797065 
+ 2294      00
+ 2295              	.LASF22:
+ 2296 007c 7475726E 		.ascii	"turn_wheel\000"
+ 2296      5F776865 
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccLQTamn.s 			page 46
+
+
+ 2296      656C00
+ 2297              	.LASF26:
+ 2298 0087 74657374 		.ascii	"test_values\000"
+ 2298      5F76616C 
+ 2298      75657300 
+ 2299              	.LASF72:
+ 2300 0093 4D315175 		.ascii	"M1QuadDec_GetCounter\000"
+ 2300      61644465 
+ 2300      635F4765 
+ 2300      74436F75 
+ 2300      6E746572 
+ 2301              	.LASF70:
+ 2302 00a8 4D315F42 		.ascii	"M1_BWD_Write\000"
+ 2302      57445F57 
+ 2302      72697465 
+ 2302      00
+ 2303              	.LASF34:
+ 2304 00b5 4765745F 		.ascii	"Get_PID\000"
+ 2304      50494400 
+ 2305              	.LASF55:
+ 2306 00bd 6572726F 		.ascii	"error_right_prev\000"
+ 2306      725F7269 
+ 2306      6768745F 
+ 2306      70726576 
+ 2306      00
+ 2307              	.LASF66:
+ 2308 00ce 4D325F46 		.ascii	"M2_FWD_Write\000"
+ 2308      57445F57 
+ 2308      72697465 
+ 2308      00
+ 2309              	.LASF48:
+ 2310 00db 766F6C74 		.ascii	"volt_motor_left\000"
+ 2310      5F6D6F74 
+ 2310      6F725F6C 
+ 2310      65667400 
+ 2311              	.LASF2:
+ 2312 00eb 73686F72 		.ascii	"short int\000"
+ 2312      7420696E 
+ 2312      7400
+ 2313              	.LASF21:
+ 2314 00f5 766F6C74 		.ascii	"volt\000"
+ 2314      00
+ 2315              	.LASF73:
+ 2316 00fa 55415254 		.ascii	"UART_PutString\000"
+ 2316      5F507574 
+ 2316      53747269 
+ 2316      6E6700
+ 2317              	.LASF12:
+ 2318 0109 75696E74 		.ascii	"uint16\000"
+ 2318      313600
+ 2319              	.LASF35:
+ 2320 0110 41646A5F 		.ascii	"Adj_Volt\000"
+ 2320      566F6C74 
+ 2320      00
+ 2321              	.LASF11:
+ 2322 0119 75696E74 		.ascii	"uint8\000"
+ 2322      3800
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccLQTamn.s 			page 47
+
+
+ 2323              	.LASF69:
+ 2324 011f 4D315F46 		.ascii	"M1_FWD_Write\000"
+ 2324      57445F57 
+ 2324      72697465 
+ 2324      00
+ 2325              	.LASF71:
+ 2326 012c 4D325175 		.ascii	"M2QuadDec_GetCounter\000"
+ 2326      61644465 
+ 2326      635F4765 
+ 2326      74436F75 
+ 2326      6E746572 
+ 2327              	.LASF44:
+ 2328 0141 6375725F 		.ascii	"cur_pos_left\000"
+ 2328      706F735F 
+ 2328      6C656674 
+ 2328      00
+ 2329              	.LASF14:
+ 2330 014e 666C6F61 		.ascii	"float\000"
+ 2330      7400
+ 2331              	.LASF52:
+ 2332 0154 6572726F 		.ascii	"error_left\000"
+ 2332      725F6C65 
+ 2332      667400
+ 2333              	.LASF6:
+ 2334 015f 6C6F6E67 		.ascii	"long long int\000"
+ 2334      206C6F6E 
+ 2334      6720696E 
+ 2334      7400
+ 2335              	.LASF39:
+ 2336 016d 6D797374 		.ascii	"mystring\000"
+ 2336      72696E67 
+ 2336      00
+ 2337              	.LASF4:
+ 2338 0176 6C6F6E67 		.ascii	"long int\000"
+ 2338      20696E74 
+ 2338      00
+ 2339              	.LASF67:
+ 2340 017f 4D325F42 		.ascii	"M2_BWD_Write\000"
+ 2340      57445F57 
+ 2340      72697465 
+ 2340      00
+ 2341              	.LASF65:
+ 2342 018c 50574D5F 		.ascii	"PWM_M2_WriteCompare\000"
+ 2342      4D325F57 
+ 2342      72697465 
+ 2342      436F6D70 
+ 2342      61726500 
+ 2343              	.LASF40:
+ 2344 01a0 6375725F 		.ascii	"cur_dest_left\000"
+ 2344      64657374 
+ 2344      5F6C6566 
+ 2344      7400
+ 2345              	.LASF28:
+ 2346 01ae 696E636C 		.ascii	"incleft\000"
+ 2346      65667400 
+ 2347              	.LASF1:
+ 2348 01b6 756E7369 		.ascii	"unsigned char\000"
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccLQTamn.s 			page 48
+
+
+ 2348      676E6564 
+ 2348      20636861 
+ 2348      7200
+ 2349              	.LASF24:
+ 2350 01c4 6C656674 		.ascii	"left_dest\000"
+ 2350      5F646573 
+ 2350      7400
+ 2351              	.LASF76:
+ 2352 01ce 433A5C55 		.ascii	"C:\\Users\\shevi\\Downloads\\Workspace01\\Workspace"
+ 2352      73657273 
+ 2352      5C736865 
+ 2352      76695C44 
+ 2352      6F776E6C 
+ 2353 01fc 30315C46 		.ascii	"01\\FYP.cydsn\000"
+ 2353      59502E63 
+ 2353      7964736E 
+ 2353      00
+ 2354              	.LASF19:
+ 2355 0209 6C6F6E67 		.ascii	"long double\000"
+ 2355      20646F75 
+ 2355      626C6500 
+ 2356              	.LASF50:
+ 2357 0215 61646A5F 		.ascii	"adj_motor_left\000"
+ 2357      6D6F746F 
+ 2357      725F6C65 
+ 2357      667400
+ 2358              	.LASF42:
+ 2359 0224 70726576 		.ascii	"prev_dest_right\000"
+ 2359      5F646573 
+ 2359      745F7269 
+ 2359      67687400 
+ 2360              	.LASF77:
+ 2361 0234 73707269 		.ascii	"sprintf\000"
+ 2361      6E746600 
+ 2362              	.LASF63:
+ 2363 023c 74696D65 		.ascii	"time_ms_start\000"
+ 2363      5F6D735F 
+ 2363      73746172 
+ 2363      7400
+ 2364              	.LASF0:
+ 2365 024a 7369676E 		.ascii	"signed char\000"
+ 2365      65642063 
+ 2365      68617200 
+ 2366              	.LASF23:
+ 2367 0256 73746570 		.ascii	"step_response\000"
+ 2367      5F726573 
+ 2367      706F6E73 
+ 2367      6500
+ 2368              	.LASF7:
+ 2369 0264 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 2369      206C6F6E 
+ 2369      6720756E 
+ 2369      7369676E 
+ 2369      65642069 
+ 2370              	.LASF68:
+ 2371 027b 50574D5F 		.ascii	"PWM_M1_WriteCompare\000"
+ 2371      4D315F57 
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccLQTamn.s 			page 49
+
+
+ 2371      72697465 
+ 2371      436F6D70 
+ 2371      61726500 
+ 2372              	.LASF8:
+ 2373 028f 756E7369 		.ascii	"unsigned int\000"
+ 2373      676E6564 
+ 2373      20696E74 
+ 2373      00
+ 2374              	.LASF5:
+ 2375 029c 6C6F6E67 		.ascii	"long unsigned int\000"
+ 2375      20756E73 
+ 2375      69676E65 
+ 2375      6420696E 
+ 2375      7400
+ 2376              	.LASF32:
+ 2377 02ae 4765745F 		.ascii	"Get_Destination\000"
+ 2377      44657374 
+ 2377      696E6174 
+ 2377      696F6E00 
+ 2378              	.LASF45:
+ 2379 02be 6375725F 		.ascii	"cur_pos_right\000"
+ 2379      706F735F 
+ 2379      72696768 
+ 2379      7400
+ 2380              	.LASF3:
+ 2381 02cc 73686F72 		.ascii	"short unsigned int\000"
+ 2381      7420756E 
+ 2381      7369676E 
+ 2381      65642069 
+ 2381      6E7400
+ 2382              	.LASF53:
+ 2383 02df 6572726F 		.ascii	"error_right\000"
+ 2383      725F7269 
+ 2383      67687400 
+ 2384              	.LASF43:
+ 2385 02eb 70726576 		.ascii	"prev_dest_left\000"
+ 2385      5F646573 
+ 2385      745F6C65 
+ 2385      667400
+ 2386              	.LASF30:
+ 2387 02fa 73746F70 		.ascii	"stop\000"
+ 2387      00
+ 2388              	.LASF17:
+ 2389 02ff 63686172 		.ascii	"char\000"
+ 2389      00
+ 2390              	.LASF74:
+ 2391 0304 474E5520 		.ascii	"GNU C 4.9.3 20150303 (release) [ARM/embedded-4_9-br"
+ 2391      4320342E 
+ 2391      392E3320 
+ 2391      32303135 
+ 2391      30333033 
+ 2392 0337 616E6368 		.ascii	"anch revision 221220] -mcpu=cortex-m3 -mthumb -g -O"
+ 2392      20726576 
+ 2392      6973696F 
+ 2392      6E203232 
+ 2392      31323230 
+ 2393 036a 67202D66 		.ascii	"g -ffunction-sections -ffat-lto-objects\000"
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccLQTamn.s 			page 50
+
+
+ 2393      66756E63 
+ 2393      74696F6E 
+ 2393      2D736563 
+ 2393      74696F6E 
+ 2394              	.LASF10:
+ 2395 0392 696E7433 		.ascii	"int32_t\000"
+ 2395      325F7400 
+ 2396              	.LASF16:
+ 2397 039a 63686172 		.ascii	"char8\000"
+ 2397      3800
+ 2398              	.LASF62:
+ 2399 03a0 74696D65 		.ascii	"time_ms\000"
+ 2399      5F6D7300 
+ 2400              	.LASF41:
+ 2401 03a8 6375725F 		.ascii	"cur_dest_right\000"
+ 2401      64657374 
+ 2401      5F726967 
+ 2401      687400
+ 2402              	.LASF61:
+ 2403 03b7 696E635F 		.ascii	"inc_right\000"
+ 2403      72696768 
+ 2403      7400
+ 2404              	.LASF29:
+ 2405 03c1 696E6372 		.ascii	"incright\000"
+ 2405      69676874 
+ 2405      00
+ 2406              	.LASF13:
+ 2407 03ca 696E7433 		.ascii	"int32\000"
+ 2407      3200
+ 2408              	.LASF15:
+ 2409 03d0 646F7562 		.ascii	"double\000"
+ 2409      6C6500
+ 2410              	.LASF36:
+ 2411 03d7 43686563 		.ascii	"Check_Speed\000"
+ 2411      6B5F5370 
+ 2411      65656400 
+ 2412              	.LASF57:
+ 2413 03e3 6572726F 		.ascii	"error_right_sum\000"
+ 2413      725F7269 
+ 2413      6768745F 
+ 2413      73756D00 
+ 2414              	.LASF31:
+ 2415 03f3 4765745F 		.ascii	"Get_Position\000"
+ 2415      506F7369 
+ 2415      74696F6E 
+ 2415      00
+ 2416              	.LASF9:
+ 2417 0400 5F5F696E 		.ascii	"__int32_t\000"
+ 2417      7433325F 
+ 2417      7400
+ 2418              	.LASF75:
+ 2419 040a 6D6F7665 		.ascii	"movement.c\000"
+ 2419      6D656E74 
+ 2419      2E6300
+ 2420              	.LASF37:
+ 2421 0415 5072696E 		.ascii	"Print_Values\000"
+ 2421      745F5661 
+ARM GAS  C:\Users\shevi\AppData\Local\Temp\ccLQTamn.s 			page 51
+
+
+ 2421      6C756573 
+ 2421      00
+ 2422              	.LASF33:
+ 2423 0422 4765745F 		.ascii	"Get_Error\000"
+ 2423      4572726F 
+ 2423      7200
+ 2424              	.LASF47:
+ 2425 042c 6C617374 		.ascii	"last_pos_left\000"
+ 2425      5F706F73 
+ 2425      5F6C6566 
+ 2425      7400
+ 2426              	.LASF20:
+ 2427 043a 73696465 		.ascii	"side\000"
+ 2427      00
+ 2428              	.LASF38:
+ 2429 043f 49544D5F 		.ascii	"ITM_RxBuffer\000"
+ 2429      52784275 
+ 2429      66666572 
+ 2429      00
+ 2430              	.LASF60:
+ 2431 044c 696E635F 		.ascii	"inc_left\000"
+ 2431      6C656674 
+ 2431      00
+ 2432              	.LASF59:
+ 2433 0455 73706565 		.ascii	"speed_right\000"
+ 2433      645F7269 
+ 2433      67687400 
+ 2434              	.LASF27:
+ 2435 0461 6E65775F 		.ascii	"new_path\000"
+ 2435      70617468 
+ 2435      00
+ 2436              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 4.9.3 20150303 (release) [ARM/embedded-4_9-br

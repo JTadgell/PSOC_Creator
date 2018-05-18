@@ -1,0 +1,11 @@
+--------------- Rebuild Started: 04/19/2018 13:54:17 Project: movement.c, Configuration: ARM GCC 4.9-2015-q1-update Debug ---------------
+arm-none-eabi-gcc.exe -mcpu=cortex-m3 -mthumb -I. -IGenerated_Source\PSoC5 -Wa,-alh=.\CortexM3\ARM_GCC_493\Debug/movement.lst -g -D DEBUG -Wall -ffunction-sections -Og -ffat-lto-objects -c movement.c -o .\CortexM3\ARM_GCC_493\Debug\movement.o
+movement.c: In function 'straight':
+movement.c:193:1: warning: control reaches end of non-void function [-Wreturn-type]
+ }
+ ^
+movement.c: In function 'turn':
+movement.c:197:1: warning: control reaches end of non-void function [-Wreturn-type]
+ } 
+ ^
+--------------- Rebuild Succeeded: 04/19/2018 13:54:18 ---------------
