@@ -1,0 +1,2043 @@
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.file	"main.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.section	.text.Timer_1_Handler,"ax",%progbits
+  19              		.align	2
+  20              		.global	Timer_1_Handler
+  21              		.thumb
+  22              		.thumb_func
+  23              		.type	Timer_1_Handler, %function
+  24              	Timer_1_Handler:
+  25              	.LFB65:
+  26              		.file 1 "main.c"
+   1:main.c        **** // include directives
+   2:main.c        **** #include "project.h"
+   3:main.c        **** #include <math.h>
+   4:main.c        **** #include <stdio.h>
+   5:main.c        **** #include <stdint.h>
+   6:main.c        **** #include <time.h>
+   7:main.c        **** 
+   8:main.c        **** extern void forward();
+   9:main.c        **** extern void stop();
+  10:main.c        **** extern void drive();
+  11:main.c        **** extern void turn_wheel();
+  12:main.c        **** extern void turn();
+  13:main.c        **** extern void straight();
+  14:main.c        **** extern void turn();
+  15:main.c        **** extern void Check_Speed();
+  16:main.c        **** extern void Print_Values();
+  17:main.c        **** extern void new_path();
+  18:main.c        **** extern int get_serial_update();
+  19:main.c        **** extern void get_serial_speed();
+  20:main.c        **** extern void get_serial_control();
+  21:main.c        **** extern void test_values();
+  22:main.c        **** extern void step_response();
+  23:main.c        **** extern void update_angle();
+  24:main.c        **** 
+  25:main.c        **** 
+  26:main.c        **** char mystring[50];
+  27:main.c        **** 
+  28:main.c        **** //turn on all components
+  29:main.c        **** void Setup(){
+  30:main.c        ****     
+  31:main.c        ****     PWM_M1_Start();
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 2
+
+
+  32:main.c        ****     PWM_M2_Start();
+  33:main.c        ****     UART_Start();
+  34:main.c        ****     M1Clock_Start();
+  35:main.c        ****     MClock_Start();
+  36:main.c        ****     
+  37:main.c        ****     M1QuadDec_Start();
+  38:main.c        ****     M1QuadDec_Enable();
+  39:main.c        ****     CyDelay(1000);
+  40:main.c        ****     M1QuadDec_SetCounter(0);
+  41:main.c        **** 
+  42:main.c        ****     CyDelay(1000);
+  43:main.c        ****     
+  44:main.c        ****     M2QuadDec_Start();
+  45:main.c        ****     M2QuadDec_Enable();
+  46:main.c        ****     CyDelay(1000);
+  47:main.c        ****     M2QuadDec_SetCounter(0);
+  48:main.c        ****     
+  49:main.c        ****     Timer_1_Start();
+  50:main.c        ****     isr_1ms_Enable();
+  51:main.c        ****    
+  52:main.c        **** }
+  53:main.c        **** 
+  54:main.c        **** void Stop(){
+  55:main.c        **** PWM_M1_Stop();
+  56:main.c        ****     PWM_M2_Stop();}
+  57:main.c        **** CY_ISR( Timer_1_Handler ){
+  27              		.loc 1 57 0
+  28              		.cfi_startproc
+  29              		@ args = 0, pretend = 0, frame = 0
+  30              		@ frame_needed = 0, uses_anonymous_args = 0
+  31 0000 08B5     		push	{r3, lr}
+  32              		.cfi_def_cfa_offset 8
+  33              		.cfi_offset 3, -8
+  34              		.cfi_offset 14, -4
+  58:main.c        ****     
+  59:main.c        ****     Check_Speed(30);
+  35              		.loc 1 59 0
+  36 0002 1E20     		movs	r0, #30
+  37 0004 FFF7FEFF 		bl	Check_Speed
+  38              	.LVL0:
+  60:main.c        ****     Timer_1_ReadStatusRegister();
+  39              		.loc 1 60 0
+  40 0008 FFF7FEFF 		bl	Timer_1_ReadStatusRegister
+  41              	.LVL1:
+  42 000c 08BD     		pop	{r3, pc}
+  43              		.cfi_endproc
+  44              	.LFE65:
+  45              		.size	Timer_1_Handler, .-Timer_1_Handler
+  46 000e 00BF     		.section	.text.Setup,"ax",%progbits
+  47              		.align	2
+  48              		.global	Setup
+  49              		.thumb
+  50              		.thumb_func
+  51              		.type	Setup, %function
+  52              	Setup:
+  53              	.LFB63:
+  29:main.c        ****     
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 3
+
+
+  54              		.loc 1 29 0
+  55              		.cfi_startproc
+  56              		@ args = 0, pretend = 0, frame = 0
+  57              		@ frame_needed = 0, uses_anonymous_args = 0
+  58 0000 08B5     		push	{r3, lr}
+  59              		.cfi_def_cfa_offset 8
+  60              		.cfi_offset 3, -8
+  61              		.cfi_offset 14, -4
+  31:main.c        ****     PWM_M2_Start();
+  62              		.loc 1 31 0
+  63 0002 FFF7FEFF 		bl	PWM_M1_Start
+  64              	.LVL2:
+  32:main.c        ****     UART_Start();
+  65              		.loc 1 32 0
+  66 0006 FFF7FEFF 		bl	PWM_M2_Start
+  67              	.LVL3:
+  33:main.c        ****     M1Clock_Start();
+  68              		.loc 1 33 0
+  69 000a FFF7FEFF 		bl	UART_Start
+  70              	.LVL4:
+  34:main.c        ****     MClock_Start();
+  71              		.loc 1 34 0
+  72 000e FFF7FEFF 		bl	M1Clock_Start
+  73              	.LVL5:
+  35:main.c        ****     
+  74              		.loc 1 35 0
+  75 0012 FFF7FEFF 		bl	MClock_Start
+  76              	.LVL6:
+  37:main.c        ****     M1QuadDec_Enable();
+  77              		.loc 1 37 0
+  78 0016 FFF7FEFF 		bl	M1QuadDec_Start
+  79              	.LVL7:
+  38:main.c        ****     CyDelay(1000);
+  80              		.loc 1 38 0
+  81 001a FFF7FEFF 		bl	M1QuadDec_Enable
+  82              	.LVL8:
+  39:main.c        ****     M1QuadDec_SetCounter(0);
+  83              		.loc 1 39 0
+  84 001e 4FF47A70 		mov	r0, #1000
+  85 0022 FFF7FEFF 		bl	CyDelay
+  86              	.LVL9:
+  40:main.c        **** 
+  87              		.loc 1 40 0
+  88 0026 0020     		movs	r0, #0
+  89 0028 FFF7FEFF 		bl	M1QuadDec_SetCounter
+  90              	.LVL10:
+  42:main.c        ****     
+  91              		.loc 1 42 0
+  92 002c 4FF47A70 		mov	r0, #1000
+  93 0030 FFF7FEFF 		bl	CyDelay
+  94              	.LVL11:
+  44:main.c        ****     M2QuadDec_Enable();
+  95              		.loc 1 44 0
+  96 0034 FFF7FEFF 		bl	M2QuadDec_Start
+  97              	.LVL12:
+  45:main.c        ****     CyDelay(1000);
+  98              		.loc 1 45 0
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 4
+
+
+  99 0038 FFF7FEFF 		bl	M2QuadDec_Enable
+ 100              	.LVL13:
+  46:main.c        ****     M2QuadDec_SetCounter(0);
+ 101              		.loc 1 46 0
+ 102 003c 4FF47A70 		mov	r0, #1000
+ 103 0040 FFF7FEFF 		bl	CyDelay
+ 104              	.LVL14:
+  47:main.c        ****     
+ 105              		.loc 1 47 0
+ 106 0044 0020     		movs	r0, #0
+ 107 0046 FFF7FEFF 		bl	M2QuadDec_SetCounter
+ 108              	.LVL15:
+  49:main.c        ****     isr_1ms_Enable();
+ 109              		.loc 1 49 0
+ 110 004a FFF7FEFF 		bl	Timer_1_Start
+ 111              	.LVL16:
+  50:main.c        ****    
+ 112              		.loc 1 50 0
+ 113 004e FFF7FEFF 		bl	isr_1ms_Enable
+ 114              	.LVL17:
+ 115 0052 08BD     		pop	{r3, pc}
+ 116              		.cfi_endproc
+ 117              	.LFE63:
+ 118              		.size	Setup, .-Setup
+ 119              		.section	.text.Stop,"ax",%progbits
+ 120              		.align	2
+ 121              		.global	Stop
+ 122              		.thumb
+ 123              		.thumb_func
+ 124              		.type	Stop, %function
+ 125              	Stop:
+ 126              	.LFB64:
+  54:main.c        **** PWM_M1_Stop();
+ 127              		.loc 1 54 0
+ 128              		.cfi_startproc
+ 129              		@ args = 0, pretend = 0, frame = 0
+ 130              		@ frame_needed = 0, uses_anonymous_args = 0
+ 131 0000 08B5     		push	{r3, lr}
+ 132              		.cfi_def_cfa_offset 8
+ 133              		.cfi_offset 3, -8
+ 134              		.cfi_offset 14, -4
+  55:main.c        ****     PWM_M2_Stop();}
+ 135              		.loc 1 55 0
+ 136 0002 FFF7FEFF 		bl	PWM_M1_Stop
+ 137              	.LVL18:
+  56:main.c        **** CY_ISR( Timer_1_Handler ){
+ 138              		.loc 1 56 0
+ 139 0006 FFF7FEFF 		bl	PWM_M2_Stop
+ 140              	.LVL19:
+ 141 000a 08BD     		pop	{r3, pc}
+ 142              		.cfi_endproc
+ 143              	.LFE64:
+ 144              		.size	Stop, .-Stop
+ 145              		.section	.text.main,"ax",%progbits
+ 146              		.align	2
+ 147              		.global	main
+ 148              		.thumb
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 5
+
+
+ 149              		.thumb_func
+ 150              		.type	main, %function
+ 151              	main:
+ 152              	.LFB66:
+  61:main.c        ****     //Print_Values();
+  62:main.c        ****     
+  63:main.c        ****     
+  64:main.c        **** }
+  65:main.c        **** 
+  66:main.c        **** int main(void){
+ 153              		.loc 1 66 0
+ 154              		.cfi_startproc
+ 155              		@ args = 0, pretend = 0, frame = 16
+ 156              		@ frame_needed = 0, uses_anonymous_args = 0
+ 157 0000 10B5     		push	{r4, lr}
+ 158              		.cfi_def_cfa_offset 8
+ 159              		.cfi_offset 4, -8
+ 160              		.cfi_offset 14, -4
+ 161 0002 84B0     		sub	sp, sp, #16
+ 162              		.cfi_def_cfa_offset 24
+  67:main.c        ****     
+  68:main.c        ****     CyGlobalIntEnable;
+ 163              		.loc 1 68 0
+ 164              	@ 68 "main.c" 1
+ 165 0004 62B6     		CPSIE   i
+ 166              	@ 0 "" 2
+  69:main.c        ****     
+  70:main.c        ****     Setup();
+ 167              		.loc 1 70 0
+ 168              		.thumb
+ 169 0006 FFF7FEFF 		bl	Setup
+ 170              	.LVL20:
+  71:main.c        ****     char str[50];
+  72:main.c        **** 
+  73:main.c        ****     isr_1ms_StartEx( Timer_1_Handler );
+ 171              		.loc 1 73 0
+ 172 000a 1F48     		ldr	r0, .L17
+ 173 000c FFF7FEFF 		bl	isr_1ms_StartEx
+ 174              	.LVL21:
+  74:main.c        ****     int counter = 0; 
+  75:main.c        ****     Timer_1_WritePeriod(12000); //CHANGE THIS BACK TO 12000
+ 175              		.loc 1 75 0
+ 176 0010 42F6E060 		movw	r0, #12000
+ 177 0014 FFF7FEFF 		bl	Timer_1_WritePeriod
+ 178              	.LVL22:
+  76:main.c        ****     int trigger1=0;
+  77:main.c        ****     int int1=0;
+ 179              		.loc 1 77 0
+ 180 0018 0023     		movs	r3, #0
+ 181 001a 0393     		str	r3, [sp, #12]
+  78:main.c        ****     int int2=0;
+ 182              		.loc 1 78 0
+ 183 001c 0293     		str	r3, [sp, #8]
+ 184              	.LVL23:
+ 185              	.L8:
+  79:main.c        ****     int int3=0;
+  80:main.c        ****     int update;
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 6
+
+
+  81:main.c        ****     double int11;
+  82:main.c        ****     double int22;
+  83:main.c        ****     double int33;
+  84:main.c        ****     long int angle;
+  85:main.c        ****     int i;
+  86:main.c        ****      /*  
+  87:main.c        ****     for(;;){ 
+  88:main.c        ****     
+  89:main.c        ****     get_serial_update(&update);
+  90:main.c        ****     
+  91:main.c        ****     if(update==0){      
+  92:main.c        ****         UART_PutString("----- Reset -----\n"); 
+  93:main.c        ****         CySoftwareReset();
+  94:main.c        ****         
+  95:main.c        ****     }
+  96:main.c        ****     else if (update==2){
+  97:main.c        ****         UART_PutString("----- Speed -----\n"); 
+  98:main.c        ****         get_serial_speed(&int1, &int2);
+  99:main.c        ****         new_path(int1,int2);
+ 100:main.c        ****         do {                
+ 101:main.c        ****             Print_Values();
+ 102:main.c        ****             if((0u != UART_ReadRxStatus())||(0u != UART_GetRxBufferSize())){trigger1=1;}
+ 103:main.c        ****         } while(trigger1==0);
+ 104:main.c        ****     
+ 105:main.c        ****     }
+ 106:main.c        ****     else if (update==1){
+ 107:main.c        ****         UART_PutString("----- Update  -----\n"); 
+ 108:main.c        ****         get_serial_control(&int11,&int22,&int33);
+ 109:main.c        ****         test_values(int11,int22,int33); 
+ 110:main.c        ****     } 
+ 111:main.c        ****     else if (update==3){
+ 112:main.c        ****         
+ 113:main.c        ****         UART_PutString("----- Distance -----\n"); 
+ 114:main.c        ****         get_serial_speed(&int111, &int222);
+ 115:main.c        ****         step_response(int111,int222);
+ 116:main.c        ****         
+ 117:main.c        ****         do {                
+ 118:main.c        ****             Print_Values();
+ 119:main.c        ****             if((0u != UART_ReadRxStatus())||(0u != UART_GetRxBufferSize())){trigger1=1;}
+ 120:main.c        ****         } while(trigger1==0);
+ 121:main.c        ****     
+ 122:main.c        ****     }
+ 123:main.c        ****     trigger1=0;
+ 124:main.c        ****     
+ 125:main.c        ****     
+ 126:main.c        ****     }
+ 127:main.c        ****     */
+ 128:main.c        ****     
+ 129:main.c        ****     
+ 130:main.c        ****     for(;;){
+ 131:main.c        ****         get_serial_update(&update);
+ 186              		.loc 1 131 0
+ 187 001e 01A8     		add	r0, sp, #4
+ 188 0020 FFF7FEFF 		bl	get_serial_update
+ 189              	.LVL24:
+ 132:main.c        ****         
+ 133:main.c        ****         if(update==0){      
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 7
+
+
+ 190              		.loc 1 133 0
+ 191 0024 019B     		ldr	r3, [sp, #4]
+ 192 0026 2BB9     		cbnz	r3, .L9
+ 134:main.c        ****             UART_PutString("----- Reset -----\n"); 
+ 193              		.loc 1 134 0
+ 194 0028 1848     		ldr	r0, .L17+4
+ 195 002a FFF7FEFF 		bl	UART_PutString
+ 196              	.LVL25:
+ 135:main.c        ****             CySoftwareReset();
+ 197              		.loc 1 135 0
+ 198 002e FFF7FEFF 		bl	CySoftwareReset
+ 199              	.LVL26:
+ 200 0032 F4E7     		b	.L8
+ 201              	.L9:
+ 136:main.c        ****             
+ 137:main.c        ****         }
+ 138:main.c        ****         // update the base speed of the robot
+ 139:main.c        ****         else if (update==2){
+ 202              		.loc 1 139 0
+ 203 0034 022B     		cmp	r3, #2
+ 204 0036 0BD1     		bne	.L11
+ 140:main.c        ****             UART_PutString("----- Speed -----\n"); 
+ 205              		.loc 1 140 0
+ 206 0038 1548     		ldr	r0, .L17+8
+ 207 003a FFF7FEFF 		bl	UART_PutString
+ 208              	.LVL27:
+ 141:main.c        ****             get_serial_speed(&int1, &int2);
+ 209              		.loc 1 141 0
+ 210 003e 03A8     		add	r0, sp, #12
+ 211 0040 02A9     		add	r1, sp, #8
+ 212 0042 FFF7FEFF 		bl	get_serial_speed
+ 213              	.LVL28:
+ 142:main.c        ****             new_path(int1,int2);
+ 214              		.loc 1 142 0
+ 215 0046 0398     		ldr	r0, [sp, #12]
+ 216 0048 0299     		ldr	r1, [sp, #8]
+ 217 004a FFF7FEFF 		bl	new_path
+ 218              	.LVL29:
+ 219 004e E6E7     		b	.L8
+ 220              	.L11:
+ 143:main.c        ****         }
+ 144:main.c        **** 
+ 145:main.c        ****         // update a 1 time increment
+ 146:main.c        ****         else if (update==3){
+ 221              		.loc 1 146 0
+ 222 0050 032B     		cmp	r3, #3
+ 223 0052 E4D1     		bne	.L8
+ 147:main.c        ****         UART_PutString("----- Angle -----\n"); 
+ 224              		.loc 1 147 0
+ 225 0054 0F48     		ldr	r0, .L17+12
+ 226 0056 FFF7FEFF 		bl	UART_PutString
+ 227              	.LVL30:
+ 148:main.c        ****         get_serial_update(&angle);
+ 228              		.loc 1 148 0
+ 229 005a 6846     		mov	r0, sp
+ 230 005c FFF7FEFF 		bl	get_serial_update
+ 231              	.LVL31:
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 8
+
+
+ 149:main.c        ****         update_angle(angle);
+ 232              		.loc 1 149 0
+ 233 0060 0098     		ldr	r0, [sp]
+ 234 0062 FFF7FEFF 		bl	update_angle
+ 235              	.LVL32:
+ 236 0066 0024     		movs	r4, #0
+ 237              	.LVL33:
+ 238              	.L13:
+ 150:main.c        ****         
+ 151:main.c        ****         do {                
+ 152:main.c        ****             Print_Values();
+ 239              		.loc 1 152 0
+ 240 0068 FFF7FEFF 		bl	Print_Values
+ 241              	.LVL34:
+ 153:main.c        ****             if((0u != UART_ReadRxStatus())||(0u != UART_GetRxBufferSize())){trigger1=1;}
+ 242              		.loc 1 153 0
+ 243 006c FFF7FEFF 		bl	UART_ReadRxStatus
+ 244              	.LVL35:
+ 245 0070 18B9     		cbnz	r0, .L14
+ 246              		.loc 1 153 0 is_stmt 0 discriminator 2
+ 247 0072 FFF7FEFF 		bl	UART_GetRxBufferSize
+ 248              	.LVL36:
+ 249 0076 10B9     		cbnz	r0, .L15
+ 250 0078 02E0     		b	.L12
+ 251              	.L14:
+ 252              		.loc 1 153 0
+ 253 007a 0124     		movs	r4, #1
+ 254              	.LVL37:
+ 255 007c 00E0     		b	.L12
+ 256              	.LVL38:
+ 257              	.L15:
+ 258 007e 0124     		movs	r4, #1
+ 259              	.LVL39:
+ 260              	.L12:
+ 154:main.c        ****         } while(trigger1==0);
+ 261              		.loc 1 154 0 is_stmt 1
+ 262 0080 002C     		cmp	r4, #0
+ 263 0082 F1D0     		beq	.L13
+ 264 0084 CBE7     		b	.L8
+ 265              	.L18:
+ 266 0086 00BF     		.align	2
+ 267              	.L17:
+ 268 0088 00000000 		.word	Timer_1_Handler
+ 269 008c 00000000 		.word	.LC0
+ 270 0090 14000000 		.word	.LC1
+ 271 0094 28000000 		.word	.LC2
+ 272              		.cfi_endproc
+ 273              	.LFE66:
+ 274              		.size	main, .-main
+ 275              		.comm	mystring,50,4
+ 276              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 277              		.align	2
+ 278              	.LC0:
+ 279 0000 2D2D2D2D 		.ascii	"----- Reset -----\012\000"
+ 279      2D205265 
+ 279      73657420 
+ 279      2D2D2D2D 
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 9
+
+
+ 279      2D0A00
+ 280 0013 00       		.space	1
+ 281              	.LC1:
+ 282 0014 2D2D2D2D 		.ascii	"----- Speed -----\012\000"
+ 282      2D205370 
+ 282      65656420 
+ 282      2D2D2D2D 
+ 282      2D0A00
+ 283 0027 00       		.space	1
+ 284              	.LC2:
+ 285 0028 2D2D2D2D 		.ascii	"----- Angle -----\012\000"
+ 285      2D20416E 
+ 285      676C6520 
+ 285      2D2D2D2D 
+ 285      2D0A00
+ 286 003b 00       		.text
+ 287              	.Letext0:
+ 288              		.file 2 "c:\\program files (x86)\\cypress\\psoc creator\\4.0\\psoc creator\\import\\gnu\\arm\\4.9.
+ 289              		.file 3 "c:\\program files (x86)\\cypress\\psoc creator\\4.0\\psoc creator\\import\\gnu\\arm\\4.9.
+ 290              		.file 4 "Generated_Source\\PSoC5/cytypes.h"
+ 291              		.file 5 "Generated_Source\\PSoC5/core_cm3.h"
+ 292              		.file 6 "Generated_Source\\PSoC5/PWM_M1.h"
+ 293              		.file 7 "Generated_Source\\PSoC5/PWM_M2.h"
+ 294              		.file 8 "Generated_Source\\PSoC5/UART.h"
+ 295              		.file 9 "Generated_Source\\PSoC5/M1Clock.h"
+ 296              		.file 10 "Generated_Source\\PSoC5/MClock.h"
+ 297              		.file 11 "Generated_Source\\PSoC5/M1QuadDec.h"
+ 298              		.file 12 "Generated_Source\\PSoC5/CyLib.h"
+ 299              		.file 13 "Generated_Source\\PSoC5/M2QuadDec.h"
+ 300              		.file 14 "Generated_Source\\PSoC5/Timer_1.h"
+ 301              		.file 15 "Generated_Source\\PSoC5/isr_1ms.h"
+ 302              		.section	.debug_info,"",%progbits
+ 303              	.Ldebug_info0:
+ 304 0000 40050000 		.4byte	0x540
+ 305 0004 0400     		.2byte	0x4
+ 306 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 307 000a 04       		.byte	0x4
+ 308 000b 01       		.uleb128 0x1
+ 309 000c 76020000 		.4byte	.LASF65
+ 310 0010 01       		.byte	0x1
+ 311 0011 58030000 		.4byte	.LASF66
+ 312 0015 F1000000 		.4byte	.LASF67
+ 313 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 314 001d 00000000 		.4byte	0
+ 315 0021 00000000 		.4byte	.Ldebug_line0
+ 316 0025 02       		.uleb128 0x2
+ 317 0026 01       		.byte	0x1
+ 318 0027 06       		.byte	0x6
+ 319 0028 C5000000 		.4byte	.LASF0
+ 320 002c 02       		.uleb128 0x2
+ 321 002d 01       		.byte	0x1
+ 322 002e 08       		.byte	0x8
+ 323 002f 80010000 		.4byte	.LASF1
+ 324 0033 02       		.uleb128 0x2
+ 325 0034 02       		.byte	0x2
+ 326 0035 05       		.byte	0x5
+ 327 0036 25000000 		.4byte	.LASF2
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 10
+
+
+ 328 003a 02       		.uleb128 0x2
+ 329 003b 02       		.byte	0x2
+ 330 003c 07       		.byte	0x7
+ 331 003d 5E020000 		.4byte	.LASF3
+ 332 0041 03       		.uleb128 0x3
+ 333 0042 A1030000 		.4byte	.LASF9
+ 334 0046 02       		.byte	0x2
+ 335 0047 3F       		.byte	0x3f
+ 336 0048 4C000000 		.4byte	0x4c
+ 337 004c 02       		.uleb128 0x2
+ 338 004d 04       		.byte	0x4
+ 339 004e 05       		.byte	0x5
+ 340 004f 55010000 		.4byte	.LASF4
+ 341 0053 02       		.uleb128 0x2
+ 342 0054 04       		.byte	0x4
+ 343 0055 07       		.byte	0x7
+ 344 0056 5F030000 		.4byte	.LASF5
+ 345 005a 02       		.uleb128 0x2
+ 346 005b 08       		.byte	0x8
+ 347 005c 05       		.byte	0x5
+ 348 005d 37010000 		.4byte	.LASF6
+ 349 0061 02       		.uleb128 0x2
+ 350 0062 08       		.byte	0x8
+ 351 0063 07       		.byte	0x7
+ 352 0064 0F020000 		.4byte	.LASF7
+ 353 0068 04       		.uleb128 0x4
+ 354 0069 04       		.byte	0x4
+ 355 006a 05       		.byte	0x5
+ 356 006b 696E7400 		.ascii	"int\000"
+ 357 006f 02       		.uleb128 0x2
+ 358 0070 04       		.byte	0x4
+ 359 0071 07       		.byte	0x7
+ 360 0072 26020000 		.4byte	.LASF8
+ 361 0076 03       		.uleb128 0x3
+ 362 0077 0F030000 		.4byte	.LASF10
+ 363 007b 03       		.byte	0x3
+ 364 007c 2C       		.byte	0x2c
+ 365 007d 41000000 		.4byte	0x41
+ 366 0081 05       		.uleb128 0x5
+ 367 0082 BF000000 		.4byte	.LASF11
+ 368 0086 04       		.byte	0x4
+ 369 0087 9201     		.2byte	0x192
+ 370 0089 2C000000 		.4byte	0x2c
+ 371 008d 05       		.uleb128 0x5
+ 372 008e 23030000 		.4byte	.LASF12
+ 373 0092 04       		.byte	0x4
+ 374 0093 9301     		.2byte	0x193
+ 375 0095 3A000000 		.4byte	0x3a
+ 376 0099 05       		.uleb128 0x5
+ 377 009a 8E030000 		.4byte	.LASF13
+ 378 009e 04       		.byte	0x4
+ 379 009f 9401     		.2byte	0x194
+ 380 00a1 53000000 		.4byte	0x53
+ 381 00a5 05       		.uleb128 0x5
+ 382 00a6 82030000 		.4byte	.LASF14
+ 383 00aa 04       		.byte	0x4
+ 384 00ab 9701     		.2byte	0x197
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 11
+
+
+ 385 00ad 4C000000 		.4byte	0x4c
+ 386 00b1 02       		.uleb128 0x2
+ 387 00b2 04       		.byte	0x4
+ 388 00b3 04       		.byte	0x4
+ 389 00b4 E1000000 		.4byte	.LASF15
+ 390 00b8 02       		.uleb128 0x2
+ 391 00b9 08       		.byte	0x8
+ 392 00ba 04       		.byte	0x4
+ 393 00bb C3030000 		.4byte	.LASF16
+ 394 00bf 05       		.uleb128 0x5
+ 395 00c0 49000000 		.4byte	.LASF17
+ 396 00c4 04       		.byte	0x4
+ 397 00c5 A301     		.2byte	0x1a3
+ 398 00c7 CB000000 		.4byte	0xcb
+ 399 00cb 02       		.uleb128 0x2
+ 400 00cc 01       		.byte	0x1
+ 401 00cd 08       		.byte	0x8
+ 402 00ce 71020000 		.4byte	.LASF18
+ 403 00d2 05       		.uleb128 0x5
+ 404 00d3 CA010000 		.4byte	.LASF19
+ 405 00d7 04       		.byte	0x4
+ 406 00d8 4E02     		.2byte	0x24e
+ 407 00da DE000000 		.4byte	0xde
+ 408 00de 06       		.uleb128 0x6
+ 409 00df 04       		.byte	0x4
+ 410 00e0 E4000000 		.4byte	0xe4
+ 411 00e4 07       		.uleb128 0x7
+ 412 00e5 02       		.uleb128 0x2
+ 413 00e6 04       		.byte	0x4
+ 414 00e7 07       		.byte	0x7
+ 415 00e8 2F000000 		.4byte	.LASF20
+ 416 00ec 02       		.uleb128 0x2
+ 417 00ed 08       		.byte	0x8
+ 418 00ee 04       		.byte	0x4
+ 419 00ef AC010000 		.4byte	.LASF21
+ 420 00f3 08       		.uleb128 0x8
+ 421 00f4 D1000000 		.4byte	.LASF68
+ 422 00f8 01       		.byte	0x1
+ 423 00f9 39       		.byte	0x39
+ 424 00fa 00000000 		.4byte	.LFB65
+ 425 00fe 0E000000 		.4byte	.LFE65-.LFB65
+ 426 0102 01       		.uleb128 0x1
+ 427 0103 9C       		.byte	0x9c
+ 428 0104 25010000 		.4byte	0x125
+ 429 0108 09       		.uleb128 0x9
+ 430 0109 08000000 		.4byte	.LVL0
+ 431 010d FD030000 		.4byte	0x3fd
+ 432 0111 1B010000 		.4byte	0x11b
+ 433 0115 0A       		.uleb128 0xa
+ 434 0116 01       		.uleb128 0x1
+ 435 0117 50       		.byte	0x50
+ 436 0118 01       		.uleb128 0x1
+ 437 0119 4E       		.byte	0x4e
+ 438 011a 00       		.byte	0
+ 439 011b 0B       		.uleb128 0xb
+ 440 011c 0C000000 		.4byte	.LVL1
+ 441 0120 0A040000 		.4byte	0x40a
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 12
+
+
+ 442 0124 00       		.byte	0
+ 443 0125 0C       		.uleb128 0xc
+ 444 0126 58020000 		.4byte	.LASF22
+ 445 012a 01       		.byte	0x1
+ 446 012b 1D       		.byte	0x1d
+ 447 012c 00000000 		.4byte	.LFB63
+ 448 0130 54000000 		.4byte	.LFE63-.LFB63
+ 449 0134 01       		.uleb128 0x1
+ 450 0135 9C       		.byte	0x9c
+ 451 0136 03020000 		.4byte	0x203
+ 452 013a 0B       		.uleb128 0xb
+ 453 013b 06000000 		.4byte	.LVL2
+ 454 013f 15040000 		.4byte	0x415
+ 455 0143 0B       		.uleb128 0xb
+ 456 0144 0A000000 		.4byte	.LVL3
+ 457 0148 1C040000 		.4byte	0x41c
+ 458 014c 0B       		.uleb128 0xb
+ 459 014d 0E000000 		.4byte	.LVL4
+ 460 0151 23040000 		.4byte	0x423
+ 461 0155 0B       		.uleb128 0xb
+ 462 0156 12000000 		.4byte	.LVL5
+ 463 015a 2A040000 		.4byte	0x42a
+ 464 015e 0B       		.uleb128 0xb
+ 465 015f 16000000 		.4byte	.LVL6
+ 466 0163 31040000 		.4byte	0x431
+ 467 0167 0B       		.uleb128 0xb
+ 468 0168 1A000000 		.4byte	.LVL7
+ 469 016c 38040000 		.4byte	0x438
+ 470 0170 0B       		.uleb128 0xb
+ 471 0171 1E000000 		.4byte	.LVL8
+ 472 0175 3F040000 		.4byte	0x43f
+ 473 0179 09       		.uleb128 0x9
+ 474 017a 26000000 		.4byte	.LVL9
+ 475 017e 46040000 		.4byte	0x446
+ 476 0182 8E010000 		.4byte	0x18e
+ 477 0186 0A       		.uleb128 0xa
+ 478 0187 01       		.uleb128 0x1
+ 479 0188 50       		.byte	0x50
+ 480 0189 03       		.uleb128 0x3
+ 481 018a 0A       		.byte	0xa
+ 482 018b E803     		.2byte	0x3e8
+ 483 018d 00       		.byte	0
+ 484 018e 09       		.uleb128 0x9
+ 485 018f 2C000000 		.4byte	.LVL10
+ 486 0193 57040000 		.4byte	0x457
+ 487 0197 A1010000 		.4byte	0x1a1
+ 488 019b 0A       		.uleb128 0xa
+ 489 019c 01       		.uleb128 0x1
+ 490 019d 50       		.byte	0x50
+ 491 019e 01       		.uleb128 0x1
+ 492 019f 30       		.byte	0x30
+ 493 01a0 00       		.byte	0
+ 494 01a1 09       		.uleb128 0x9
+ 495 01a2 34000000 		.4byte	.LVL11
+ 496 01a6 46040000 		.4byte	0x446
+ 497 01aa B6010000 		.4byte	0x1b6
+ 498 01ae 0A       		.uleb128 0xa
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 13
+
+
+ 499 01af 01       		.uleb128 0x1
+ 500 01b0 50       		.byte	0x50
+ 501 01b1 03       		.uleb128 0x3
+ 502 01b2 0A       		.byte	0xa
+ 503 01b3 E803     		.2byte	0x3e8
+ 504 01b5 00       		.byte	0
+ 505 01b6 0B       		.uleb128 0xb
+ 506 01b7 38000000 		.4byte	.LVL12
+ 507 01bb 68040000 		.4byte	0x468
+ 508 01bf 0B       		.uleb128 0xb
+ 509 01c0 3C000000 		.4byte	.LVL13
+ 510 01c4 6F040000 		.4byte	0x46f
+ 511 01c8 09       		.uleb128 0x9
+ 512 01c9 44000000 		.4byte	.LVL14
+ 513 01cd 46040000 		.4byte	0x446
+ 514 01d1 DD010000 		.4byte	0x1dd
+ 515 01d5 0A       		.uleb128 0xa
+ 516 01d6 01       		.uleb128 0x1
+ 517 01d7 50       		.byte	0x50
+ 518 01d8 03       		.uleb128 0x3
+ 519 01d9 0A       		.byte	0xa
+ 520 01da E803     		.2byte	0x3e8
+ 521 01dc 00       		.byte	0
+ 522 01dd 09       		.uleb128 0x9
+ 523 01de 4A000000 		.4byte	.LVL15
+ 524 01e2 76040000 		.4byte	0x476
+ 525 01e6 F0010000 		.4byte	0x1f0
+ 526 01ea 0A       		.uleb128 0xa
+ 527 01eb 01       		.uleb128 0x1
+ 528 01ec 50       		.byte	0x50
+ 529 01ed 01       		.uleb128 0x1
+ 530 01ee 30       		.byte	0x30
+ 531 01ef 00       		.byte	0
+ 532 01f0 0B       		.uleb128 0xb
+ 533 01f1 4E000000 		.4byte	.LVL16
+ 534 01f5 87040000 		.4byte	0x487
+ 535 01f9 0B       		.uleb128 0xb
+ 536 01fa 52000000 		.4byte	.LVL17
+ 537 01fe 8E040000 		.4byte	0x48e
+ 538 0202 00       		.byte	0
+ 539 0203 0C       		.uleb128 0xc
+ 540 0204 AB030000 		.4byte	.LASF23
+ 541 0208 01       		.byte	0x1
+ 542 0209 36       		.byte	0x36
+ 543 020a 00000000 		.4byte	.LFB64
+ 544 020e 0C000000 		.4byte	.LFE64-.LFB64
+ 545 0212 01       		.uleb128 0x1
+ 546 0213 9C       		.byte	0x9c
+ 547 0214 2B020000 		.4byte	0x22b
+ 548 0218 0B       		.uleb128 0xb
+ 549 0219 06000000 		.4byte	.LVL18
+ 550 021d 95040000 		.4byte	0x495
+ 551 0221 0B       		.uleb128 0xb
+ 552 0222 0A000000 		.4byte	.LVL19
+ 553 0226 9C040000 		.4byte	0x49c
+ 554 022a 00       		.byte	0
+ 555 022b 0D       		.uleb128 0xd
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 14
+
+
+ 556 022c 61000000 		.4byte	.LASF69
+ 557 0230 01       		.byte	0x1
+ 558 0231 42       		.byte	0x42
+ 559 0232 68000000 		.4byte	0x68
+ 560 0236 00000000 		.4byte	.LFB66
+ 561 023a 98000000 		.4byte	.LFE66-.LFB66
+ 562 023e 01       		.uleb128 0x1
+ 563 023f 9C       		.byte	0x9c
+ 564 0240 CB030000 		.4byte	0x3cb
+ 565 0244 0E       		.uleb128 0xe
+ 566 0245 73747200 		.ascii	"str\000"
+ 567 0249 01       		.byte	0x1
+ 568 024a 47       		.byte	0x47
+ 569 024b CB030000 		.4byte	0x3cb
+ 570 024f 0F       		.uleb128 0xf
+ 571 0250 00000000 		.4byte	.LASF24
+ 572 0254 01       		.byte	0x1
+ 573 0255 4A       		.byte	0x4a
+ 574 0256 68000000 		.4byte	0x68
+ 575 025a 00       		.byte	0
+ 576 025b 10       		.uleb128 0x10
+ 577 025c 77010000 		.4byte	.LASF25
+ 578 0260 01       		.byte	0x1
+ 579 0261 4C       		.byte	0x4c
+ 580 0262 68000000 		.4byte	0x68
+ 581 0266 00000000 		.4byte	.LLST0
+ 582 026a 11       		.uleb128 0x11
+ 583 026b 5E010000 		.4byte	.LASF26
+ 584 026f 01       		.byte	0x1
+ 585 0270 4D       		.byte	0x4d
+ 586 0271 68000000 		.4byte	0x68
+ 587 0275 02       		.uleb128 0x2
+ 588 0276 91       		.byte	0x91
+ 589 0277 74       		.sleb128 -12
+ 590 0278 11       		.uleb128 0x11
+ 591 0279 E7000000 		.4byte	.LASF27
+ 592 027d 01       		.byte	0x1
+ 593 027e 4E       		.byte	0x4e
+ 594 027f 68000000 		.4byte	0x68
+ 595 0283 02       		.uleb128 0x2
+ 596 0284 91       		.byte	0x91
+ 597 0285 70       		.sleb128 -16
+ 598 0286 0F       		.uleb128 0xf
+ 599 0287 EC000000 		.4byte	.LASF28
+ 600 028b 01       		.byte	0x1
+ 601 028c 4F       		.byte	0x4f
+ 602 028d 68000000 		.4byte	0x68
+ 603 0291 00       		.byte	0
+ 604 0292 11       		.uleb128 0x11
+ 605 0293 4E010000 		.4byte	.LASF29
+ 606 0297 01       		.byte	0x1
+ 607 0298 50       		.byte	0x50
+ 608 0299 68000000 		.4byte	0x68
+ 609 029d 02       		.uleb128 0x2
+ 610 029e 91       		.byte	0x91
+ 611 029f 6C       		.sleb128 -20
+ 612 02a0 12       		.uleb128 0x12
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 15
+
+
+ 613 02a1 A9000000 		.4byte	.LASF30
+ 614 02a5 01       		.byte	0x1
+ 615 02a6 51       		.byte	0x51
+ 616 02a7 B8000000 		.4byte	0xb8
+ 617 02ab 12       		.uleb128 0x12
+ 618 02ac D7010000 		.4byte	.LASF31
+ 619 02b0 01       		.byte	0x1
+ 620 02b1 52       		.byte	0x52
+ 621 02b2 B8000000 		.4byte	0xb8
+ 622 02b6 12       		.uleb128 0x12
+ 623 02b7 88030000 		.4byte	.LASF32
+ 624 02bb 01       		.byte	0x1
+ 625 02bc 53       		.byte	0x53
+ 626 02bd B8000000 		.4byte	0xb8
+ 627 02c1 11       		.uleb128 0x11
+ 628 02c2 BD030000 		.4byte	.LASF33
+ 629 02c6 01       		.byte	0x1
+ 630 02c7 54       		.byte	0x54
+ 631 02c8 4C000000 		.4byte	0x4c
+ 632 02cc 02       		.uleb128 0x2
+ 633 02cd 91       		.byte	0x91
+ 634 02ce 68       		.sleb128 -24
+ 635 02cf 0E       		.uleb128 0xe
+ 636 02d0 6900     		.ascii	"i\000"
+ 637 02d2 01       		.byte	0x1
+ 638 02d3 55       		.byte	0x55
+ 639 02d4 68000000 		.4byte	0x68
+ 640 02d8 0B       		.uleb128 0xb
+ 641 02d9 0A000000 		.4byte	.LVL20
+ 642 02dd 25010000 		.4byte	0x125
+ 643 02e1 09       		.uleb128 0x9
+ 644 02e2 10000000 		.4byte	.LVL21
+ 645 02e6 A3040000 		.4byte	0x4a3
+ 646 02ea F8020000 		.4byte	0x2f8
+ 647 02ee 0A       		.uleb128 0xa
+ 648 02ef 01       		.uleb128 0x1
+ 649 02f0 50       		.byte	0x50
+ 650 02f1 05       		.uleb128 0x5
+ 651 02f2 03       		.byte	0x3
+ 652 02f3 00000000 		.4byte	Timer_1_Handler
+ 653 02f7 00       		.byte	0
+ 654 02f8 09       		.uleb128 0x9
+ 655 02f9 18000000 		.4byte	.LVL22
+ 656 02fd B4040000 		.4byte	0x4b4
+ 657 0301 0D030000 		.4byte	0x30d
+ 658 0305 0A       		.uleb128 0xa
+ 659 0306 01       		.uleb128 0x1
+ 660 0307 50       		.byte	0x50
+ 661 0308 03       		.uleb128 0x3
+ 662 0309 0A       		.byte	0xa
+ 663 030a E02E     		.2byte	0x2ee0
+ 664 030c 00       		.byte	0
+ 665 030d 09       		.uleb128 0x9
+ 666 030e 24000000 		.4byte	.LVL24
+ 667 0312 C5040000 		.4byte	0x4c5
+ 668 0316 21030000 		.4byte	0x321
+ 669 031a 0A       		.uleb128 0xa
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 16
+
+
+ 670 031b 01       		.uleb128 0x1
+ 671 031c 50       		.byte	0x50
+ 672 031d 02       		.uleb128 0x2
+ 673 031e 91       		.byte	0x91
+ 674 031f 6C       		.sleb128 -20
+ 675 0320 00       		.byte	0
+ 676 0321 09       		.uleb128 0x9
+ 677 0322 2E000000 		.4byte	.LVL25
+ 678 0326 D6040000 		.4byte	0x4d6
+ 679 032a 38030000 		.4byte	0x338
+ 680 032e 0A       		.uleb128 0xa
+ 681 032f 01       		.uleb128 0x1
+ 682 0330 50       		.byte	0x50
+ 683 0331 05       		.uleb128 0x5
+ 684 0332 03       		.byte	0x3
+ 685 0333 00000000 		.4byte	.LC0
+ 686 0337 00       		.byte	0
+ 687 0338 0B       		.uleb128 0xb
+ 688 0339 32000000 		.4byte	.LVL26
+ 689 033d F2040000 		.4byte	0x4f2
+ 690 0341 09       		.uleb128 0x9
+ 691 0342 3E000000 		.4byte	.LVL27
+ 692 0346 D6040000 		.4byte	0x4d6
+ 693 034a 58030000 		.4byte	0x358
+ 694 034e 0A       		.uleb128 0xa
+ 695 034f 01       		.uleb128 0x1
+ 696 0350 50       		.byte	0x50
+ 697 0351 05       		.uleb128 0x5
+ 698 0352 03       		.byte	0x3
+ 699 0353 14000000 		.4byte	.LC1
+ 700 0357 00       		.byte	0
+ 701 0358 09       		.uleb128 0x9
+ 702 0359 46000000 		.4byte	.LVL28
+ 703 035d F9040000 		.4byte	0x4f9
+ 704 0361 72030000 		.4byte	0x372
+ 705 0365 0A       		.uleb128 0xa
+ 706 0366 01       		.uleb128 0x1
+ 707 0367 51       		.byte	0x51
+ 708 0368 02       		.uleb128 0x2
+ 709 0369 91       		.byte	0x91
+ 710 036a 70       		.sleb128 -16
+ 711 036b 0A       		.uleb128 0xa
+ 712 036c 01       		.uleb128 0x1
+ 713 036d 50       		.byte	0x50
+ 714 036e 02       		.uleb128 0x2
+ 715 036f 91       		.byte	0x91
+ 716 0370 74       		.sleb128 -12
+ 717 0371 00       		.byte	0
+ 718 0372 0B       		.uleb128 0xb
+ 719 0373 4E000000 		.4byte	.LVL29
+ 720 0377 06050000 		.4byte	0x506
+ 721 037b 09       		.uleb128 0x9
+ 722 037c 5A000000 		.4byte	.LVL30
+ 723 0380 D6040000 		.4byte	0x4d6
+ 724 0384 92030000 		.4byte	0x392
+ 725 0388 0A       		.uleb128 0xa
+ 726 0389 01       		.uleb128 0x1
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 17
+
+
+ 727 038a 50       		.byte	0x50
+ 728 038b 05       		.uleb128 0x5
+ 729 038c 03       		.byte	0x3
+ 730 038d 28000000 		.4byte	.LC2
+ 731 0391 00       		.byte	0
+ 732 0392 09       		.uleb128 0x9
+ 733 0393 60000000 		.4byte	.LVL31
+ 734 0397 C5040000 		.4byte	0x4c5
+ 735 039b A6030000 		.4byte	0x3a6
+ 736 039f 0A       		.uleb128 0xa
+ 737 03a0 01       		.uleb128 0x1
+ 738 03a1 50       		.byte	0x50
+ 739 03a2 02       		.uleb128 0x2
+ 740 03a3 7D       		.byte	0x7d
+ 741 03a4 00       		.sleb128 0
+ 742 03a5 00       		.byte	0
+ 743 03a6 0B       		.uleb128 0xb
+ 744 03a7 66000000 		.4byte	.LVL32
+ 745 03ab 13050000 		.4byte	0x513
+ 746 03af 0B       		.uleb128 0xb
+ 747 03b0 6C000000 		.4byte	.LVL34
+ 748 03b4 20050000 		.4byte	0x520
+ 749 03b8 0B       		.uleb128 0xb
+ 750 03b9 70000000 		.4byte	.LVL35
+ 751 03bd 2D050000 		.4byte	0x52d
+ 752 03c1 0B       		.uleb128 0xb
+ 753 03c2 76000000 		.4byte	.LVL36
+ 754 03c6 38050000 		.4byte	0x538
+ 755 03ca 00       		.byte	0
+ 756 03cb 13       		.uleb128 0x13
+ 757 03cc CB000000 		.4byte	0xcb
+ 758 03d0 DB030000 		.4byte	0x3db
+ 759 03d4 14       		.uleb128 0x14
+ 760 03d5 E5000000 		.4byte	0xe5
+ 761 03d9 31       		.byte	0x31
+ 762 03da 00       		.byte	0
+ 763 03db 15       		.uleb128 0x15
+ 764 03dc CA030000 		.4byte	.LASF34
+ 765 03e0 05       		.byte	0x5
+ 766 03e1 9606     		.2byte	0x696
+ 767 03e3 E7030000 		.4byte	0x3e7
+ 768 03e7 16       		.uleb128 0x16
+ 769 03e8 76000000 		.4byte	0x76
+ 770 03ec 17       		.uleb128 0x17
+ 771 03ed 45010000 		.4byte	.LASF35
+ 772 03f1 01       		.byte	0x1
+ 773 03f2 1A       		.byte	0x1a
+ 774 03f3 CB030000 		.4byte	0x3cb
+ 775 03f7 05       		.uleb128 0x5
+ 776 03f8 03       		.byte	0x3
+ 777 03f9 00000000 		.4byte	mystring
+ 778 03fd 18       		.uleb128 0x18
+ 779 03fe 95030000 		.4byte	.LASF57
+ 780 0402 01       		.byte	0x1
+ 781 0403 0F       		.byte	0xf
+ 782 0404 0A040000 		.4byte	0x40a
+ 783 0408 19       		.uleb128 0x19
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 18
+
+
+ 784 0409 00       		.byte	0
+ 785 040a 1A       		.uleb128 0x1a
+ 786 040b 8E000000 		.4byte	.LASF62
+ 787 040f 0E       		.byte	0xe
+ 788 0410 5E       		.byte	0x5e
+ 789 0411 81000000 		.4byte	0x81
+ 790 0415 1B       		.uleb128 0x1b
+ 791 0416 72000000 		.4byte	.LASF36
+ 792 041a 06       		.byte	0x6
+ 793 041b 92       		.byte	0x92
+ 794 041c 1B       		.uleb128 0x1b
+ 795 041d 4B030000 		.4byte	.LASF37
+ 796 0421 07       		.byte	0x7
+ 797 0422 92       		.byte	0x92
+ 798 0423 1B       		.uleb128 0x1b
+ 799 0424 04030000 		.4byte	.LASF38
+ 800 0428 08       		.byte	0x8
+ 801 0429 54       		.byte	0x54
+ 802 042a 1B       		.uleb128 0x1b
+ 803 042b EC030000 		.4byte	.LASF39
+ 804 042f 09       		.byte	0x9
+ 805 0430 27       		.byte	0x27
+ 806 0431 1B       		.uleb128 0x1b
+ 807 0432 18000000 		.4byte	.LASF40
+ 808 0436 0A       		.byte	0xa
+ 809 0437 27       		.byte	0x27
+ 810 0438 1B       		.uleb128 0x1b
+ 811 0439 AF000000 		.4byte	.LASF41
+ 812 043d 0B       		.byte	0xb
+ 813 043e 48       		.byte	0x48
+ 814 043f 1B       		.uleb128 0x1b
+ 815 0440 2A030000 		.4byte	.LASF42
+ 816 0444 0B       		.byte	0xb
+ 817 0445 4A       		.byte	0x4a
+ 818 0446 1C       		.uleb128 0x1c
+ 819 0447 D7030000 		.4byte	.LASF43
+ 820 044b 0C       		.byte	0xc
+ 821 044c 76       		.byte	0x76
+ 822 044d 57040000 		.4byte	0x457
+ 823 0451 1D       		.uleb128 0x1d
+ 824 0452 99000000 		.4byte	0x99
+ 825 0456 00       		.byte	0
+ 826 0457 1C       		.uleb128 0x1c
+ 827 0458 8E010000 		.4byte	.LASF44
+ 828 045c 0B       		.byte	0xb
+ 829 045d 4F       		.byte	0x4f
+ 830 045e 68040000 		.4byte	0x468
+ 831 0462 1D       		.uleb128 0x1d
+ 832 0463 A5000000 		.4byte	0xa5
+ 833 0467 00       		.byte	0
+ 834 0468 1B       		.uleb128 0x1b
+ 835 0469 48020000 		.4byte	.LASF45
+ 836 046d 0D       		.byte	0xd
+ 837 046e 48       		.byte	0x48
+ 838 046f 1B       		.uleb128 0x1b
+ 839 0470 71030000 		.4byte	.LASF46
+ 840 0474 0D       		.byte	0xd
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 19
+
+
+ 841 0475 4A       		.byte	0x4a
+ 842 0476 1C       		.uleb128 0x1c
+ 843 0477 33020000 		.4byte	.LASF47
+ 844 047b 0D       		.byte	0xd
+ 845 047c 4F       		.byte	0x4f
+ 846 047d 87040000 		.4byte	0x487
+ 847 0481 1D       		.uleb128 0x1d
+ 848 0482 A5000000 		.4byte	0xa5
+ 849 0486 00       		.byte	0
+ 850 0487 1B       		.uleb128 0x1b
+ 851 0488 01020000 		.4byte	.LASF48
+ 852 048c 0E       		.byte	0xe
+ 853 048d 5A       		.byte	0x5a
+ 854 048e 1B       		.uleb128 0x1b
+ 855 048f DD010000 		.4byte	.LASF49
+ 856 0493 0F       		.byte	0xf
+ 857 0494 23       		.byte	0x23
+ 858 0495 1B       		.uleb128 0x1b
+ 859 0496 17030000 		.4byte	.LASF50
+ 860 049a 06       		.byte	0x6
+ 861 049b 93       		.byte	0x93
+ 862 049c 1B       		.uleb128 0x1b
+ 863 049d 66000000 		.4byte	.LASF51
+ 864 04a1 07       		.byte	0x7
+ 865 04a2 93       		.byte	0x93
+ 866 04a3 1C       		.uleb128 0x1c
+ 867 04a4 08000000 		.4byte	.LASF52
+ 868 04a8 0F       		.byte	0xf
+ 869 04a9 18       		.byte	0x18
+ 870 04aa B4040000 		.4byte	0x4b4
+ 871 04ae 1D       		.uleb128 0x1d
+ 872 04af D2000000 		.4byte	0xd2
+ 873 04b3 00       		.byte	0
+ 874 04b4 1C       		.uleb128 0x1c
+ 875 04b5 63010000 		.4byte	.LASF53
+ 876 04b9 0E       		.byte	0xe
+ 877 04ba 68       		.byte	0x68
+ 878 04bb C5040000 		.4byte	0x4c5
+ 879 04bf 1D       		.uleb128 0x1d
+ 880 04c0 99000000 		.4byte	0x99
+ 881 04c4 00       		.byte	0
+ 882 04c5 1E       		.uleb128 0x1e
+ 883 04c6 B8010000 		.4byte	.LASF54
+ 884 04ca 01       		.byte	0x1
+ 885 04cb 12       		.byte	0x12
+ 886 04cc 68000000 		.4byte	0x68
+ 887 04d0 D6040000 		.4byte	0x4d6
+ 888 04d4 19       		.uleb128 0x19
+ 889 04d5 00       		.byte	0
+ 890 04d6 1C       		.uleb128 0x1c
+ 891 04d7 7F000000 		.4byte	.LASF55
+ 892 04db 08       		.byte	0x8
+ 893 04dc 8B       		.byte	0x8b
+ 894 04dd E7040000 		.4byte	0x4e7
+ 895 04e1 1D       		.uleb128 0x1d
+ 896 04e2 E7040000 		.4byte	0x4e7
+ 897 04e6 00       		.byte	0
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 20
+
+
+ 898 04e7 06       		.uleb128 0x6
+ 899 04e8 04       		.byte	0x4
+ 900 04e9 ED040000 		.4byte	0x4ed
+ 901 04ed 1F       		.uleb128 0x1f
+ 902 04ee BF000000 		.4byte	0xbf
+ 903 04f2 1B       		.uleb128 0x1b
+ 904 04f3 3B030000 		.4byte	.LASF56
+ 905 04f7 0C       		.byte	0xc
+ 906 04f8 7B       		.byte	0x7b
+ 907 04f9 18       		.uleb128 0x18
+ 908 04fa 38000000 		.4byte	.LASF58
+ 909 04fe 01       		.byte	0x1
+ 910 04ff 13       		.byte	0x13
+ 911 0500 06050000 		.4byte	0x506
+ 912 0504 19       		.uleb128 0x19
+ 913 0505 00       		.byte	0
+ 914 0506 18       		.uleb128 0x18
+ 915 0507 A3010000 		.4byte	.LASF59
+ 916 050b 01       		.byte	0x1
+ 917 050c 11       		.byte	0x11
+ 918 050d 13050000 		.4byte	0x513
+ 919 0511 19       		.uleb128 0x19
+ 920 0512 00       		.byte	0
+ 921 0513 18       		.uleb128 0x18
+ 922 0514 DF030000 		.4byte	.LASF60
+ 923 0518 01       		.byte	0x1
+ 924 0519 17       		.byte	0x17
+ 925 051a 20050000 		.4byte	0x520
+ 926 051e 19       		.uleb128 0x19
+ 927 051f 00       		.byte	0
+ 928 0520 18       		.uleb128 0x18
+ 929 0521 B0030000 		.4byte	.LASF61
+ 930 0525 01       		.byte	0x1
+ 931 0526 10       		.byte	0x10
+ 932 0527 2D050000 		.4byte	0x52d
+ 933 052b 19       		.uleb128 0x19
+ 934 052c 00       		.byte	0
+ 935 052d 1A       		.uleb128 0x1a
+ 936 052e 4F000000 		.4byte	.LASF63
+ 937 0532 08       		.byte	0x8
+ 938 0533 70       		.byte	0x70
+ 939 0534 81000000 		.4byte	0x81
+ 940 0538 1A       		.uleb128 0x1a
+ 941 0539 EC010000 		.4byte	.LASF64
+ 942 053d 08       		.byte	0x8
+ 943 053e 73       		.byte	0x73
+ 944 053f 8D000000 		.4byte	0x8d
+ 945 0543 00       		.byte	0
+ 946              		.section	.debug_abbrev,"",%progbits
+ 947              	.Ldebug_abbrev0:
+ 948 0000 01       		.uleb128 0x1
+ 949 0001 11       		.uleb128 0x11
+ 950 0002 01       		.byte	0x1
+ 951 0003 25       		.uleb128 0x25
+ 952 0004 0E       		.uleb128 0xe
+ 953 0005 13       		.uleb128 0x13
+ 954 0006 0B       		.uleb128 0xb
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 21
+
+
+ 955 0007 03       		.uleb128 0x3
+ 956 0008 0E       		.uleb128 0xe
+ 957 0009 1B       		.uleb128 0x1b
+ 958 000a 0E       		.uleb128 0xe
+ 959 000b 55       		.uleb128 0x55
+ 960 000c 17       		.uleb128 0x17
+ 961 000d 11       		.uleb128 0x11
+ 962 000e 01       		.uleb128 0x1
+ 963 000f 10       		.uleb128 0x10
+ 964 0010 17       		.uleb128 0x17
+ 965 0011 00       		.byte	0
+ 966 0012 00       		.byte	0
+ 967 0013 02       		.uleb128 0x2
+ 968 0014 24       		.uleb128 0x24
+ 969 0015 00       		.byte	0
+ 970 0016 0B       		.uleb128 0xb
+ 971 0017 0B       		.uleb128 0xb
+ 972 0018 3E       		.uleb128 0x3e
+ 973 0019 0B       		.uleb128 0xb
+ 974 001a 03       		.uleb128 0x3
+ 975 001b 0E       		.uleb128 0xe
+ 976 001c 00       		.byte	0
+ 977 001d 00       		.byte	0
+ 978 001e 03       		.uleb128 0x3
+ 979 001f 16       		.uleb128 0x16
+ 980 0020 00       		.byte	0
+ 981 0021 03       		.uleb128 0x3
+ 982 0022 0E       		.uleb128 0xe
+ 983 0023 3A       		.uleb128 0x3a
+ 984 0024 0B       		.uleb128 0xb
+ 985 0025 3B       		.uleb128 0x3b
+ 986 0026 0B       		.uleb128 0xb
+ 987 0027 49       		.uleb128 0x49
+ 988 0028 13       		.uleb128 0x13
+ 989 0029 00       		.byte	0
+ 990 002a 00       		.byte	0
+ 991 002b 04       		.uleb128 0x4
+ 992 002c 24       		.uleb128 0x24
+ 993 002d 00       		.byte	0
+ 994 002e 0B       		.uleb128 0xb
+ 995 002f 0B       		.uleb128 0xb
+ 996 0030 3E       		.uleb128 0x3e
+ 997 0031 0B       		.uleb128 0xb
+ 998 0032 03       		.uleb128 0x3
+ 999 0033 08       		.uleb128 0x8
+ 1000 0034 00       		.byte	0
+ 1001 0035 00       		.byte	0
+ 1002 0036 05       		.uleb128 0x5
+ 1003 0037 16       		.uleb128 0x16
+ 1004 0038 00       		.byte	0
+ 1005 0039 03       		.uleb128 0x3
+ 1006 003a 0E       		.uleb128 0xe
+ 1007 003b 3A       		.uleb128 0x3a
+ 1008 003c 0B       		.uleb128 0xb
+ 1009 003d 3B       		.uleb128 0x3b
+ 1010 003e 05       		.uleb128 0x5
+ 1011 003f 49       		.uleb128 0x49
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 22
+
+
+ 1012 0040 13       		.uleb128 0x13
+ 1013 0041 00       		.byte	0
+ 1014 0042 00       		.byte	0
+ 1015 0043 06       		.uleb128 0x6
+ 1016 0044 0F       		.uleb128 0xf
+ 1017 0045 00       		.byte	0
+ 1018 0046 0B       		.uleb128 0xb
+ 1019 0047 0B       		.uleb128 0xb
+ 1020 0048 49       		.uleb128 0x49
+ 1021 0049 13       		.uleb128 0x13
+ 1022 004a 00       		.byte	0
+ 1023 004b 00       		.byte	0
+ 1024 004c 07       		.uleb128 0x7
+ 1025 004d 15       		.uleb128 0x15
+ 1026 004e 00       		.byte	0
+ 1027 004f 27       		.uleb128 0x27
+ 1028 0050 19       		.uleb128 0x19
+ 1029 0051 00       		.byte	0
+ 1030 0052 00       		.byte	0
+ 1031 0053 08       		.uleb128 0x8
+ 1032 0054 2E       		.uleb128 0x2e
+ 1033 0055 01       		.byte	0x1
+ 1034 0056 3F       		.uleb128 0x3f
+ 1035 0057 19       		.uleb128 0x19
+ 1036 0058 03       		.uleb128 0x3
+ 1037 0059 0E       		.uleb128 0xe
+ 1038 005a 3A       		.uleb128 0x3a
+ 1039 005b 0B       		.uleb128 0xb
+ 1040 005c 3B       		.uleb128 0x3b
+ 1041 005d 0B       		.uleb128 0xb
+ 1042 005e 27       		.uleb128 0x27
+ 1043 005f 19       		.uleb128 0x19
+ 1044 0060 11       		.uleb128 0x11
+ 1045 0061 01       		.uleb128 0x1
+ 1046 0062 12       		.uleb128 0x12
+ 1047 0063 06       		.uleb128 0x6
+ 1048 0064 40       		.uleb128 0x40
+ 1049 0065 18       		.uleb128 0x18
+ 1050 0066 9742     		.uleb128 0x2117
+ 1051 0068 19       		.uleb128 0x19
+ 1052 0069 01       		.uleb128 0x1
+ 1053 006a 13       		.uleb128 0x13
+ 1054 006b 00       		.byte	0
+ 1055 006c 00       		.byte	0
+ 1056 006d 09       		.uleb128 0x9
+ 1057 006e 898201   		.uleb128 0x4109
+ 1058 0071 01       		.byte	0x1
+ 1059 0072 11       		.uleb128 0x11
+ 1060 0073 01       		.uleb128 0x1
+ 1061 0074 31       		.uleb128 0x31
+ 1062 0075 13       		.uleb128 0x13
+ 1063 0076 01       		.uleb128 0x1
+ 1064 0077 13       		.uleb128 0x13
+ 1065 0078 00       		.byte	0
+ 1066 0079 00       		.byte	0
+ 1067 007a 0A       		.uleb128 0xa
+ 1068 007b 8A8201   		.uleb128 0x410a
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 23
+
+
+ 1069 007e 00       		.byte	0
+ 1070 007f 02       		.uleb128 0x2
+ 1071 0080 18       		.uleb128 0x18
+ 1072 0081 9142     		.uleb128 0x2111
+ 1073 0083 18       		.uleb128 0x18
+ 1074 0084 00       		.byte	0
+ 1075 0085 00       		.byte	0
+ 1076 0086 0B       		.uleb128 0xb
+ 1077 0087 898201   		.uleb128 0x4109
+ 1078 008a 00       		.byte	0
+ 1079 008b 11       		.uleb128 0x11
+ 1080 008c 01       		.uleb128 0x1
+ 1081 008d 31       		.uleb128 0x31
+ 1082 008e 13       		.uleb128 0x13
+ 1083 008f 00       		.byte	0
+ 1084 0090 00       		.byte	0
+ 1085 0091 0C       		.uleb128 0xc
+ 1086 0092 2E       		.uleb128 0x2e
+ 1087 0093 01       		.byte	0x1
+ 1088 0094 3F       		.uleb128 0x3f
+ 1089 0095 19       		.uleb128 0x19
+ 1090 0096 03       		.uleb128 0x3
+ 1091 0097 0E       		.uleb128 0xe
+ 1092 0098 3A       		.uleb128 0x3a
+ 1093 0099 0B       		.uleb128 0xb
+ 1094 009a 3B       		.uleb128 0x3b
+ 1095 009b 0B       		.uleb128 0xb
+ 1096 009c 11       		.uleb128 0x11
+ 1097 009d 01       		.uleb128 0x1
+ 1098 009e 12       		.uleb128 0x12
+ 1099 009f 06       		.uleb128 0x6
+ 1100 00a0 40       		.uleb128 0x40
+ 1101 00a1 18       		.uleb128 0x18
+ 1102 00a2 9742     		.uleb128 0x2117
+ 1103 00a4 19       		.uleb128 0x19
+ 1104 00a5 01       		.uleb128 0x1
+ 1105 00a6 13       		.uleb128 0x13
+ 1106 00a7 00       		.byte	0
+ 1107 00a8 00       		.byte	0
+ 1108 00a9 0D       		.uleb128 0xd
+ 1109 00aa 2E       		.uleb128 0x2e
+ 1110 00ab 01       		.byte	0x1
+ 1111 00ac 3F       		.uleb128 0x3f
+ 1112 00ad 19       		.uleb128 0x19
+ 1113 00ae 03       		.uleb128 0x3
+ 1114 00af 0E       		.uleb128 0xe
+ 1115 00b0 3A       		.uleb128 0x3a
+ 1116 00b1 0B       		.uleb128 0xb
+ 1117 00b2 3B       		.uleb128 0x3b
+ 1118 00b3 0B       		.uleb128 0xb
+ 1119 00b4 27       		.uleb128 0x27
+ 1120 00b5 19       		.uleb128 0x19
+ 1121 00b6 49       		.uleb128 0x49
+ 1122 00b7 13       		.uleb128 0x13
+ 1123 00b8 11       		.uleb128 0x11
+ 1124 00b9 01       		.uleb128 0x1
+ 1125 00ba 12       		.uleb128 0x12
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 24
+
+
+ 1126 00bb 06       		.uleb128 0x6
+ 1127 00bc 40       		.uleb128 0x40
+ 1128 00bd 18       		.uleb128 0x18
+ 1129 00be 9742     		.uleb128 0x2117
+ 1130 00c0 19       		.uleb128 0x19
+ 1131 00c1 01       		.uleb128 0x1
+ 1132 00c2 13       		.uleb128 0x13
+ 1133 00c3 00       		.byte	0
+ 1134 00c4 00       		.byte	0
+ 1135 00c5 0E       		.uleb128 0xe
+ 1136 00c6 34       		.uleb128 0x34
+ 1137 00c7 00       		.byte	0
+ 1138 00c8 03       		.uleb128 0x3
+ 1139 00c9 08       		.uleb128 0x8
+ 1140 00ca 3A       		.uleb128 0x3a
+ 1141 00cb 0B       		.uleb128 0xb
+ 1142 00cc 3B       		.uleb128 0x3b
+ 1143 00cd 0B       		.uleb128 0xb
+ 1144 00ce 49       		.uleb128 0x49
+ 1145 00cf 13       		.uleb128 0x13
+ 1146 00d0 00       		.byte	0
+ 1147 00d1 00       		.byte	0
+ 1148 00d2 0F       		.uleb128 0xf
+ 1149 00d3 34       		.uleb128 0x34
+ 1150 00d4 00       		.byte	0
+ 1151 00d5 03       		.uleb128 0x3
+ 1152 00d6 0E       		.uleb128 0xe
+ 1153 00d7 3A       		.uleb128 0x3a
+ 1154 00d8 0B       		.uleb128 0xb
+ 1155 00d9 3B       		.uleb128 0x3b
+ 1156 00da 0B       		.uleb128 0xb
+ 1157 00db 49       		.uleb128 0x49
+ 1158 00dc 13       		.uleb128 0x13
+ 1159 00dd 1C       		.uleb128 0x1c
+ 1160 00de 0B       		.uleb128 0xb
+ 1161 00df 00       		.byte	0
+ 1162 00e0 00       		.byte	0
+ 1163 00e1 10       		.uleb128 0x10
+ 1164 00e2 34       		.uleb128 0x34
+ 1165 00e3 00       		.byte	0
+ 1166 00e4 03       		.uleb128 0x3
+ 1167 00e5 0E       		.uleb128 0xe
+ 1168 00e6 3A       		.uleb128 0x3a
+ 1169 00e7 0B       		.uleb128 0xb
+ 1170 00e8 3B       		.uleb128 0x3b
+ 1171 00e9 0B       		.uleb128 0xb
+ 1172 00ea 49       		.uleb128 0x49
+ 1173 00eb 13       		.uleb128 0x13
+ 1174 00ec 02       		.uleb128 0x2
+ 1175 00ed 17       		.uleb128 0x17
+ 1176 00ee 00       		.byte	0
+ 1177 00ef 00       		.byte	0
+ 1178 00f0 11       		.uleb128 0x11
+ 1179 00f1 34       		.uleb128 0x34
+ 1180 00f2 00       		.byte	0
+ 1181 00f3 03       		.uleb128 0x3
+ 1182 00f4 0E       		.uleb128 0xe
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 25
+
+
+ 1183 00f5 3A       		.uleb128 0x3a
+ 1184 00f6 0B       		.uleb128 0xb
+ 1185 00f7 3B       		.uleb128 0x3b
+ 1186 00f8 0B       		.uleb128 0xb
+ 1187 00f9 49       		.uleb128 0x49
+ 1188 00fa 13       		.uleb128 0x13
+ 1189 00fb 02       		.uleb128 0x2
+ 1190 00fc 18       		.uleb128 0x18
+ 1191 00fd 00       		.byte	0
+ 1192 00fe 00       		.byte	0
+ 1193 00ff 12       		.uleb128 0x12
+ 1194 0100 34       		.uleb128 0x34
+ 1195 0101 00       		.byte	0
+ 1196 0102 03       		.uleb128 0x3
+ 1197 0103 0E       		.uleb128 0xe
+ 1198 0104 3A       		.uleb128 0x3a
+ 1199 0105 0B       		.uleb128 0xb
+ 1200 0106 3B       		.uleb128 0x3b
+ 1201 0107 0B       		.uleb128 0xb
+ 1202 0108 49       		.uleb128 0x49
+ 1203 0109 13       		.uleb128 0x13
+ 1204 010a 00       		.byte	0
+ 1205 010b 00       		.byte	0
+ 1206 010c 13       		.uleb128 0x13
+ 1207 010d 01       		.uleb128 0x1
+ 1208 010e 01       		.byte	0x1
+ 1209 010f 49       		.uleb128 0x49
+ 1210 0110 13       		.uleb128 0x13
+ 1211 0111 01       		.uleb128 0x1
+ 1212 0112 13       		.uleb128 0x13
+ 1213 0113 00       		.byte	0
+ 1214 0114 00       		.byte	0
+ 1215 0115 14       		.uleb128 0x14
+ 1216 0116 21       		.uleb128 0x21
+ 1217 0117 00       		.byte	0
+ 1218 0118 49       		.uleb128 0x49
+ 1219 0119 13       		.uleb128 0x13
+ 1220 011a 2F       		.uleb128 0x2f
+ 1221 011b 0B       		.uleb128 0xb
+ 1222 011c 00       		.byte	0
+ 1223 011d 00       		.byte	0
+ 1224 011e 15       		.uleb128 0x15
+ 1225 011f 34       		.uleb128 0x34
+ 1226 0120 00       		.byte	0
+ 1227 0121 03       		.uleb128 0x3
+ 1228 0122 0E       		.uleb128 0xe
+ 1229 0123 3A       		.uleb128 0x3a
+ 1230 0124 0B       		.uleb128 0xb
+ 1231 0125 3B       		.uleb128 0x3b
+ 1232 0126 05       		.uleb128 0x5
+ 1233 0127 49       		.uleb128 0x49
+ 1234 0128 13       		.uleb128 0x13
+ 1235 0129 3F       		.uleb128 0x3f
+ 1236 012a 19       		.uleb128 0x19
+ 1237 012b 3C       		.uleb128 0x3c
+ 1238 012c 19       		.uleb128 0x19
+ 1239 012d 00       		.byte	0
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 26
+
+
+ 1240 012e 00       		.byte	0
+ 1241 012f 16       		.uleb128 0x16
+ 1242 0130 35       		.uleb128 0x35
+ 1243 0131 00       		.byte	0
+ 1244 0132 49       		.uleb128 0x49
+ 1245 0133 13       		.uleb128 0x13
+ 1246 0134 00       		.byte	0
+ 1247 0135 00       		.byte	0
+ 1248 0136 17       		.uleb128 0x17
+ 1249 0137 34       		.uleb128 0x34
+ 1250 0138 00       		.byte	0
+ 1251 0139 03       		.uleb128 0x3
+ 1252 013a 0E       		.uleb128 0xe
+ 1253 013b 3A       		.uleb128 0x3a
+ 1254 013c 0B       		.uleb128 0xb
+ 1255 013d 3B       		.uleb128 0x3b
+ 1256 013e 0B       		.uleb128 0xb
+ 1257 013f 49       		.uleb128 0x49
+ 1258 0140 13       		.uleb128 0x13
+ 1259 0141 3F       		.uleb128 0x3f
+ 1260 0142 19       		.uleb128 0x19
+ 1261 0143 02       		.uleb128 0x2
+ 1262 0144 18       		.uleb128 0x18
+ 1263 0145 00       		.byte	0
+ 1264 0146 00       		.byte	0
+ 1265 0147 18       		.uleb128 0x18
+ 1266 0148 2E       		.uleb128 0x2e
+ 1267 0149 01       		.byte	0x1
+ 1268 014a 3F       		.uleb128 0x3f
+ 1269 014b 19       		.uleb128 0x19
+ 1270 014c 03       		.uleb128 0x3
+ 1271 014d 0E       		.uleb128 0xe
+ 1272 014e 3A       		.uleb128 0x3a
+ 1273 014f 0B       		.uleb128 0xb
+ 1274 0150 3B       		.uleb128 0x3b
+ 1275 0151 0B       		.uleb128 0xb
+ 1276 0152 3C       		.uleb128 0x3c
+ 1277 0153 19       		.uleb128 0x19
+ 1278 0154 01       		.uleb128 0x1
+ 1279 0155 13       		.uleb128 0x13
+ 1280 0156 00       		.byte	0
+ 1281 0157 00       		.byte	0
+ 1282 0158 19       		.uleb128 0x19
+ 1283 0159 18       		.uleb128 0x18
+ 1284 015a 00       		.byte	0
+ 1285 015b 00       		.byte	0
+ 1286 015c 00       		.byte	0
+ 1287 015d 1A       		.uleb128 0x1a
+ 1288 015e 2E       		.uleb128 0x2e
+ 1289 015f 00       		.byte	0
+ 1290 0160 3F       		.uleb128 0x3f
+ 1291 0161 19       		.uleb128 0x19
+ 1292 0162 03       		.uleb128 0x3
+ 1293 0163 0E       		.uleb128 0xe
+ 1294 0164 3A       		.uleb128 0x3a
+ 1295 0165 0B       		.uleb128 0xb
+ 1296 0166 3B       		.uleb128 0x3b
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 27
+
+
+ 1297 0167 0B       		.uleb128 0xb
+ 1298 0168 27       		.uleb128 0x27
+ 1299 0169 19       		.uleb128 0x19
+ 1300 016a 49       		.uleb128 0x49
+ 1301 016b 13       		.uleb128 0x13
+ 1302 016c 3C       		.uleb128 0x3c
+ 1303 016d 19       		.uleb128 0x19
+ 1304 016e 00       		.byte	0
+ 1305 016f 00       		.byte	0
+ 1306 0170 1B       		.uleb128 0x1b
+ 1307 0171 2E       		.uleb128 0x2e
+ 1308 0172 00       		.byte	0
+ 1309 0173 3F       		.uleb128 0x3f
+ 1310 0174 19       		.uleb128 0x19
+ 1311 0175 03       		.uleb128 0x3
+ 1312 0176 0E       		.uleb128 0xe
+ 1313 0177 3A       		.uleb128 0x3a
+ 1314 0178 0B       		.uleb128 0xb
+ 1315 0179 3B       		.uleb128 0x3b
+ 1316 017a 0B       		.uleb128 0xb
+ 1317 017b 27       		.uleb128 0x27
+ 1318 017c 19       		.uleb128 0x19
+ 1319 017d 3C       		.uleb128 0x3c
+ 1320 017e 19       		.uleb128 0x19
+ 1321 017f 00       		.byte	0
+ 1322 0180 00       		.byte	0
+ 1323 0181 1C       		.uleb128 0x1c
+ 1324 0182 2E       		.uleb128 0x2e
+ 1325 0183 01       		.byte	0x1
+ 1326 0184 3F       		.uleb128 0x3f
+ 1327 0185 19       		.uleb128 0x19
+ 1328 0186 03       		.uleb128 0x3
+ 1329 0187 0E       		.uleb128 0xe
+ 1330 0188 3A       		.uleb128 0x3a
+ 1331 0189 0B       		.uleb128 0xb
+ 1332 018a 3B       		.uleb128 0x3b
+ 1333 018b 0B       		.uleb128 0xb
+ 1334 018c 27       		.uleb128 0x27
+ 1335 018d 19       		.uleb128 0x19
+ 1336 018e 3C       		.uleb128 0x3c
+ 1337 018f 19       		.uleb128 0x19
+ 1338 0190 01       		.uleb128 0x1
+ 1339 0191 13       		.uleb128 0x13
+ 1340 0192 00       		.byte	0
+ 1341 0193 00       		.byte	0
+ 1342 0194 1D       		.uleb128 0x1d
+ 1343 0195 05       		.uleb128 0x5
+ 1344 0196 00       		.byte	0
+ 1345 0197 49       		.uleb128 0x49
+ 1346 0198 13       		.uleb128 0x13
+ 1347 0199 00       		.byte	0
+ 1348 019a 00       		.byte	0
+ 1349 019b 1E       		.uleb128 0x1e
+ 1350 019c 2E       		.uleb128 0x2e
+ 1351 019d 01       		.byte	0x1
+ 1352 019e 3F       		.uleb128 0x3f
+ 1353 019f 19       		.uleb128 0x19
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 28
+
+
+ 1354 01a0 03       		.uleb128 0x3
+ 1355 01a1 0E       		.uleb128 0xe
+ 1356 01a2 3A       		.uleb128 0x3a
+ 1357 01a3 0B       		.uleb128 0xb
+ 1358 01a4 3B       		.uleb128 0x3b
+ 1359 01a5 0B       		.uleb128 0xb
+ 1360 01a6 49       		.uleb128 0x49
+ 1361 01a7 13       		.uleb128 0x13
+ 1362 01a8 3C       		.uleb128 0x3c
+ 1363 01a9 19       		.uleb128 0x19
+ 1364 01aa 01       		.uleb128 0x1
+ 1365 01ab 13       		.uleb128 0x13
+ 1366 01ac 00       		.byte	0
+ 1367 01ad 00       		.byte	0
+ 1368 01ae 1F       		.uleb128 0x1f
+ 1369 01af 26       		.uleb128 0x26
+ 1370 01b0 00       		.byte	0
+ 1371 01b1 49       		.uleb128 0x49
+ 1372 01b2 13       		.uleb128 0x13
+ 1373 01b3 00       		.byte	0
+ 1374 01b4 00       		.byte	0
+ 1375 01b5 00       		.byte	0
+ 1376              		.section	.debug_loc,"",%progbits
+ 1377              	.Ldebug_loc0:
+ 1378              	.LLST0:
+ 1379 0000 18000000 		.4byte	.LVL22
+ 1380 0004 68000000 		.4byte	.LVL33
+ 1381 0008 0200     		.2byte	0x2
+ 1382 000a 30       		.byte	0x30
+ 1383 000b 9F       		.byte	0x9f
+ 1384 000c 68000000 		.4byte	.LVL33
+ 1385 0010 7C000000 		.4byte	.LVL37
+ 1386 0014 0100     		.2byte	0x1
+ 1387 0016 54       		.byte	0x54
+ 1388 0017 7E000000 		.4byte	.LVL38
+ 1389 001b 98000000 		.4byte	.LFE66
+ 1390 001f 0100     		.2byte	0x1
+ 1391 0021 54       		.byte	0x54
+ 1392 0022 00000000 		.4byte	0
+ 1393 0026 00000000 		.4byte	0
+ 1394              		.section	.debug_aranges,"",%progbits
+ 1395 0000 34000000 		.4byte	0x34
+ 1396 0004 0200     		.2byte	0x2
+ 1397 0006 00000000 		.4byte	.Ldebug_info0
+ 1398 000a 04       		.byte	0x4
+ 1399 000b 00       		.byte	0
+ 1400 000c 0000     		.2byte	0
+ 1401 000e 0000     		.2byte	0
+ 1402 0010 00000000 		.4byte	.LFB65
+ 1403 0014 0E000000 		.4byte	.LFE65-.LFB65
+ 1404 0018 00000000 		.4byte	.LFB63
+ 1405 001c 54000000 		.4byte	.LFE63-.LFB63
+ 1406 0020 00000000 		.4byte	.LFB64
+ 1407 0024 0C000000 		.4byte	.LFE64-.LFB64
+ 1408 0028 00000000 		.4byte	.LFB66
+ 1409 002c 98000000 		.4byte	.LFE66-.LFB66
+ 1410 0030 00000000 		.4byte	0
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 29
+
+
+ 1411 0034 00000000 		.4byte	0
+ 1412              		.section	.debug_ranges,"",%progbits
+ 1413              	.Ldebug_ranges0:
+ 1414 0000 00000000 		.4byte	.LFB65
+ 1415 0004 0E000000 		.4byte	.LFE65
+ 1416 0008 00000000 		.4byte	.LFB63
+ 1417 000c 54000000 		.4byte	.LFE63
+ 1418 0010 00000000 		.4byte	.LFB64
+ 1419 0014 0C000000 		.4byte	.LFE64
+ 1420 0018 00000000 		.4byte	.LFB66
+ 1421 001c 98000000 		.4byte	.LFE66
+ 1422 0020 00000000 		.4byte	0
+ 1423 0024 00000000 		.4byte	0
+ 1424              		.section	.debug_line,"",%progbits
+ 1425              	.Ldebug_line0:
+ 1426 0000 3B020000 		.section	.debug_str,"MS",%progbits,1
+ 1426      0200C501 
+ 1426      00000201 
+ 1426      FB0E0D00 
+ 1426      01010101 
+ 1427              	.LASF24:
+ 1428 0000 636F756E 		.ascii	"counter\000"
+ 1428      74657200 
+ 1429              	.LASF52:
+ 1430 0008 6973725F 		.ascii	"isr_1ms_StartEx\000"
+ 1430      316D735F 
+ 1430      53746172 
+ 1430      74457800 
+ 1431              	.LASF40:
+ 1432 0018 4D436C6F 		.ascii	"MClock_Start\000"
+ 1432      636B5F53 
+ 1432      74617274 
+ 1432      00
+ 1433              	.LASF2:
+ 1434 0025 73686F72 		.ascii	"short int\000"
+ 1434      7420696E 
+ 1434      7400
+ 1435              	.LASF20:
+ 1436 002f 73697A65 		.ascii	"sizetype\000"
+ 1436      74797065 
+ 1436      00
+ 1437              	.LASF58:
+ 1438 0038 6765745F 		.ascii	"get_serial_speed\000"
+ 1438      73657269 
+ 1438      616C5F73 
+ 1438      70656564 
+ 1438      00
+ 1439              	.LASF17:
+ 1440 0049 63686172 		.ascii	"char8\000"
+ 1440      3800
+ 1441              	.LASF63:
+ 1442 004f 55415254 		.ascii	"UART_ReadRxStatus\000"
+ 1442      5F526561 
+ 1442      64527853 
+ 1442      74617475 
+ 1442      7300
+ 1443              	.LASF69:
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 30
+
+
+ 1444 0061 6D61696E 		.ascii	"main\000"
+ 1444      00
+ 1445              	.LASF51:
+ 1446 0066 50574D5F 		.ascii	"PWM_M2_Stop\000"
+ 1446      4D325F53 
+ 1446      746F7000 
+ 1447              	.LASF36:
+ 1448 0072 50574D5F 		.ascii	"PWM_M1_Start\000"
+ 1448      4D315F53 
+ 1448      74617274 
+ 1448      00
+ 1449              	.LASF55:
+ 1450 007f 55415254 		.ascii	"UART_PutString\000"
+ 1450      5F507574 
+ 1450      53747269 
+ 1450      6E6700
+ 1451              	.LASF62:
+ 1452 008e 54696D65 		.ascii	"Timer_1_ReadStatusRegister\000"
+ 1452      725F315F 
+ 1452      52656164 
+ 1452      53746174 
+ 1452      75735265 
+ 1453              	.LASF30:
+ 1454 00a9 696E7431 		.ascii	"int11\000"
+ 1454      3100
+ 1455              	.LASF41:
+ 1456 00af 4D315175 		.ascii	"M1QuadDec_Start\000"
+ 1456      61644465 
+ 1456      635F5374 
+ 1456      61727400 
+ 1457              	.LASF11:
+ 1458 00bf 75696E74 		.ascii	"uint8\000"
+ 1458      3800
+ 1459              	.LASF0:
+ 1460 00c5 7369676E 		.ascii	"signed char\000"
+ 1460      65642063 
+ 1460      68617200 
+ 1461              	.LASF68:
+ 1462 00d1 54696D65 		.ascii	"Timer_1_Handler\000"
+ 1462      725F315F 
+ 1462      48616E64 
+ 1462      6C657200 
+ 1463              	.LASF15:
+ 1464 00e1 666C6F61 		.ascii	"float\000"
+ 1464      7400
+ 1465              	.LASF27:
+ 1466 00e7 696E7432 		.ascii	"int2\000"
+ 1466      00
+ 1467              	.LASF28:
+ 1468 00ec 696E7433 		.ascii	"int3\000"
+ 1468      00
+ 1469              	.LASF67:
+ 1470 00f1 433A5C55 		.ascii	"C:\\Users\\tadge\\Documents\\GitHub\\PSOC_Creator\\"
+ 1470      73657273 
+ 1470      5C746164 
+ 1470      67655C44 
+ 1470      6F63756D 
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 31
+
+
+ 1471 011e 6C617365 		.ascii	"laser_follower\\FYP.cydsn\000"
+ 1471      725F666F 
+ 1471      6C6C6F77 
+ 1471      65725C46 
+ 1471      59502E63 
+ 1472              	.LASF6:
+ 1473 0137 6C6F6E67 		.ascii	"long long int\000"
+ 1473      206C6F6E 
+ 1473      6720696E 
+ 1473      7400
+ 1474              	.LASF35:
+ 1475 0145 6D797374 		.ascii	"mystring\000"
+ 1475      72696E67 
+ 1475      00
+ 1476              	.LASF29:
+ 1477 014e 75706461 		.ascii	"update\000"
+ 1477      746500
+ 1478              	.LASF4:
+ 1479 0155 6C6F6E67 		.ascii	"long int\000"
+ 1479      20696E74 
+ 1479      00
+ 1480              	.LASF26:
+ 1481 015e 696E7431 		.ascii	"int1\000"
+ 1481      00
+ 1482              	.LASF53:
+ 1483 0163 54696D65 		.ascii	"Timer_1_WritePeriod\000"
+ 1483      725F315F 
+ 1483      57726974 
+ 1483      65506572 
+ 1483      696F6400 
+ 1484              	.LASF25:
+ 1485 0177 74726967 		.ascii	"trigger1\000"
+ 1485      67657231 
+ 1485      00
+ 1486              	.LASF1:
+ 1487 0180 756E7369 		.ascii	"unsigned char\000"
+ 1487      676E6564 
+ 1487      20636861 
+ 1487      7200
+ 1488              	.LASF44:
+ 1489 018e 4D315175 		.ascii	"M1QuadDec_SetCounter\000"
+ 1489      61644465 
+ 1489      635F5365 
+ 1489      74436F75 
+ 1489      6E746572 
+ 1490              	.LASF59:
+ 1491 01a3 6E65775F 		.ascii	"new_path\000"
+ 1491      70617468 
+ 1491      00
+ 1492              	.LASF21:
+ 1493 01ac 6C6F6E67 		.ascii	"long double\000"
+ 1493      20646F75 
+ 1493      626C6500 
+ 1494              	.LASF54:
+ 1495 01b8 6765745F 		.ascii	"get_serial_update\000"
+ 1495      73657269 
+ 1495      616C5F75 
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 32
+
+
+ 1495      70646174 
+ 1495      6500
+ 1496              	.LASF19:
+ 1497 01ca 63796973 		.ascii	"cyisraddress\000"
+ 1497      72616464 
+ 1497      72657373 
+ 1497      00
+ 1498              	.LASF31:
+ 1499 01d7 696E7432 		.ascii	"int22\000"
+ 1499      3200
+ 1500              	.LASF49:
+ 1501 01dd 6973725F 		.ascii	"isr_1ms_Enable\000"
+ 1501      316D735F 
+ 1501      456E6162 
+ 1501      6C6500
+ 1502              	.LASF64:
+ 1503 01ec 55415254 		.ascii	"UART_GetRxBufferSize\000"
+ 1503      5F476574 
+ 1503      52784275 
+ 1503      66666572 
+ 1503      53697A65 
+ 1504              	.LASF48:
+ 1505 0201 54696D65 		.ascii	"Timer_1_Start\000"
+ 1505      725F315F 
+ 1505      53746172 
+ 1505      7400
+ 1506              	.LASF7:
+ 1507 020f 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 1507      206C6F6E 
+ 1507      6720756E 
+ 1507      7369676E 
+ 1507      65642069 
+ 1508              	.LASF8:
+ 1509 0226 756E7369 		.ascii	"unsigned int\000"
+ 1509      676E6564 
+ 1509      20696E74 
+ 1509      00
+ 1510              	.LASF47:
+ 1511 0233 4D325175 		.ascii	"M2QuadDec_SetCounter\000"
+ 1511      61644465 
+ 1511      635F5365 
+ 1511      74436F75 
+ 1511      6E746572 
+ 1512              	.LASF45:
+ 1513 0248 4D325175 		.ascii	"M2QuadDec_Start\000"
+ 1513      61644465 
+ 1513      635F5374 
+ 1513      61727400 
+ 1514              	.LASF22:
+ 1515 0258 53657475 		.ascii	"Setup\000"
+ 1515      7000
+ 1516              	.LASF3:
+ 1517 025e 73686F72 		.ascii	"short unsigned int\000"
+ 1517      7420756E 
+ 1517      7369676E 
+ 1517      65642069 
+ 1517      6E7400
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 33
+
+
+ 1518              	.LASF18:
+ 1519 0271 63686172 		.ascii	"char\000"
+ 1519      00
+ 1520              	.LASF65:
+ 1521 0276 474E5520 		.ascii	"GNU C 4.9.3 20150303 (release) [ARM/embedded-4_9-br"
+ 1521      4320342E 
+ 1521      392E3320 
+ 1521      32303135 
+ 1521      30333033 
+ 1522 02a9 616E6368 		.ascii	"anch revision 221220] -mcpu=cortex-m3 -mthumb -g -O"
+ 1522      20726576 
+ 1522      6973696F 
+ 1522      6E203232 
+ 1522      31323230 
+ 1523 02dc 67202D66 		.ascii	"g -ffunction-sections -ffat-lto-objects\000"
+ 1523      66756E63 
+ 1523      74696F6E 
+ 1523      2D736563 
+ 1523      74696F6E 
+ 1524              	.LASF38:
+ 1525 0304 55415254 		.ascii	"UART_Start\000"
+ 1525      5F537461 
+ 1525      727400
+ 1526              	.LASF10:
+ 1527 030f 696E7433 		.ascii	"int32_t\000"
+ 1527      325F7400 
+ 1528              	.LASF50:
+ 1529 0317 50574D5F 		.ascii	"PWM_M1_Stop\000"
+ 1529      4D315F53 
+ 1529      746F7000 
+ 1530              	.LASF12:
+ 1531 0323 75696E74 		.ascii	"uint16\000"
+ 1531      313600
+ 1532              	.LASF42:
+ 1533 032a 4D315175 		.ascii	"M1QuadDec_Enable\000"
+ 1533      61644465 
+ 1533      635F456E 
+ 1533      61626C65 
+ 1533      00
+ 1534              	.LASF56:
+ 1535 033b 4379536F 		.ascii	"CySoftwareReset\000"
+ 1535      66747761 
+ 1535      72655265 
+ 1535      73657400 
+ 1536              	.LASF37:
+ 1537 034b 50574D5F 		.ascii	"PWM_M2_Start\000"
+ 1537      4D325F53 
+ 1537      74617274 
+ 1537      00
+ 1538              	.LASF66:
+ 1539 0358 6D61696E 		.ascii	"main.c\000"
+ 1539      2E6300
+ 1540              	.LASF5:
+ 1541 035f 6C6F6E67 		.ascii	"long unsigned int\000"
+ 1541      20756E73 
+ 1541      69676E65 
+ 1541      6420696E 
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 34
+
+
+ 1541      7400
+ 1542              	.LASF46:
+ 1543 0371 4D325175 		.ascii	"M2QuadDec_Enable\000"
+ 1543      61644465 
+ 1543      635F456E 
+ 1543      61626C65 
+ 1543      00
+ 1544              	.LASF14:
+ 1545 0382 696E7433 		.ascii	"int32\000"
+ 1545      3200
+ 1546              	.LASF32:
+ 1547 0388 696E7433 		.ascii	"int33\000"
+ 1547      3300
+ 1548              	.LASF13:
+ 1549 038e 75696E74 		.ascii	"uint32\000"
+ 1549      333200
+ 1550              	.LASF57:
+ 1551 0395 43686563 		.ascii	"Check_Speed\000"
+ 1551      6B5F5370 
+ 1551      65656400 
+ 1552              	.LASF9:
+ 1553 03a1 5F5F696E 		.ascii	"__int32_t\000"
+ 1553      7433325F 
+ 1553      7400
+ 1554              	.LASF23:
+ 1555 03ab 53746F70 		.ascii	"Stop\000"
+ 1555      00
+ 1556              	.LASF61:
+ 1557 03b0 5072696E 		.ascii	"Print_Values\000"
+ 1557      745F5661 
+ 1557      6C756573 
+ 1557      00
+ 1558              	.LASF33:
+ 1559 03bd 616E676C 		.ascii	"angle\000"
+ 1559      6500
+ 1560              	.LASF16:
+ 1561 03c3 646F7562 		.ascii	"double\000"
+ 1561      6C6500
+ 1562              	.LASF34:
+ 1563 03ca 49544D5F 		.ascii	"ITM_RxBuffer\000"
+ 1563      52784275 
+ 1563      66666572 
+ 1563      00
+ 1564              	.LASF43:
+ 1565 03d7 43794465 		.ascii	"CyDelay\000"
+ 1565      6C617900 
+ 1566              	.LASF60:
+ 1567 03df 75706461 		.ascii	"update_angle\000"
+ 1567      74655F61 
+ 1567      6E676C65 
+ 1567      00
+ 1568              	.LASF39:
+ 1569 03ec 4D31436C 		.ascii	"M1Clock_Start\000"
+ 1569      6F636B5F 
+ 1569      53746172 
+ 1569      7400
+ 1570              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 4.9.3 20150303 (release) [ARM/embedded-4_9-br
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 35
+
+

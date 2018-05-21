@@ -1,0 +1,3115 @@
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\cckLVLLS.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.file	"movement.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.section	.text.turn_wheel,"ax",%progbits
+  19              		.align	2
+  20              		.global	turn_wheel
+  21              		.thumb
+  22              		.thumb_func
+  23              		.type	turn_wheel, %function
+  24              	turn_wheel:
+  25              	.LFB63:
+  26              		.file 1 "movement.c"
+   1:movement.c    **** // include directives
+   2:movement.c    **** 
+   3:movement.c    **** // RIGHT WHEEL IS MOTOR 2 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+   4:movement.c    **** // speed is a value between 0 and 65535
+   5:movement.c    **** #include "project.h"
+   6:movement.c    **** #include <math.h>
+   7:movement.c    **** #include <stdio.h>
+   8:movement.c    **** #include <stdint.h>
+   9:movement.c    **** #include <stdlib.h>
+  10:movement.c    **** #include <time.h>
+  11:movement.c    ****     
+  12:movement.c    **** char mystring[50];
+  13:movement.c    **** //Shevin
+  14:movement.c    **** 
+  15:movement.c    **** /* declare global variables */
+  16:movement.c    **** 
+  17:movement.c    **** 
+  18:movement.c    ****     long int cur_dest_left = 0;
+  19:movement.c    ****     long int cur_dest_right = 0;  
+  20:movement.c    ****     long int prev_dest_right;
+  21:movement.c    ****     long int prev_dest_left;
+  22:movement.c    ****     
+  23:movement.c    ****     long int cur_pos_left;  
+  24:movement.c    ****     long int cur_pos_right;
+  25:movement.c    ****     long int last_pos_right;
+  26:movement.c    ****     long int last_pos_left;
+  27:movement.c    **** 
+  28:movement.c    ****     int volt_motor_left;
+  29:movement.c    ****     int volt_motor_right;
+  30:movement.c    **** 
+  31:movement.c    ****     int adj_motor_left;
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\cckLVLLS.s 			page 2
+
+
+  32:movement.c    ****     int adj_motor_right;
+  33:movement.c    **** 
+  34:movement.c    ****     int error_left;
+  35:movement.c    ****     int error_right;
+  36:movement.c    **** 
+  37:movement.c    ****     int error_left_prev;
+  38:movement.c    ****     int error_right_prev;
+  39:movement.c    **** 
+  40:movement.c    ****     int error_left_sum;
+  41:movement.c    ****     int error_right_sum;
+  42:movement.c    **** 
+  43:movement.c    ****     long int distance_left;
+  44:movement.c    ****     long int distance_right;
+  45:movement.c    **** 
+  46:movement.c    ****     double Kp=100;
+  47:movement.c    ****     double Ki=0.1;
+  48:movement.c    ****     double Kd=1000;
+  49:movement.c    **** 
+  50:movement.c    ****     int speed_left;
+  51:movement.c    ****     int speed_right;
+  52:movement.c    **** 
+  53:movement.c    ****     int inc_left;
+  54:movement.c    ****     int inc_right;
+  55:movement.c    **** 
+  56:movement.c    ****     long int time_ms;
+  57:movement.c    ****     long int time_ms_start;
+  58:movement.c    **** 
+  59:movement.c    **** 
+  60:movement.c    ****     
+  61:movement.c    **** 
+  62:movement.c    **** void turn_wheel(char side, int volt){
+  27              		.loc 1 62 0
+  28              		.cfi_startproc
+  29              		@ args = 0, pretend = 0, frame = 0
+  30              		@ frame_needed = 0, uses_anonymous_args = 0
+  31              	.LVL0:
+  32 0000 38B5     		push	{r3, r4, r5, lr}
+  33              		.cfi_def_cfa_offset 16
+  34              		.cfi_offset 3, -16
+  35              		.cfi_offset 4, -12
+  36              		.cfi_offset 5, -8
+  37              		.cfi_offset 14, -4
+  38 0002 0446     		mov	r4, r0
+  39 0004 0D46     		mov	r5, r1
+  63:movement.c    ****     // turning right wheel
+  64:movement.c    ****     if (side == 'r'){
+  40              		.loc 1 64 0
+  41 0006 7228     		cmp	r0, #114
+  42 0008 21D1     		bne	.L2
+  65:movement.c    ****         Standby_Write(1);
+  43              		.loc 1 65 0
+  44 000a 0120     		movs	r0, #1
+  45              	.LVL1:
+  46 000c FFF7FEFF 		bl	Standby_Write
+  47              	.LVL2:
+  66:movement.c    ****         PWM_M2_WriteCompare(abs(volt));
+  48              		.loc 1 66 0
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\cckLVLLS.s 			page 3
+
+
+  49 0010 85EAE570 		eor	r0, r5, r5, asr #31
+  50 0014 A0EBE570 		sub	r0, r0, r5, asr #31
+  51 0018 80B2     		uxth	r0, r0
+  52 001a FFF7FEFF 		bl	PWM_M2_WriteCompare
+  53              	.LVL3:
+  67:movement.c    ****         
+  68:movement.c    ****         if (volt > 0)
+  54              		.loc 1 68 0
+  55 001e 002D     		cmp	r5, #0
+  56 0020 06DD     		ble	.L3
+  69:movement.c    ****         {
+  70:movement.c    ****             M2_FWD_Write(0);
+  57              		.loc 1 70 0
+  58 0022 0020     		movs	r0, #0
+  59 0024 FFF7FEFF 		bl	M2_FWD_Write
+  60              	.LVL4:
+  71:movement.c    ****             M2_BWD_Write(1);
+  61              		.loc 1 71 0
+  62 0028 0120     		movs	r0, #1
+  63 002a FFF7FEFF 		bl	M2_BWD_Write
+  64              	.LVL5:
+  65 002e 0EE0     		b	.L2
+  66              	.L3:
+  72:movement.c    ****         }
+  73:movement.c    ****         else if (volt < 0)
+  67              		.loc 1 73 0
+  68 0030 002D     		cmp	r5, #0
+  69 0032 06DA     		bge	.L4
+  74:movement.c    ****         {
+  75:movement.c    ****             M2_FWD_Write(1);
+  70              		.loc 1 75 0
+  71 0034 0120     		movs	r0, #1
+  72 0036 FFF7FEFF 		bl	M2_FWD_Write
+  73              	.LVL6:
+  76:movement.c    ****             M2_BWD_Write(0);
+  74              		.loc 1 76 0
+  75 003a 0020     		movs	r0, #0
+  76 003c FFF7FEFF 		bl	M2_BWD_Write
+  77              	.LVL7:
+  78 0040 05E0     		b	.L2
+  79              	.L4:
+  77:movement.c    ****         }
+  78:movement.c    ****         else
+  79:movement.c    ****         {
+  80:movement.c    ****             M2_FWD_Write(0);
+  80              		.loc 1 80 0
+  81 0042 0020     		movs	r0, #0
+  82 0044 FFF7FEFF 		bl	M2_FWD_Write
+  83              	.LVL8:
+  81:movement.c    ****             M2_BWD_Write(0);
+  84              		.loc 1 81 0
+  85 0048 0020     		movs	r0, #0
+  86 004a FFF7FEFF 		bl	M2_BWD_Write
+  87              	.LVL9:
+  88              	.L2:
+  82:movement.c    ****         }
+  83:movement.c    ****     }
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\cckLVLLS.s 			page 4
+
+
+  84:movement.c    ****     
+  85:movement.c    ****     //turning left wheel
+  86:movement.c    ****     if (side == 'l'){
+  89              		.loc 1 86 0
+  90 004e 6C2C     		cmp	r4, #108
+  91 0050 21D1     		bne	.L1
+  87:movement.c    ****         Standby_Write(1);
+  92              		.loc 1 87 0
+  93 0052 0120     		movs	r0, #1
+  94 0054 FFF7FEFF 		bl	Standby_Write
+  95              	.LVL10:
+  88:movement.c    ****         PWM_M1_WriteCompare(abs(volt));
+  96              		.loc 1 88 0
+  97 0058 85EAE570 		eor	r0, r5, r5, asr #31
+  98 005c A0EBE570 		sub	r0, r0, r5, asr #31
+  99 0060 80B2     		uxth	r0, r0
+ 100 0062 FFF7FEFF 		bl	PWM_M1_WriteCompare
+ 101              	.LVL11:
+  89:movement.c    ****         
+  90:movement.c    ****         if (volt > 0)
+ 102              		.loc 1 90 0
+ 103 0066 002D     		cmp	r5, #0
+ 104 0068 06DD     		ble	.L6
+  91:movement.c    ****         {
+  92:movement.c    ****             M1_FWD_Write(0);
+ 105              		.loc 1 92 0
+ 106 006a 0020     		movs	r0, #0
+ 107 006c FFF7FEFF 		bl	M1_FWD_Write
+ 108              	.LVL12:
+  93:movement.c    ****             M1_BWD_Write(1);
+ 109              		.loc 1 93 0
+ 110 0070 0120     		movs	r0, #1
+ 111 0072 FFF7FEFF 		bl	M1_BWD_Write
+ 112              	.LVL13:
+ 113 0076 38BD     		pop	{r3, r4, r5, pc}
+ 114              	.LVL14:
+ 115              	.L6:
+  94:movement.c    ****         }
+  95:movement.c    ****         else if (volt < 0)
+ 116              		.loc 1 95 0
+ 117 0078 002D     		cmp	r5, #0
+ 118 007a 06DA     		bge	.L7
+  96:movement.c    ****         {
+  97:movement.c    ****             M1_FWD_Write(1);
+ 119              		.loc 1 97 0
+ 120 007c 0120     		movs	r0, #1
+ 121 007e FFF7FEFF 		bl	M1_FWD_Write
+ 122              	.LVL15:
+  98:movement.c    ****             M1_BWD_Write(0);
+ 123              		.loc 1 98 0
+ 124 0082 0020     		movs	r0, #0
+ 125 0084 FFF7FEFF 		bl	M1_BWD_Write
+ 126              	.LVL16:
+ 127 0088 38BD     		pop	{r3, r4, r5, pc}
+ 128              	.LVL17:
+ 129              	.L7:
+  99:movement.c    ****         }
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\cckLVLLS.s 			page 5
+
+
+ 100:movement.c    ****         else
+ 101:movement.c    ****         {
+ 102:movement.c    ****             M1_FWD_Write(0);
+ 130              		.loc 1 102 0
+ 131 008a 0020     		movs	r0, #0
+ 132 008c FFF7FEFF 		bl	M1_FWD_Write
+ 133              	.LVL18:
+ 103:movement.c    ****             M1_BWD_Write(0);
+ 134              		.loc 1 103 0
+ 135 0090 0020     		movs	r0, #0
+ 136 0092 FFF7FEFF 		bl	M1_BWD_Write
+ 137              	.LVL19:
+ 138              	.L1:
+ 139 0096 38BD     		pop	{r3, r4, r5, pc}
+ 140              		.cfi_endproc
+ 141              	.LFE63:
+ 142              		.size	turn_wheel, .-turn_wheel
+ 143              		.section	.text.update_angle,"ax",%progbits
+ 144              		.align	2
+ 145              		.global	update_angle
+ 146              		.thumb
+ 147              		.thumb_func
+ 148              		.type	update_angle, %function
+ 149              	update_angle:
+ 150              	.LFB64:
+ 104:movement.c    ****         }
+ 105:movement.c    ****     }
+ 106:movement.c    **** }
+ 107:movement.c    **** void update_angle(angle){
+ 151              		.loc 1 107 0
+ 152              		.cfi_startproc
+ 153              		@ args = 0, pretend = 0, frame = 0
+ 154              		@ frame_needed = 0, uses_anonymous_args = 0
+ 155              		@ link register save eliminated.
+ 156              	.LVL20:
+ 108:movement.c    **** 
+ 109:movement.c    ****     distance_left = 1/2 * angle;
+ 157              		.loc 1 109 0
+ 158 0000 0023     		movs	r3, #0
+ 159 0002 024A     		ldr	r2, .L10
+ 160 0004 1360     		str	r3, [r2]
+ 110:movement.c    ****     distance_right = -1/2 * angle; 
+ 161              		.loc 1 110 0
+ 162 0006 024A     		ldr	r2, .L10+4
+ 163 0008 1360     		str	r3, [r2]
+ 164 000a 7047     		bx	lr
+ 165              	.L11:
+ 166              		.align	2
+ 167              	.L10:
+ 168 000c 00000000 		.word	distance_left
+ 169 0010 00000000 		.word	distance_right
+ 170              		.cfi_endproc
+ 171              	.LFE64:
+ 172              		.size	update_angle, .-update_angle
+ 173              		.section	.text.step_response,"ax",%progbits
+ 174              		.align	2
+ 175              		.global	step_response
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\cckLVLLS.s 			page 6
+
+
+ 176              		.thumb
+ 177              		.thumb_func
+ 178              		.type	step_response, %function
+ 179              	step_response:
+ 180              	.LFB65:
+ 111:movement.c    **** 
+ 112:movement.c    **** }
+ 113:movement.c    **** 
+ 114:movement.c    **** void step_response(long int left_dest, long int right_dest){
+ 181              		.loc 1 114 0
+ 182              		.cfi_startproc
+ 183              		@ args = 0, pretend = 0, frame = 0
+ 184              		@ frame_needed = 0, uses_anonymous_args = 0
+ 185              		@ link register save eliminated.
+ 186              	.LVL21:
+ 115:movement.c    ****     
+ 116:movement.c    ****      time_ms_start = time_ms; 
+ 187              		.loc 1 116 0
+ 188 0000 064B     		ldr	r3, .L13
+ 189 0002 1A68     		ldr	r2, [r3]
+ 190 0004 064B     		ldr	r3, .L13+4
+ 191 0006 1A60     		str	r2, [r3]
+ 117:movement.c    ****     
+ 118:movement.c    ****      cur_dest_left = left_dest;   
+ 192              		.loc 1 118 0
+ 193 0008 064B     		ldr	r3, .L13+8
+ 194 000a 1860     		str	r0, [r3]
+ 119:movement.c    ****      cur_dest_right = right_dest;
+ 195              		.loc 1 119 0
+ 196 000c 5960     		str	r1, [r3, #4]
+ 120:movement.c    ****         
+ 121:movement.c    ****      inc_left = 0;
+ 197              		.loc 1 121 0
+ 198 000e 0023     		movs	r3, #0
+ 199 0010 054A     		ldr	r2, .L13+12
+ 200 0012 1360     		str	r3, [r2]
+ 122:movement.c    ****      inc_right = 0;
+ 201              		.loc 1 122 0
+ 202 0014 054A     		ldr	r2, .L13+16
+ 203 0016 1360     		str	r3, [r2]
+ 204 0018 7047     		bx	lr
+ 205              	.L14:
+ 206 001a 00BF     		.align	2
+ 207              	.L13:
+ 208 001c 00000000 		.word	time_ms
+ 209 0020 00000000 		.word	time_ms_start
+ 210 0024 00000000 		.word	.LANCHOR0
+ 211 0028 00000000 		.word	inc_left
+ 212 002c 00000000 		.word	inc_right
+ 213              		.cfi_endproc
+ 214              	.LFE65:
+ 215              		.size	step_response, .-step_response
+ 216              		.section	.text.test_values,"ax",%progbits
+ 217              		.align	2
+ 218              		.global	test_values
+ 219              		.thumb
+ 220              		.thumb_func
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\cckLVLLS.s 			page 7
+
+
+ 221              		.type	test_values, %function
+ 222              	test_values:
+ 223              	.LFB66:
+ 123:movement.c    ****     
+ 124:movement.c    **** }
+ 125:movement.c    **** /*
+ 126:movement.c    **** void Get_StartSpeed(){
+ 127:movement.c    ****     speed_left = 10*(cur_dest_left - prev_dest_left);
+ 128:movement.c    ****     speed_right = 10*(cur_dest_right - prev_dest_left);
+ 129:movement.c    **** }
+ 130:movement.c    ****   
+ 131:movement.c    **** */
+ 132:movement.c    **** void test_values(double kp, double kd, double ki)
+ 133:movement.c    **** {   Kp=kp;
+ 224              		.loc 1 133 0
+ 225              		.cfi_startproc
+ 226              		@ args = 8, pretend = 0, frame = 0
+ 227              		@ frame_needed = 0, uses_anonymous_args = 0
+ 228              		@ link register save eliminated.
+ 229              	.LVL22:
+ 230 0000 10B4     		push	{r4}
+ 231              		.cfi_def_cfa_offset 4
+ 232              		.cfi_offset 4, -4
+ 233              		.loc 1 133 0
+ 234 0002 064C     		ldr	r4, .L17
+ 235 0004 C4E90001 		strd	r0, [r4]
+ 134:movement.c    ****     Kd=kd;
+ 236              		.loc 1 134 0
+ 237 0008 C4E90223 		strd	r2, [r4, #8]
+ 135:movement.c    ****     Ki=ki;
+ 238              		.loc 1 135 0
+ 239 000c DDE90123 		ldrd	r2, [sp, #4]
+ 240              	.LVL23:
+ 241 0010 C4E90423 		strd	r2, [r4, #16]
+ 136:movement.c    **** }
+ 242              		.loc 1 136 0
+ 243 0014 5DF8044B 		ldr	r4, [sp], #4
+ 244              		.cfi_restore 4
+ 245              		.cfi_def_cfa_offset 0
+ 246              	.LVL24:
+ 247 0018 7047     		bx	lr
+ 248              	.L18:
+ 249 001a 00BF     		.align	2
+ 250              	.L17:
+ 251 001c 00000000 		.word	.LANCHOR1
+ 252              		.cfi_endproc
+ 253              	.LFE66:
+ 254              		.size	test_values, .-test_values
+ 255              		.section	.text.new_path,"ax",%progbits
+ 256              		.align	2
+ 257              		.global	new_path
+ 258              		.thumb
+ 259              		.thumb_func
+ 260              		.type	new_path, %function
+ 261              	new_path:
+ 262              	.LFB67:
+ 137:movement.c    **** void new_path(int incleft, int incright){
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\cckLVLLS.s 			page 8
+
+
+ 263              		.loc 1 137 0
+ 264              		.cfi_startproc
+ 265              		@ args = 0, pretend = 0, frame = 0
+ 266              		@ frame_needed = 0, uses_anonymous_args = 0
+ 267              		@ link register save eliminated.
+ 268              	.LVL25:
+ 269 0000 10B4     		push	{r4}
+ 270              		.cfi_def_cfa_offset 4
+ 271              		.cfi_offset 4, -4
+ 138:movement.c    ****     
+ 139:movement.c    ****     
+ 140:movement.c    ****     inc_left = incleft + distance_left;
+ 272              		.loc 1 140 0
+ 273 0002 084C     		ldr	r4, .L21
+ 274 0004 2368     		ldr	r3, [r4]
+ 275 0006 1844     		add	r0, r0, r3
+ 276              	.LVL26:
+ 277 0008 074B     		ldr	r3, .L21+4
+ 278 000a 1860     		str	r0, [r3]
+ 141:movement.c    ****     inc_right = incright + distance_right;
+ 279              		.loc 1 141 0
+ 280 000c 074A     		ldr	r2, .L21+8
+ 281 000e 1368     		ldr	r3, [r2]
+ 282 0010 1944     		add	r1, r1, r3
+ 283              	.LVL27:
+ 284 0012 074B     		ldr	r3, .L21+12
+ 285 0014 1960     		str	r1, [r3]
+ 142:movement.c    ****     
+ 143:movement.c    ****     distance_left = 0;
+ 286              		.loc 1 143 0
+ 287 0016 0023     		movs	r3, #0
+ 288 0018 2360     		str	r3, [r4]
+ 144:movement.c    ****     distance_right = 0;
+ 289              		.loc 1 144 0
+ 290 001a 1360     		str	r3, [r2]
+ 145:movement.c    ****     
+ 146:movement.c    ****     
+ 147:movement.c    ****     /*
+ 148:movement.c    ****     
+ 149:movement.c    ****     int speed = 30;
+ 150:movement.c    ****     inc_left = speed;
+ 151:movement.c    ****     inc_right = speed;
+ 152:movement.c    ****     
+ 153:movement.c    ****     if (cur_dest_right < fin_dest_right){
+ 154:movement.c    ****         direction_right = 1;}
+ 155:movement.c    ****     else{
+ 156:movement.c    ****         direction_right = -1;}
+ 157:movement.c    ****     
+ 158:movement.c    ****     if (cur_dest_left < fin_dest_left){
+ 159:movement.c    ****         direction_left = 1;}
+ 160:movement.c    ****     else{
+ 161:movement.c    ****         direction_left = -1;}
+ 162:movement.c    ****     
+ 163:movement.c    ****     iterations_left = fin_dest_left - cur_dest_left;
+ 164:movement.c    ****     iterations_count_left = 0;
+ 165:movement.c    ****     
+ 166:movement.c    ****     iterations_right = fin_dest_right - cur_dest_right;
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\cckLVLLS.s 			page 9
+
+
+ 167:movement.c    ****     iterations_count_right = 0;
+ 168:movement.c    ****     
+ 169:movement.c    ****     */
+ 170:movement.c    ****     
+ 171:movement.c    **** }
+ 291              		.loc 1 171 0
+ 292 001c 5DF8044B 		ldr	r4, [sp], #4
+ 293              		.cfi_restore 4
+ 294              		.cfi_def_cfa_offset 0
+ 295 0020 7047     		bx	lr
+ 296              	.L22:
+ 297 0022 00BF     		.align	2
+ 298              	.L21:
+ 299 0024 00000000 		.word	distance_left
+ 300 0028 00000000 		.word	inc_left
+ 301 002c 00000000 		.word	distance_right
+ 302 0030 00000000 		.word	inc_right
+ 303              		.cfi_endproc
+ 304              	.LFE67:
+ 305              		.size	new_path, .-new_path
+ 306              		.section	.text.Get_Destination,"ax",%progbits
+ 307              		.align	2
+ 308              		.global	Get_Destination
+ 309              		.thumb
+ 310              		.thumb_func
+ 311              		.type	Get_Destination, %function
+ 312              	Get_Destination:
+ 313              	.LFB68:
+ 172:movement.c    **** 
+ 173:movement.c    **** 
+ 174:movement.c    **** 
+ 175:movement.c    **** void Get_Destination(){
+ 314              		.loc 1 175 0
+ 315              		.cfi_startproc
+ 316              		@ args = 0, pretend = 0, frame = 0
+ 317              		@ frame_needed = 0, uses_anonymous_args = 0
+ 318              		@ link register save eliminated.
+ 176:movement.c    ****     
+ 177:movement.c    ****     cur_dest_left = cur_dest_left + inc_left;
+ 319              		.loc 1 177 0
+ 320 0000 054B     		ldr	r3, .L24
+ 321 0002 1968     		ldr	r1, [r3]
+ 322 0004 054A     		ldr	r2, .L24+4
+ 323 0006 1268     		ldr	r2, [r2]
+ 324 0008 0A44     		add	r2, r2, r1
+ 325 000a 1A60     		str	r2, [r3]
+ 178:movement.c    ****     cur_dest_right = cur_dest_right + inc_right;
+ 326              		.loc 1 178 0
+ 327 000c 5968     		ldr	r1, [r3, #4]
+ 328 000e 044A     		ldr	r2, .L24+8
+ 329 0010 1268     		ldr	r2, [r2]
+ 330 0012 0A44     		add	r2, r2, r1
+ 331 0014 5A60     		str	r2, [r3, #4]
+ 332 0016 7047     		bx	lr
+ 333              	.L25:
+ 334              		.align	2
+ 335              	.L24:
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\cckLVLLS.s 			page 10
+
+
+ 336 0018 00000000 		.word	.LANCHOR0
+ 337 001c 00000000 		.word	inc_left
+ 338 0020 00000000 		.word	inc_right
+ 339              		.cfi_endproc
+ 340              	.LFE68:
+ 341              		.size	Get_Destination, .-Get_Destination
+ 342              		.section	.text.Get_Position,"ax",%progbits
+ 343              		.align	2
+ 344              		.global	Get_Position
+ 345              		.thumb
+ 346              		.thumb_func
+ 347              		.type	Get_Position, %function
+ 348              	Get_Position:
+ 349              	.LFB69:
+ 179:movement.c    **** }
+ 180:movement.c    **** void Get_Position(){
+ 350              		.loc 1 180 0
+ 351              		.cfi_startproc
+ 352              		@ args = 0, pretend = 0, frame = 0
+ 353              		@ frame_needed = 0, uses_anonymous_args = 0
+ 354 0000 08B5     		push	{r3, lr}
+ 355              		.cfi_def_cfa_offset 8
+ 356              		.cfi_offset 3, -8
+ 357              		.cfi_offset 14, -4
+ 181:movement.c    ****     cur_pos_right = -64*M2QuadDec_GetCounter();
+ 358              		.loc 1 181 0
+ 359 0002 FFF7FEFF 		bl	M2QuadDec_GetCounter
+ 360              	.LVL28:
+ 361 0006 4042     		negs	r0, r0
+ 362 0008 8001     		lsls	r0, r0, #6
+ 363 000a 044B     		ldr	r3, .L28
+ 364 000c 1860     		str	r0, [r3]
+ 182:movement.c    ****     cur_pos_left = -64*M1QuadDec_GetCounter();
+ 365              		.loc 1 182 0
+ 366 000e FFF7FEFF 		bl	M1QuadDec_GetCounter
+ 367              	.LVL29:
+ 368 0012 4042     		negs	r0, r0
+ 369 0014 8001     		lsls	r0, r0, #6
+ 370 0016 024B     		ldr	r3, .L28+4
+ 371 0018 1860     		str	r0, [r3]
+ 372 001a 08BD     		pop	{r3, pc}
+ 373              	.L29:
+ 374              		.align	2
+ 375              	.L28:
+ 376 001c 00000000 		.word	cur_pos_right
+ 377 0020 00000000 		.word	cur_pos_left
+ 378              		.cfi_endproc
+ 379              	.LFE69:
+ 380              		.size	Get_Position, .-Get_Position
+ 381              		.section	.text.Get_Error,"ax",%progbits
+ 382              		.align	2
+ 383              		.global	Get_Error
+ 384              		.thumb
+ 385              		.thumb_func
+ 386              		.type	Get_Error, %function
+ 387              	Get_Error:
+ 388              	.LFB70:
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\cckLVLLS.s 			page 11
+
+
+ 183:movement.c    **** }
+ 184:movement.c    **** void Get_Error(){
+ 389              		.loc 1 184 0
+ 390              		.cfi_startproc
+ 391              		@ args = 0, pretend = 0, frame = 0
+ 392              		@ frame_needed = 0, uses_anonymous_args = 0
+ 393              		@ link register save eliminated.
+ 394 0000 10B4     		push	{r4}
+ 395              		.cfi_def_cfa_offset 4
+ 396              		.cfi_offset 4, -4
+ 185:movement.c    ****     error_left_prev = error_left;
+ 397              		.loc 1 185 0
+ 398 0002 0F4C     		ldr	r4, .L32
+ 399 0004 2268     		ldr	r2, [r4]
+ 400 0006 0F4B     		ldr	r3, .L32+4
+ 401 0008 1A60     		str	r2, [r3]
+ 186:movement.c    ****     error_right_prev = error_right;
+ 402              		.loc 1 186 0
+ 403 000a 0F49     		ldr	r1, .L32+8
+ 404 000c 0A68     		ldr	r2, [r1]
+ 405 000e 0F4B     		ldr	r3, .L32+12
+ 406 0010 1A60     		str	r2, [r3]
+ 187:movement.c    ****     
+ 188:movement.c    ****     error_left = cur_dest_left - cur_pos_left;
+ 407              		.loc 1 188 0
+ 408 0012 0F48     		ldr	r0, .L32+16
+ 409 0014 0368     		ldr	r3, [r0]
+ 410 0016 0F4A     		ldr	r2, .L32+20
+ 411 0018 1268     		ldr	r2, [r2]
+ 412 001a 9A1A     		subs	r2, r3, r2
+ 413 001c 2260     		str	r2, [r4]
+ 189:movement.c    ****     error_right = cur_dest_right - cur_pos_right;
+ 414              		.loc 1 189 0
+ 415 001e 4368     		ldr	r3, [r0, #4]
+ 416 0020 0D48     		ldr	r0, .L32+24
+ 417 0022 0068     		ldr	r0, [r0]
+ 418 0024 1B1A     		subs	r3, r3, r0
+ 419 0026 0B60     		str	r3, [r1]
+ 190:movement.c    ****     
+ 191:movement.c    ****     error_left_sum = error_left_sum + error_left;
+ 420              		.loc 1 191 0
+ 421 0028 0C48     		ldr	r0, .L32+28
+ 422 002a 0168     		ldr	r1, [r0]
+ 423 002c 0A44     		add	r2, r2, r1
+ 424 002e 0260     		str	r2, [r0]
+ 192:movement.c    ****     error_right_sum = error_right_sum + error_right;
+ 425              		.loc 1 192 0
+ 426 0030 0B49     		ldr	r1, .L32+32
+ 427 0032 0A68     		ldr	r2, [r1]
+ 428 0034 1344     		add	r3, r3, r2
+ 429 0036 0B60     		str	r3, [r1]
+ 193:movement.c    **** 
+ 194:movement.c    **** }
+ 430              		.loc 1 194 0
+ 431 0038 5DF8044B 		ldr	r4, [sp], #4
+ 432              		.cfi_restore 4
+ 433              		.cfi_def_cfa_offset 0
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\cckLVLLS.s 			page 12
+
+
+ 434 003c 7047     		bx	lr
+ 435              	.L33:
+ 436 003e 00BF     		.align	2
+ 437              	.L32:
+ 438 0040 00000000 		.word	error_left
+ 439 0044 00000000 		.word	error_left_prev
+ 440 0048 00000000 		.word	error_right
+ 441 004c 00000000 		.word	error_right_prev
+ 442 0050 00000000 		.word	.LANCHOR0
+ 443 0054 00000000 		.word	cur_pos_left
+ 444 0058 00000000 		.word	cur_pos_right
+ 445 005c 00000000 		.word	error_left_sum
+ 446 0060 00000000 		.word	error_right_sum
+ 447              		.cfi_endproc
+ 448              	.LFE70:
+ 449              		.size	Get_Error, .-Get_Error
+ 450              		.global	__aeabi_i2d
+ 451              		.global	__aeabi_dmul
+ 452              		.global	__aeabi_dadd
+ 453              		.global	__aeabi_d2iz
+ 454              		.section	.text.Get_PID,"ax",%progbits
+ 455              		.align	2
+ 456              		.global	Get_PID
+ 457              		.thumb
+ 458              		.thumb_func
+ 459              		.type	Get_PID, %function
+ 460              	Get_PID:
+ 461              	.LFB71:
+ 195:movement.c    **** 
+ 196:movement.c    **** void Get_PID(){   
+ 462              		.loc 1 196 0
+ 463              		.cfi_startproc
+ 464              		@ args = 0, pretend = 0, frame = 8
+ 465              		@ frame_needed = 0, uses_anonymous_args = 0
+ 466 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 467              		.cfi_def_cfa_offset 36
+ 468              		.cfi_offset 4, -36
+ 469              		.cfi_offset 5, -32
+ 470              		.cfi_offset 6, -28
+ 471              		.cfi_offset 7, -24
+ 472              		.cfi_offset 8, -20
+ 473              		.cfi_offset 9, -16
+ 474              		.cfi_offset 10, -12
+ 475              		.cfi_offset 11, -8
+ 476              		.cfi_offset 14, -4
+ 477 0004 83B0     		sub	sp, sp, #12
+ 478              		.cfi_def_cfa_offset 48
+ 197:movement.c    ****     volt_motor_left =  ( Kp * error_left ) + ( Ki * error_left_sum ) + ( Kd * (error_left - error_l
+ 479              		.loc 1 197 0
+ 480 0006 454B     		ldr	r3, .L40
+ 481 0008 D3F800A0 		ldr	r10, [r3]
+ 482 000c DFF830B1 		ldr	fp, .L40+36
+ 483 0010 DBE90067 		ldrd	r6, [fp]
+ 484 0014 5046     		mov	r0, r10
+ 485 0016 FFF7FEFF 		bl	__aeabi_i2d
+ 486              	.LVL30:
+ 487 001a 3246     		mov	r2, r6
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\cckLVLLS.s 			page 13
+
+
+ 488 001c 3B46     		mov	r3, r7
+ 489 001e FFF7FEFF 		bl	__aeabi_dmul
+ 490              	.LVL31:
+ 491 0022 8046     		mov	r8, r0
+ 492 0024 8946     		mov	r9, r1
+ 493 0026 DBE90445 		ldrd	r4, [fp, #16]
+ 494 002a 3D4B     		ldr	r3, .L40+4
+ 495 002c 1868     		ldr	r0, [r3]
+ 496 002e FFF7FEFF 		bl	__aeabi_i2d
+ 497              	.LVL32:
+ 498 0032 2246     		mov	r2, r4
+ 499 0034 2B46     		mov	r3, r5
+ 500 0036 FFF7FEFF 		bl	__aeabi_dmul
+ 501              	.LVL33:
+ 502 003a 0246     		mov	r2, r0
+ 503 003c 0B46     		mov	r3, r1
+ 504 003e 4046     		mov	r0, r8
+ 505 0040 4946     		mov	r1, r9
+ 506 0042 FFF7FEFF 		bl	__aeabi_dadd
+ 507              	.LVL34:
+ 508 0046 CDE90001 		strd	r0, [sp]
+ 509 004a 364B     		ldr	r3, .L40+8
+ 510 004c 1868     		ldr	r0, [r3]
+ 511 004e DBE90289 		ldrd	r8, [fp, #8]
+ 512 0052 C0EB0A00 		rsb	r0, r0, r10
+ 513 0056 FFF7FEFF 		bl	__aeabi_i2d
+ 514              	.LVL35:
+ 515 005a 4246     		mov	r2, r8
+ 516 005c 4B46     		mov	r3, r9
+ 517 005e FFF7FEFF 		bl	__aeabi_dmul
+ 518              	.LVL36:
+ 519 0062 0246     		mov	r2, r0
+ 520 0064 0B46     		mov	r3, r1
+ 521 0066 DDE90001 		ldrd	r0, [sp]
+ 522 006a FFF7FEFF 		bl	__aeabi_dadd
+ 523              	.LVL37:
+ 524 006e FFF7FEFF 		bl	__aeabi_d2iz
+ 525              	.LVL38:
+ 526 0072 2D4B     		ldr	r3, .L40+12
+ 527 0074 1860     		str	r0, [r3]
+ 198:movement.c    ****     //volt_motor_left =  adj_motor_left;
+ 199:movement.c    ****     
+ 200:movement.c    ****         if (volt_motor_left < -65535){
+ 528              		.loc 1 200 0
+ 529 0076 10F5803F 		cmn	r0, #65536
+ 530 007a 02DC     		bgt	.L35
+ 201:movement.c    ****             volt_motor_left = -65535;}
+ 531              		.loc 1 201 0
+ 532 007c 2B4A     		ldr	r2, .L40+16
+ 533 007e 1A60     		str	r2, [r3]
+ 534 0080 06E0     		b	.L36
+ 535              	.L35:
+ 202:movement.c    ****         else if (volt_motor_left > 65535){
+ 536              		.loc 1 202 0
+ 537 0082 B0F5803F 		cmp	r0, #65536
+ 538 0086 03DB     		blt	.L36
+ 203:movement.c    ****             volt_motor_left = 65535;}
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\cckLVLLS.s 			page 14
+
+
+ 539              		.loc 1 203 0
+ 540 0088 4FF6FF72 		movw	r2, #65535
+ 541 008c 264B     		ldr	r3, .L40+12
+ 542 008e 1A60     		str	r2, [r3]
+ 543              	.L36:
+ 204:movement.c    ****     
+ 205:movement.c    ****     volt_motor_right = ( Kp * error_right ) + ( Ki * error_right_sum ) + ( Kd * (error_right - erro
+ 544              		.loc 1 205 0
+ 545 0090 274B     		ldr	r3, .L40+20
+ 546 0092 D3F800A0 		ldr	r10, [r3]
+ 547 0096 5046     		mov	r0, r10
+ 548 0098 FFF7FEFF 		bl	__aeabi_i2d
+ 549              	.LVL39:
+ 550 009c 0246     		mov	r2, r0
+ 551 009e 0B46     		mov	r3, r1
+ 552 00a0 3046     		mov	r0, r6
+ 553 00a2 3946     		mov	r1, r7
+ 554 00a4 FFF7FEFF 		bl	__aeabi_dmul
+ 555              	.LVL40:
+ 556 00a8 0646     		mov	r6, r0
+ 557 00aa 0F46     		mov	r7, r1
+ 558 00ac 214B     		ldr	r3, .L40+24
+ 559 00ae 1868     		ldr	r0, [r3]
+ 560 00b0 FFF7FEFF 		bl	__aeabi_i2d
+ 561              	.LVL41:
+ 562 00b4 0246     		mov	r2, r0
+ 563 00b6 0B46     		mov	r3, r1
+ 564 00b8 2046     		mov	r0, r4
+ 565 00ba 2946     		mov	r1, r5
+ 566 00bc FFF7FEFF 		bl	__aeabi_dmul
+ 567              	.LVL42:
+ 568 00c0 0246     		mov	r2, r0
+ 569 00c2 0B46     		mov	r3, r1
+ 570 00c4 3046     		mov	r0, r6
+ 571 00c6 3946     		mov	r1, r7
+ 572 00c8 FFF7FEFF 		bl	__aeabi_dadd
+ 573              	.LVL43:
+ 574 00cc 0446     		mov	r4, r0
+ 575 00ce 0D46     		mov	r5, r1
+ 576 00d0 194B     		ldr	r3, .L40+28
+ 577 00d2 1868     		ldr	r0, [r3]
+ 578 00d4 C0EB0A00 		rsb	r0, r0, r10
+ 579 00d8 FFF7FEFF 		bl	__aeabi_i2d
+ 580              	.LVL44:
+ 581 00dc 0246     		mov	r2, r0
+ 582 00de 0B46     		mov	r3, r1
+ 583 00e0 4046     		mov	r0, r8
+ 584 00e2 4946     		mov	r1, r9
+ 585 00e4 FFF7FEFF 		bl	__aeabi_dmul
+ 586              	.LVL45:
+ 587 00e8 0246     		mov	r2, r0
+ 588 00ea 0B46     		mov	r3, r1
+ 589 00ec 2046     		mov	r0, r4
+ 590 00ee 2946     		mov	r1, r5
+ 591 00f0 FFF7FEFF 		bl	__aeabi_dadd
+ 592              	.LVL46:
+ 593 00f4 FFF7FEFF 		bl	__aeabi_d2iz
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\cckLVLLS.s 			page 15
+
+
+ 594              	.LVL47:
+ 595 00f8 104B     		ldr	r3, .L40+32
+ 596 00fa 1860     		str	r0, [r3]
+ 206:movement.c    ****     //volt_motor_right =  adj_motor_right;
+ 207:movement.c    ****     
+ 208:movement.c    ****         if (volt_motor_right < -65535){
+ 597              		.loc 1 208 0
+ 598 00fc 10F5803F 		cmn	r0, #65536
+ 599 0100 02DC     		bgt	.L37
+ 209:movement.c    ****             volt_motor_right = -65535;}
+ 600              		.loc 1 209 0
+ 601 0102 0A4A     		ldr	r2, .L40+16
+ 602 0104 1A60     		str	r2, [r3]
+ 603 0106 06E0     		b	.L34
+ 604              	.L37:
+ 210:movement.c    ****         else if (volt_motor_right > 65535){
+ 605              		.loc 1 210 0
+ 606 0108 B0F5803F 		cmp	r0, #65536
+ 607 010c 03DB     		blt	.L34
+ 211:movement.c    ****             volt_motor_right = 65535;}
+ 608              		.loc 1 211 0
+ 609 010e 4FF6FF72 		movw	r2, #65535
+ 610 0112 0A4B     		ldr	r3, .L40+32
+ 611 0114 1A60     		str	r2, [r3]
+ 612              	.L34:
+ 212:movement.c    **** }    
+ 613              		.loc 1 212 0
+ 614 0116 03B0     		add	sp, sp, #12
+ 615              		.cfi_def_cfa_offset 36
+ 616              		@ sp needed
+ 617 0118 BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 618              	.L41:
+ 619              		.align	2
+ 620              	.L40:
+ 621 011c 00000000 		.word	error_left
+ 622 0120 00000000 		.word	error_left_sum
+ 623 0124 00000000 		.word	error_left_prev
+ 624 0128 00000000 		.word	volt_motor_left
+ 625 012c 0100FFFF 		.word	-65535
+ 626 0130 00000000 		.word	error_right
+ 627 0134 00000000 		.word	error_right_sum
+ 628 0138 00000000 		.word	error_right_prev
+ 629 013c 00000000 		.word	volt_motor_right
+ 630 0140 00000000 		.word	.LANCHOR1
+ 631              		.cfi_endproc
+ 632              	.LFE71:
+ 633              		.size	Get_PID, .-Get_PID
+ 634              		.section	.text.Adj_Volt,"ax",%progbits
+ 635              		.align	2
+ 636              		.global	Adj_Volt
+ 637              		.thumb
+ 638              		.thumb_func
+ 639              		.type	Adj_Volt, %function
+ 640              	Adj_Volt:
+ 641              	.LFB72:
+ 213:movement.c    **** void Adj_Volt(){
+ 642              		.loc 1 213 0
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\cckLVLLS.s 			page 16
+
+
+ 643              		.cfi_startproc
+ 644              		@ args = 0, pretend = 0, frame = 0
+ 645              		@ frame_needed = 0, uses_anonymous_args = 0
+ 646 0000 08B5     		push	{r3, lr}
+ 647              		.cfi_def_cfa_offset 8
+ 648              		.cfi_offset 3, -8
+ 649              		.cfi_offset 14, -4
+ 214:movement.c    ****     
+ 215:movement.c    ****     turn_wheel('l', volt_motor_left);
+ 650              		.loc 1 215 0
+ 651 0002 6C20     		movs	r0, #108
+ 652 0004 044B     		ldr	r3, .L44
+ 653 0006 1968     		ldr	r1, [r3]
+ 654 0008 FFF7FEFF 		bl	turn_wheel
+ 655              	.LVL48:
+ 216:movement.c    ****     turn_wheel('r', volt_motor_right);
+ 656              		.loc 1 216 0
+ 657 000c 7220     		movs	r0, #114
+ 658 000e 034B     		ldr	r3, .L44+4
+ 659 0010 1968     		ldr	r1, [r3]
+ 660 0012 FFF7FEFF 		bl	turn_wheel
+ 661              	.LVL49:
+ 662 0016 08BD     		pop	{r3, pc}
+ 663              	.L45:
+ 664              		.align	2
+ 665              	.L44:
+ 666 0018 00000000 		.word	volt_motor_left
+ 667 001c 00000000 		.word	volt_motor_right
+ 668              		.cfi_endproc
+ 669              	.LFE72:
+ 670              		.size	Adj_Volt, .-Adj_Volt
+ 671              		.section	.text.Check_Speed,"ax",%progbits
+ 672              		.align	2
+ 673              		.global	Check_Speed
+ 674              		.thumb
+ 675              		.thumb_func
+ 676              		.type	Check_Speed, %function
+ 677              	Check_Speed:
+ 678              	.LFB73:
+ 217:movement.c    **** }
+ 218:movement.c    **** 
+ 219:movement.c    **** void Check_Speed(){
+ 679              		.loc 1 219 0
+ 680              		.cfi_startproc
+ 681              		@ args = 0, pretend = 0, frame = 0
+ 682              		@ frame_needed = 0, uses_anonymous_args = 0
+ 683 0000 08B5     		push	{r3, lr}
+ 684              		.cfi_def_cfa_offset 8
+ 685              		.cfi_offset 3, -8
+ 686              		.cfi_offset 14, -4
+ 220:movement.c    ****     time_ms = time_ms + 1;
+ 687              		.loc 1 220 0
+ 688 0002 074A     		ldr	r2, .L48
+ 689 0004 1368     		ldr	r3, [r2]
+ 690 0006 0133     		adds	r3, r3, #1
+ 691 0008 1360     		str	r3, [r2]
+ 221:movement.c    ****     Get_Destination();  // update the destination
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\cckLVLLS.s 			page 17
+
+
+ 692              		.loc 1 221 0
+ 693 000a FFF7FEFF 		bl	Get_Destination
+ 694              	.LVL50:
+ 222:movement.c    ****     Get_Position();     // update the position
+ 695              		.loc 1 222 0
+ 696 000e FFF7FEFF 		bl	Get_Position
+ 697              	.LVL51:
+ 223:movement.c    ****     Get_Error();        // update the current and previous errors
+ 698              		.loc 1 223 0
+ 699 0012 FFF7FEFF 		bl	Get_Error
+ 700              	.LVL52:
+ 224:movement.c    ****     Get_PID();          // calculate the current voltages required
+ 701              		.loc 1 224 0
+ 702 0016 FFF7FEFF 		bl	Get_PID
+ 703              	.LVL53:
+ 225:movement.c    ****     Adj_Volt();      // update the speed of the wheVels
+ 704              		.loc 1 225 0
+ 705 001a FFF7FEFF 		bl	Adj_Volt
+ 706              	.LVL54:
+ 707 001e 08BD     		pop	{r3, pc}
+ 708              	.L49:
+ 709              		.align	2
+ 710              	.L48:
+ 711 0020 00000000 		.word	time_ms
+ 712              		.cfi_endproc
+ 713              	.LFE73:
+ 714              		.size	Check_Speed, .-Check_Speed
+ 715              		.section	.text.Print_Values,"ax",%progbits
+ 716              		.align	2
+ 717              		.global	Print_Values
+ 718              		.thumb
+ 719              		.thumb_func
+ 720              		.type	Print_Values, %function
+ 721              	Print_Values:
+ 722              	.LFB74:
+ 226:movement.c    ****     
+ 227:movement.c    **** }
+ 228:movement.c    **** 
+ 229:movement.c    **** void Print_Values(){
+ 723              		.loc 1 229 0
+ 724              		.cfi_startproc
+ 725              		@ args = 0, pretend = 0, frame = 0
+ 726              		@ frame_needed = 0, uses_anonymous_args = 0
+ 727 0000 10B5     		push	{r4, lr}
+ 728              		.cfi_def_cfa_offset 8
+ 729              		.cfi_offset 4, -8
+ 730              		.cfi_offset 14, -4
+ 731 0002 86B0     		sub	sp, sp, #24
+ 732              		.cfi_def_cfa_offset 32
+ 230:movement.c    ****     sprintf(mystring, "%d|%d|%ld|%ld|%ld|%d|%d|%d\n", error_left, volt_motor_left, cur_pos_left, cu
+ 733              		.loc 1 230 0
+ 734 0004 104B     		ldr	r3, .L52
+ 735 0006 1A68     		ldr	r2, [r3]
+ 736 0008 104C     		ldr	r4, .L52+4
+ 737 000a 114B     		ldr	r3, .L52+8
+ 738 000c 1B68     		ldr	r3, [r3]
+ 739 000e 1149     		ldr	r1, .L52+12
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\cckLVLLS.s 			page 18
+
+
+ 740 0010 0968     		ldr	r1, [r1]
+ 741 0012 0091     		str	r1, [sp]
+ 742 0014 1049     		ldr	r1, .L52+16
+ 743 0016 0968     		ldr	r1, [r1]
+ 744 0018 0191     		str	r1, [sp, #4]
+ 745 001a 1049     		ldr	r1, .L52+20
+ 746 001c 0968     		ldr	r1, [r1]
+ 747 001e 1048     		ldr	r0, .L52+24
+ 748 0020 0068     		ldr	r0, [r0]
+ 749 0022 091A     		subs	r1, r1, r0
+ 750 0024 0291     		str	r1, [sp, #8]
+ 751 0026 0392     		str	r2, [sp, #12]
+ 752 0028 0E49     		ldr	r1, .L52+28
+ 753 002a 0968     		ldr	r1, [r1]
+ 754 002c 511A     		subs	r1, r2, r1
+ 755 002e 0491     		str	r1, [sp, #16]
+ 756 0030 0D49     		ldr	r1, .L52+32
+ 757 0032 0968     		ldr	r1, [r1]
+ 758 0034 0591     		str	r1, [sp, #20]
+ 759 0036 2046     		mov	r0, r4
+ 760 0038 0C49     		ldr	r1, .L52+36
+ 761 003a FFF7FEFF 		bl	sprintf
+ 762              	.LVL55:
+ 231:movement.c    ****     UART_PutString(mystring);
+ 763              		.loc 1 231 0
+ 764 003e 2046     		mov	r0, r4
+ 765 0040 FFF7FEFF 		bl	UART_PutString
+ 766              	.LVL56:
+ 232:movement.c    ****     
+ 233:movement.c    ****     /*
+ 234:movement.c    ****     sprintf(mystring, "left error:%d     right error: %d\n", error_left, error_right);
+ 235:movement.c    ****     UART_PutString(mystring);
+ 236:movement.c    ****     sprintf(mystring, "left voltage:%d     right voltage: %d\n", volt_motor_left, volt_motor_right)
+ 237:movement.c    ****     UART_PutString(mystring);
+ 238:movement.c    ****     sprintf(mystring, "left position:%ld     right position: %ld\n", cur_pos_left, cur_pos_right);
+ 239:movement.c    ****     UART_PutString(mystring);
+ 240:movement.c    ****     sprintf(mystring, "left destination:%ld     right destination: %ld\n", cur_dest_left, cur_dest_
+ 241:movement.c    ****     UART_PutString(mystring);
+ 242:movement.c    ****     */
+ 243:movement.c    **** }
+ 767              		.loc 1 243 0
+ 768 0044 06B0     		add	sp, sp, #24
+ 769              		.cfi_def_cfa_offset 8
+ 770              		@ sp needed
+ 771 0046 10BD     		pop	{r4, pc}
+ 772              	.L53:
+ 773              		.align	2
+ 774              	.L52:
+ 775 0048 00000000 		.word	error_left
+ 776 004c 00000000 		.word	mystring
+ 777 0050 00000000 		.word	volt_motor_left
+ 778 0054 00000000 		.word	cur_pos_left
+ 779 0058 00000000 		.word	.LANCHOR0
+ 780 005c 00000000 		.word	time_ms
+ 781 0060 00000000 		.word	time_ms_start
+ 782 0064 00000000 		.word	error_left_prev
+ 783 0068 00000000 		.word	error_left_sum
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\cckLVLLS.s 			page 19
+
+
+ 784 006c 00000000 		.word	.LC0
+ 785              		.cfi_endproc
+ 786              	.LFE74:
+ 787              		.size	Print_Values, .-Print_Values
+ 788              		.comm	time_ms_start,4,4
+ 789              		.comm	time_ms,4,4
+ 790              		.comm	inc_right,4,4
+ 791              		.comm	inc_left,4,4
+ 792              		.comm	speed_right,4,4
+ 793              		.comm	speed_left,4,4
+ 794              		.global	Kd
+ 795              		.global	Ki
+ 796              		.global	Kp
+ 797              		.comm	distance_right,4,4
+ 798              		.comm	distance_left,4,4
+ 799              		.comm	error_right_sum,4,4
+ 800              		.comm	error_left_sum,4,4
+ 801              		.comm	error_right_prev,4,4
+ 802              		.comm	error_left_prev,4,4
+ 803              		.comm	error_right,4,4
+ 804              		.comm	error_left,4,4
+ 805              		.comm	adj_motor_right,4,4
+ 806              		.comm	adj_motor_left,4,4
+ 807              		.comm	volt_motor_right,4,4
+ 808              		.comm	volt_motor_left,4,4
+ 809              		.comm	last_pos_left,4,4
+ 810              		.comm	last_pos_right,4,4
+ 811              		.comm	cur_pos_right,4,4
+ 812              		.comm	cur_pos_left,4,4
+ 813              		.comm	prev_dest_left,4,4
+ 814              		.comm	prev_dest_right,4,4
+ 815              		.global	cur_dest_right
+ 816              		.global	cur_dest_left
+ 817              		.comm	mystring,50,4
+ 818              		.data
+ 819              		.align	3
+ 820              		.set	.LANCHOR1,. + 0
+ 821              		.type	Kp, %object
+ 822              		.size	Kp, 8
+ 823              	Kp:
+ 824 0000 00000000 		.word	0
+ 825 0004 00005940 		.word	1079574528
+ 826              		.type	Kd, %object
+ 827              		.size	Kd, 8
+ 828              	Kd:
+ 829 0008 00000000 		.word	0
+ 830 000c 00408F40 		.word	1083129856
+ 831              		.type	Ki, %object
+ 832              		.size	Ki, 8
+ 833              	Ki:
+ 834 0010 9A999999 		.word	-1717986918
+ 835 0014 9999B93F 		.word	1069128089
+ 836              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 837              		.align	2
+ 838              	.LC0:
+ 839 0000 25647C25 		.ascii	"%d|%d|%ld|%ld|%ld|%d|%d|%d\012\000"
+ 839      647C256C 
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\cckLVLLS.s 			page 20
+
+
+ 839      647C256C 
+ 839      647C256C 
+ 839      647C2564 
+ 840              		.bss
+ 841              		.align	2
+ 842              		.set	.LANCHOR0,. + 0
+ 843              		.type	cur_dest_left, %object
+ 844              		.size	cur_dest_left, 4
+ 845              	cur_dest_left:
+ 846 0000 00000000 		.space	4
+ 847              		.type	cur_dest_right, %object
+ 848              		.size	cur_dest_right, 4
+ 849              	cur_dest_right:
+ 850 0004 00000000 		.space	4
+ 851              		.text
+ 852              	.Letext0:
+ 853              		.file 2 "c:\\program files (x86)\\cypress\\psoc creator\\4.0\\psoc creator\\import\\gnu\\arm\\4.9.
+ 854              		.file 3 "c:\\program files (x86)\\cypress\\psoc creator\\4.0\\psoc creator\\import\\gnu\\arm\\4.9.
+ 855              		.file 4 "Generated_Source\\PSoC5/cytypes.h"
+ 856              		.file 5 "Generated_Source\\PSoC5/core_cm3.h"
+ 857              		.file 6 "Generated_Source\\PSoC5/Standby.h"
+ 858              		.file 7 "Generated_Source\\PSoC5/PWM_M2.h"
+ 859              		.file 8 "Generated_Source\\PSoC5/M2_FWD.h"
+ 860              		.file 9 "Generated_Source\\PSoC5/M2_BWD.h"
+ 861              		.file 10 "Generated_Source\\PSoC5/PWM_M1.h"
+ 862              		.file 11 "Generated_Source\\PSoC5/M1_FWD.h"
+ 863              		.file 12 "Generated_Source\\PSoC5/M1_BWD.h"
+ 864              		.file 13 "Generated_Source\\PSoC5/M2QuadDec.h"
+ 865              		.file 14 "Generated_Source\\PSoC5/M1QuadDec.h"
+ 866              		.file 15 "Generated_Source\\PSoC5/UART.h"
+ 867              		.file 16 "c:\\program files (x86)\\cypress\\psoc creator\\4.0\\psoc creator\\import\\gnu\\arm\\4.9
+ 868              		.section	.debug_info,"",%progbits
+ 869              	.Ldebug_info0:
+ 870 0000 1D070000 		.4byte	0x71d
+ 871 0004 0400     		.2byte	0x4
+ 872 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 873 000a 04       		.byte	0x4
+ 874 000b 01       		.uleb128 0x1
+ 875 000c 31030000 		.4byte	.LASF77
+ 876 0010 01       		.byte	0x1
+ 877 0011 37040000 		.4byte	.LASF78
+ 878 0015 8A000000 		.4byte	.LASF79
+ 879 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 880 001d 00000000 		.4byte	0
+ 881 0021 00000000 		.4byte	.Ldebug_line0
+ 882 0025 02       		.uleb128 0x2
+ 883 0026 01       		.byte	0x1
+ 884 0027 06       		.byte	0x6
+ 885 0028 7C020000 		.4byte	.LASF0
+ 886 002c 02       		.uleb128 0x2
+ 887 002d 01       		.byte	0x1
+ 888 002e 08       		.byte	0x8
+ 889 002f 0E020000 		.4byte	.LASF1
+ 890 0033 02       		.uleb128 0x2
+ 891 0034 02       		.byte	0x2
+ 892 0035 05       		.byte	0x5
+ 893 0036 34010000 		.4byte	.LASF2
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\cckLVLLS.s 			page 21
+
+
+ 894 003a 02       		.uleb128 0x2
+ 895 003b 02       		.byte	0x2
+ 896 003c 07       		.byte	0x7
+ 897 003d FE020000 		.4byte	.LASF3
+ 898 0041 03       		.uleb128 0x3
+ 899 0042 2D040000 		.4byte	.LASF9
+ 900 0046 02       		.byte	0x2
+ 901 0047 3F       		.byte	0x3f
+ 902 0048 4C000000 		.4byte	0x4c
+ 903 004c 02       		.uleb128 0x2
+ 904 004d 04       		.byte	0x4
+ 905 004e 05       		.byte	0x5
+ 906 004f CE010000 		.4byte	.LASF4
+ 907 0053 02       		.uleb128 0x2
+ 908 0054 04       		.byte	0x4
+ 909 0055 07       		.byte	0x7
+ 910 0056 CE020000 		.4byte	.LASF5
+ 911 005a 02       		.uleb128 0x2
+ 912 005b 08       		.byte	0x8
+ 913 005c 05       		.byte	0x5
+ 914 005d B7010000 		.4byte	.LASF6
+ 915 0061 02       		.uleb128 0x2
+ 916 0062 08       		.byte	0x8
+ 917 0063 07       		.byte	0x7
+ 918 0064 96020000 		.4byte	.LASF7
+ 919 0068 04       		.uleb128 0x4
+ 920 0069 04       		.byte	0x4
+ 921 006a 05       		.byte	0x5
+ 922 006b 696E7400 		.ascii	"int\000"
+ 923 006f 02       		.uleb128 0x2
+ 924 0070 04       		.byte	0x4
+ 925 0071 07       		.byte	0x7
+ 926 0072 C1020000 		.4byte	.LASF8
+ 927 0076 03       		.uleb128 0x3
+ 928 0077 BF030000 		.4byte	.LASF10
+ 929 007b 03       		.byte	0x3
+ 930 007c 2C       		.byte	0x2c
+ 931 007d 41000000 		.4byte	0x41
+ 932 0081 05       		.uleb128 0x5
+ 933 0082 71010000 		.4byte	.LASF11
+ 934 0086 04       		.byte	0x4
+ 935 0087 9201     		.2byte	0x192
+ 936 0089 2C000000 		.4byte	0x2c
+ 937 008d 05       		.uleb128 0x5
+ 938 008e 61010000 		.4byte	.LASF12
+ 939 0092 04       		.byte	0x4
+ 940 0093 9301     		.2byte	0x193
+ 941 0095 3A000000 		.4byte	0x3a
+ 942 0099 05       		.uleb128 0x5
+ 943 009a F7030000 		.4byte	.LASF13
+ 944 009e 04       		.byte	0x4
+ 945 009f 9701     		.2byte	0x197
+ 946 00a1 4C000000 		.4byte	0x4c
+ 947 00a5 02       		.uleb128 0x2
+ 948 00a6 04       		.byte	0x4
+ 949 00a7 04       		.byte	0x4
+ 950 00a8 A6010000 		.4byte	.LASF14
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\cckLVLLS.s 			page 22
+
+
+ 951 00ac 02       		.uleb128 0x2
+ 952 00ad 08       		.byte	0x8
+ 953 00ae 04       		.byte	0x4
+ 954 00af FD030000 		.4byte	.LASF15
+ 955 00b3 05       		.uleb128 0x5
+ 956 00b4 C7030000 		.4byte	.LASF16
+ 957 00b8 04       		.byte	0x4
+ 958 00b9 A301     		.2byte	0x1a3
+ 959 00bb BF000000 		.4byte	0xbf
+ 960 00bf 02       		.uleb128 0x2
+ 961 00c0 01       		.byte	0x1
+ 962 00c1 08       		.byte	0x8
+ 963 00c2 2C030000 		.4byte	.LASF17
+ 964 00c6 02       		.uleb128 0x2
+ 965 00c7 04       		.byte	0x4
+ 966 00c8 07       		.byte	0x7
+ 967 00c9 81000000 		.4byte	.LASF18
+ 968 00cd 06       		.uleb128 0x6
+ 969 00ce 04       		.byte	0x4
+ 970 00cf BF000000 		.4byte	0xbf
+ 971 00d3 06       		.uleb128 0x6
+ 972 00d4 04       		.byte	0x4
+ 973 00d5 D9000000 		.4byte	0xd9
+ 974 00d9 07       		.uleb128 0x7
+ 975 00da BF000000 		.4byte	0xbf
+ 976 00de 02       		.uleb128 0x2
+ 977 00df 08       		.byte	0x8
+ 978 00e0 04       		.byte	0x4
+ 979 00e1 30020000 		.4byte	.LASF19
+ 980 00e5 08       		.uleb128 0x8
+ 981 00e6 71020000 		.4byte	.LASF23
+ 982 00ea 01       		.byte	0x1
+ 983 00eb 3E       		.byte	0x3e
+ 984 00ec 00000000 		.4byte	.LFB63
+ 985 00f0 98000000 		.4byte	.LFE63-.LFB63
+ 986 00f4 01       		.uleb128 0x1
+ 987 00f5 9C       		.byte	0x9c
+ 988 00f6 5B020000 		.4byte	0x25b
+ 989 00fa 09       		.uleb128 0x9
+ 990 00fb 63040000 		.4byte	.LASF20
+ 991 00ff 01       		.byte	0x1
+ 992 0100 3E       		.byte	0x3e
+ 993 0101 BF000000 		.4byte	0xbf
+ 994 0105 00000000 		.4byte	.LLST0
+ 995 0109 09       		.uleb128 0x9
+ 996 010a 3E010000 		.4byte	.LASF21
+ 997 010e 01       		.byte	0x1
+ 998 010f 3E       		.byte	0x3e
+ 999 0110 68000000 		.4byte	0x68
+ 1000 0114 21000000 		.4byte	.LLST1
+ 1001 0118 0A       		.uleb128 0xa
+ 1002 0119 10000000 		.4byte	.LVL2
+ 1003 011d 5C060000 		.4byte	0x65c
+ 1004 0121 2B010000 		.4byte	0x12b
+ 1005 0125 0B       		.uleb128 0xb
+ 1006 0126 01       		.uleb128 0x1
+ 1007 0127 50       		.byte	0x50
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\cckLVLLS.s 			page 23
+
+
+ 1008 0128 01       		.uleb128 0x1
+ 1009 0129 31       		.byte	0x31
+ 1010 012a 00       		.byte	0
+ 1011 012b 0A       		.uleb128 0xa
+ 1012 012c 1E000000 		.4byte	.LVL3
+ 1013 0130 6D060000 		.4byte	0x66d
+ 1014 0134 49010000 		.4byte	0x149
+ 1015 0138 0B       		.uleb128 0xb
+ 1016 0139 01       		.uleb128 0x1
+ 1017 013a 50       		.byte	0x50
+ 1018 013b 0C       		.uleb128 0xc
+ 1019 013c 75       		.byte	0x75
+ 1020 013d 00       		.sleb128 0
+ 1021 013e 4F       		.byte	0x4f
+ 1022 013f 26       		.byte	0x26
+ 1023 0140 75       		.byte	0x75
+ 1024 0141 00       		.sleb128 0
+ 1025 0142 27       		.byte	0x27
+ 1026 0143 75       		.byte	0x75
+ 1027 0144 00       		.sleb128 0
+ 1028 0145 4F       		.byte	0x4f
+ 1029 0146 26       		.byte	0x26
+ 1030 0147 1C       		.byte	0x1c
+ 1031 0148 00       		.byte	0
+ 1032 0149 0A       		.uleb128 0xa
+ 1033 014a 28000000 		.4byte	.LVL4
+ 1034 014e 7E060000 		.4byte	0x67e
+ 1035 0152 5C010000 		.4byte	0x15c
+ 1036 0156 0B       		.uleb128 0xb
+ 1037 0157 01       		.uleb128 0x1
+ 1038 0158 50       		.byte	0x50
+ 1039 0159 01       		.uleb128 0x1
+ 1040 015a 30       		.byte	0x30
+ 1041 015b 00       		.byte	0
+ 1042 015c 0A       		.uleb128 0xa
+ 1043 015d 2E000000 		.4byte	.LVL5
+ 1044 0161 8F060000 		.4byte	0x68f
+ 1045 0165 6F010000 		.4byte	0x16f
+ 1046 0169 0B       		.uleb128 0xb
+ 1047 016a 01       		.uleb128 0x1
+ 1048 016b 50       		.byte	0x50
+ 1049 016c 01       		.uleb128 0x1
+ 1050 016d 31       		.byte	0x31
+ 1051 016e 00       		.byte	0
+ 1052 016f 0A       		.uleb128 0xa
+ 1053 0170 3A000000 		.4byte	.LVL6
+ 1054 0174 7E060000 		.4byte	0x67e
+ 1055 0178 82010000 		.4byte	0x182
+ 1056 017c 0B       		.uleb128 0xb
+ 1057 017d 01       		.uleb128 0x1
+ 1058 017e 50       		.byte	0x50
+ 1059 017f 01       		.uleb128 0x1
+ 1060 0180 31       		.byte	0x31
+ 1061 0181 00       		.byte	0
+ 1062 0182 0A       		.uleb128 0xa
+ 1063 0183 40000000 		.4byte	.LVL7
+ 1064 0187 8F060000 		.4byte	0x68f
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\cckLVLLS.s 			page 24
+
+
+ 1065 018b 95010000 		.4byte	0x195
+ 1066 018f 0B       		.uleb128 0xb
+ 1067 0190 01       		.uleb128 0x1
+ 1068 0191 50       		.byte	0x50
+ 1069 0192 01       		.uleb128 0x1
+ 1070 0193 30       		.byte	0x30
+ 1071 0194 00       		.byte	0
+ 1072 0195 0A       		.uleb128 0xa
+ 1073 0196 48000000 		.4byte	.LVL8
+ 1074 019a 7E060000 		.4byte	0x67e
+ 1075 019e A8010000 		.4byte	0x1a8
+ 1076 01a2 0B       		.uleb128 0xb
+ 1077 01a3 01       		.uleb128 0x1
+ 1078 01a4 50       		.byte	0x50
+ 1079 01a5 01       		.uleb128 0x1
+ 1080 01a6 30       		.byte	0x30
+ 1081 01a7 00       		.byte	0
+ 1082 01a8 0A       		.uleb128 0xa
+ 1083 01a9 4E000000 		.4byte	.LVL9
+ 1084 01ad 8F060000 		.4byte	0x68f
+ 1085 01b1 BB010000 		.4byte	0x1bb
+ 1086 01b5 0B       		.uleb128 0xb
+ 1087 01b6 01       		.uleb128 0x1
+ 1088 01b7 50       		.byte	0x50
+ 1089 01b8 01       		.uleb128 0x1
+ 1090 01b9 30       		.byte	0x30
+ 1091 01ba 00       		.byte	0
+ 1092 01bb 0A       		.uleb128 0xa
+ 1093 01bc 58000000 		.4byte	.LVL10
+ 1094 01c0 5C060000 		.4byte	0x65c
+ 1095 01c4 CE010000 		.4byte	0x1ce
+ 1096 01c8 0B       		.uleb128 0xb
+ 1097 01c9 01       		.uleb128 0x1
+ 1098 01ca 50       		.byte	0x50
+ 1099 01cb 01       		.uleb128 0x1
+ 1100 01cc 31       		.byte	0x31
+ 1101 01cd 00       		.byte	0
+ 1102 01ce 0A       		.uleb128 0xa
+ 1103 01cf 66000000 		.4byte	.LVL11
+ 1104 01d3 A0060000 		.4byte	0x6a0
+ 1105 01d7 EC010000 		.4byte	0x1ec
+ 1106 01db 0B       		.uleb128 0xb
+ 1107 01dc 01       		.uleb128 0x1
+ 1108 01dd 50       		.byte	0x50
+ 1109 01de 0C       		.uleb128 0xc
+ 1110 01df 75       		.byte	0x75
+ 1111 01e0 00       		.sleb128 0
+ 1112 01e1 4F       		.byte	0x4f
+ 1113 01e2 26       		.byte	0x26
+ 1114 01e3 75       		.byte	0x75
+ 1115 01e4 00       		.sleb128 0
+ 1116 01e5 27       		.byte	0x27
+ 1117 01e6 75       		.byte	0x75
+ 1118 01e7 00       		.sleb128 0
+ 1119 01e8 4F       		.byte	0x4f
+ 1120 01e9 26       		.byte	0x26
+ 1121 01ea 1C       		.byte	0x1c
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\cckLVLLS.s 			page 25
+
+
+ 1122 01eb 00       		.byte	0
+ 1123 01ec 0A       		.uleb128 0xa
+ 1124 01ed 70000000 		.4byte	.LVL12
+ 1125 01f1 B1060000 		.4byte	0x6b1
+ 1126 01f5 FF010000 		.4byte	0x1ff
+ 1127 01f9 0B       		.uleb128 0xb
+ 1128 01fa 01       		.uleb128 0x1
+ 1129 01fb 50       		.byte	0x50
+ 1130 01fc 01       		.uleb128 0x1
+ 1131 01fd 30       		.byte	0x30
+ 1132 01fe 00       		.byte	0
+ 1133 01ff 0A       		.uleb128 0xa
+ 1134 0200 76000000 		.4byte	.LVL13
+ 1135 0204 C2060000 		.4byte	0x6c2
+ 1136 0208 12020000 		.4byte	0x212
+ 1137 020c 0B       		.uleb128 0xb
+ 1138 020d 01       		.uleb128 0x1
+ 1139 020e 50       		.byte	0x50
+ 1140 020f 01       		.uleb128 0x1
+ 1141 0210 31       		.byte	0x31
+ 1142 0211 00       		.byte	0
+ 1143 0212 0A       		.uleb128 0xa
+ 1144 0213 82000000 		.4byte	.LVL15
+ 1145 0217 B1060000 		.4byte	0x6b1
+ 1146 021b 25020000 		.4byte	0x225
+ 1147 021f 0B       		.uleb128 0xb
+ 1148 0220 01       		.uleb128 0x1
+ 1149 0221 50       		.byte	0x50
+ 1150 0222 01       		.uleb128 0x1
+ 1151 0223 31       		.byte	0x31
+ 1152 0224 00       		.byte	0
+ 1153 0225 0A       		.uleb128 0xa
+ 1154 0226 88000000 		.4byte	.LVL16
+ 1155 022a C2060000 		.4byte	0x6c2
+ 1156 022e 38020000 		.4byte	0x238
+ 1157 0232 0B       		.uleb128 0xb
+ 1158 0233 01       		.uleb128 0x1
+ 1159 0234 50       		.byte	0x50
+ 1160 0235 01       		.uleb128 0x1
+ 1161 0236 30       		.byte	0x30
+ 1162 0237 00       		.byte	0
+ 1163 0238 0A       		.uleb128 0xa
+ 1164 0239 90000000 		.4byte	.LVL18
+ 1165 023d B1060000 		.4byte	0x6b1
+ 1166 0241 4B020000 		.4byte	0x24b
+ 1167 0245 0B       		.uleb128 0xb
+ 1168 0246 01       		.uleb128 0x1
+ 1169 0247 50       		.byte	0x50
+ 1170 0248 01       		.uleb128 0x1
+ 1171 0249 30       		.byte	0x30
+ 1172 024a 00       		.byte	0
+ 1173 024b 0C       		.uleb128 0xc
+ 1174 024c 96000000 		.4byte	.LVL19
+ 1175 0250 C2060000 		.4byte	0x6c2
+ 1176 0254 0B       		.uleb128 0xb
+ 1177 0255 01       		.uleb128 0x1
+ 1178 0256 50       		.byte	0x50
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\cckLVLLS.s 			page 26
+
+
+ 1179 0257 01       		.uleb128 0x1
+ 1180 0258 30       		.byte	0x30
+ 1181 0259 00       		.byte	0
+ 1182 025a 00       		.byte	0
+ 1183 025b 0D       		.uleb128 0xd
+ 1184 025c 8A040000 		.4byte	.LASF31
+ 1185 0260 01       		.byte	0x1
+ 1186 0261 6B       		.byte	0x6b
+ 1187 0262 00000000 		.4byte	.LFB64
+ 1188 0266 14000000 		.4byte	.LFE64-.LFB64
+ 1189 026a 01       		.uleb128 0x1
+ 1190 026b 9C       		.byte	0x9c
+ 1191 026c 7E020000 		.4byte	0x27e
+ 1192 0270 0E       		.uleb128 0xe
+ 1193 0271 4F040000 		.4byte	.LASF22
+ 1194 0275 01       		.byte	0x1
+ 1195 0276 6B       		.byte	0x6b
+ 1196 0277 68000000 		.4byte	0x68
+ 1197 027b 01       		.uleb128 0x1
+ 1198 027c 50       		.byte	0x50
+ 1199 027d 00       		.byte	0
+ 1200 027e 08       		.uleb128 0x8
+ 1201 027f 88020000 		.4byte	.LASF24
+ 1202 0283 01       		.byte	0x1
+ 1203 0284 72       		.byte	0x72
+ 1204 0285 00000000 		.4byte	.LFB65
+ 1205 0289 30000000 		.4byte	.LFE65-.LFB65
+ 1206 028d 01       		.uleb128 0x1
+ 1207 028e 9C       		.byte	0x9c
+ 1208 028f AE020000 		.4byte	0x2ae
+ 1209 0293 0E       		.uleb128 0xe
+ 1210 0294 1C020000 		.4byte	.LASF25
+ 1211 0298 01       		.byte	0x1
+ 1212 0299 72       		.byte	0x72
+ 1213 029a 4C000000 		.4byte	0x4c
+ 1214 029e 01       		.uleb128 0x1
+ 1215 029f 50       		.byte	0x50
+ 1216 02a0 0E       		.uleb128 0xe
+ 1217 02a1 1E000000 		.4byte	.LASF26
+ 1218 02a5 01       		.byte	0x1
+ 1219 02a6 72       		.byte	0x72
+ 1220 02a7 4C000000 		.4byte	0x4c
+ 1221 02ab 01       		.uleb128 0x1
+ 1222 02ac 51       		.byte	0x51
+ 1223 02ad 00       		.byte	0
+ 1224 02ae 08       		.uleb128 0x8
+ 1225 02af D0000000 		.4byte	.LASF27
+ 1226 02b3 01       		.byte	0x1
+ 1227 02b4 84       		.byte	0x84
+ 1228 02b5 00000000 		.4byte	.LFB66
+ 1229 02b9 20000000 		.4byte	.LFE66-.LFB66
+ 1230 02bd 01       		.uleb128 0x1
+ 1231 02be 9C       		.byte	0x9c
+ 1232 02bf F1020000 		.4byte	0x2f1
+ 1233 02c3 0F       		.uleb128 0xf
+ 1234 02c4 6B7000   		.ascii	"kp\000"
+ 1235 02c7 01       		.byte	0x1
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\cckLVLLS.s 			page 27
+
+
+ 1236 02c8 84       		.byte	0x84
+ 1237 02c9 AC000000 		.4byte	0xac
+ 1238 02cd 06       		.uleb128 0x6
+ 1239 02ce 50       		.byte	0x50
+ 1240 02cf 93       		.byte	0x93
+ 1241 02d0 04       		.uleb128 0x4
+ 1242 02d1 51       		.byte	0x51
+ 1243 02d2 93       		.byte	0x93
+ 1244 02d3 04       		.uleb128 0x4
+ 1245 02d4 10       		.uleb128 0x10
+ 1246 02d5 6B6400   		.ascii	"kd\000"
+ 1247 02d8 01       		.byte	0x1
+ 1248 02d9 84       		.byte	0x84
+ 1249 02da AC000000 		.4byte	0xac
+ 1250 02de 3F000000 		.4byte	.LLST2
+ 1251 02e2 10       		.uleb128 0x10
+ 1252 02e3 6B6900   		.ascii	"ki\000"
+ 1253 02e6 01       		.byte	0x1
+ 1254 02e7 84       		.byte	0x84
+ 1255 02e8 AC000000 		.4byte	0xac
+ 1256 02ec 66000000 		.4byte	.LLST3
+ 1257 02f0 00       		.byte	0
+ 1258 02f1 08       		.uleb128 0x8
+ 1259 02f2 97040000 		.4byte	.LASF28
+ 1260 02f6 01       		.byte	0x1
+ 1261 02f7 89       		.byte	0x89
+ 1262 02f8 00000000 		.4byte	.LFB67
+ 1263 02fc 34000000 		.4byte	.LFE67-.LFB67
+ 1264 0300 01       		.uleb128 0x1
+ 1265 0301 9C       		.byte	0x9c
+ 1266 0302 25030000 		.4byte	0x325
+ 1267 0306 09       		.uleb128 0x9
+ 1268 0307 06020000 		.4byte	.LASF29
+ 1269 030b 01       		.byte	0x1
+ 1270 030c 89       		.byte	0x89
+ 1271 030d 68000000 		.4byte	0x68
+ 1272 0311 86000000 		.4byte	.LLST4
+ 1273 0315 09       		.uleb128 0x9
+ 1274 0316 EE030000 		.4byte	.LASF30
+ 1275 031a 01       		.byte	0x1
+ 1276 031b 89       		.byte	0x89
+ 1277 031c 68000000 		.4byte	0x68
+ 1278 0320 A7000000 		.4byte	.LLST5
+ 1279 0324 00       		.byte	0
+ 1280 0325 11       		.uleb128 0x11
+ 1281 0326 E0020000 		.4byte	.LASF33
+ 1282 032a 01       		.byte	0x1
+ 1283 032b AF       		.byte	0xaf
+ 1284 032c 00000000 		.4byte	.LFB68
+ 1285 0330 24000000 		.4byte	.LFE68-.LFB68
+ 1286 0334 01       		.uleb128 0x1
+ 1287 0335 9C       		.byte	0x9c
+ 1288 0336 0D       		.uleb128 0xd
+ 1289 0337 20040000 		.4byte	.LASF32
+ 1290 033b 01       		.byte	0x1
+ 1291 033c B4       		.byte	0xb4
+ 1292 033d 00000000 		.4byte	.LFB69
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\cckLVLLS.s 			page 28
+
+
+ 1293 0341 24000000 		.4byte	.LFE69-.LFB69
+ 1294 0345 01       		.uleb128 0x1
+ 1295 0346 9C       		.byte	0x9c
+ 1296 0347 5E030000 		.4byte	0x35e
+ 1297 034b 12       		.uleb128 0x12
+ 1298 034c 06000000 		.4byte	.LVL28
+ 1299 0350 D3060000 		.4byte	0x6d3
+ 1300 0354 12       		.uleb128 0x12
+ 1301 0355 12000000 		.4byte	.LVL29
+ 1302 0359 DE060000 		.4byte	0x6de
+ 1303 035d 00       		.byte	0
+ 1304 035e 11       		.uleb128 0x11
+ 1305 035f 26020000 		.4byte	.LASF34
+ 1306 0363 01       		.byte	0x1
+ 1307 0364 B8       		.byte	0xb8
+ 1308 0365 00000000 		.4byte	.LFB70
+ 1309 0369 64000000 		.4byte	.LFE70-.LFB70
+ 1310 036d 01       		.uleb128 0x1
+ 1311 036e 9C       		.byte	0x9c
+ 1312 036f 13       		.uleb128 0x13
+ 1313 0370 FE000000 		.4byte	.LASF35
+ 1314 0374 01       		.byte	0x1
+ 1315 0375 C4       		.byte	0xc4
+ 1316 0376 00000000 		.4byte	.LFB71
+ 1317 037a 44010000 		.4byte	.LFE71-.LFB71
+ 1318 037e 01       		.uleb128 0x1
+ 1319 037f 9C       		.byte	0x9c
+ 1320 0380 0D       		.uleb128 0xd
+ 1321 0381 68010000 		.4byte	.LASF36
+ 1322 0385 01       		.byte	0x1
+ 1323 0386 D5       		.byte	0xd5
+ 1324 0387 00000000 		.4byte	.LFB72
+ 1325 038b 20000000 		.4byte	.LFE72-.LFB72
+ 1326 038f 01       		.uleb128 0x1
+ 1327 0390 9C       		.byte	0x9c
+ 1328 0391 BA030000 		.4byte	0x3ba
+ 1329 0395 0A       		.uleb128 0xa
+ 1330 0396 0C000000 		.4byte	.LVL48
+ 1331 039a E5000000 		.4byte	0xe5
+ 1332 039e A9030000 		.4byte	0x3a9
+ 1333 03a2 0B       		.uleb128 0xb
+ 1334 03a3 01       		.uleb128 0x1
+ 1335 03a4 50       		.byte	0x50
+ 1336 03a5 02       		.uleb128 0x2
+ 1337 03a6 08       		.byte	0x8
+ 1338 03a7 6C       		.byte	0x6c
+ 1339 03a8 00       		.byte	0
+ 1340 03a9 0C       		.uleb128 0xc
+ 1341 03aa 16000000 		.4byte	.LVL49
+ 1342 03ae E5000000 		.4byte	0xe5
+ 1343 03b2 0B       		.uleb128 0xb
+ 1344 03b3 01       		.uleb128 0x1
+ 1345 03b4 50       		.byte	0x50
+ 1346 03b5 02       		.uleb128 0x2
+ 1347 03b6 08       		.byte	0x8
+ 1348 03b7 72       		.byte	0x72
+ 1349 03b8 00       		.byte	0
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\cckLVLLS.s 			page 29
+
+
+ 1350 03b9 00       		.byte	0
+ 1351 03ba 0D       		.uleb128 0xd
+ 1352 03bb 04040000 		.4byte	.LASF37
+ 1353 03bf 01       		.byte	0x1
+ 1354 03c0 DB       		.byte	0xdb
+ 1355 03c1 00000000 		.4byte	.LFB73
+ 1356 03c5 24000000 		.4byte	.LFE73-.LFB73
+ 1357 03c9 01       		.uleb128 0x1
+ 1358 03ca 9C       		.byte	0x9c
+ 1359 03cb FD030000 		.4byte	0x3fd
+ 1360 03cf 12       		.uleb128 0x12
+ 1361 03d0 0E000000 		.4byte	.LVL50
+ 1362 03d4 25030000 		.4byte	0x325
+ 1363 03d8 12       		.uleb128 0x12
+ 1364 03d9 12000000 		.4byte	.LVL51
+ 1365 03dd 36030000 		.4byte	0x336
+ 1366 03e1 12       		.uleb128 0x12
+ 1367 03e2 16000000 		.4byte	.LVL52
+ 1368 03e6 5E030000 		.4byte	0x35e
+ 1369 03ea 12       		.uleb128 0x12
+ 1370 03eb 1A000000 		.4byte	.LVL53
+ 1371 03ef 6F030000 		.4byte	0x36f
+ 1372 03f3 12       		.uleb128 0x12
+ 1373 03f4 1E000000 		.4byte	.LVL54
+ 1374 03f8 80030000 		.4byte	0x380
+ 1375 03fc 00       		.byte	0
+ 1376 03fd 0D       		.uleb128 0xd
+ 1377 03fe 42040000 		.4byte	.LASF38
+ 1378 0402 01       		.byte	0x1
+ 1379 0403 E5       		.byte	0xe5
+ 1380 0404 00000000 		.4byte	.LFB74
+ 1381 0408 70000000 		.4byte	.LFE74-.LFB74
+ 1382 040c 01       		.uleb128 0x1
+ 1383 040d 9C       		.byte	0x9c
+ 1384 040e 40040000 		.4byte	0x440
+ 1385 0412 0A       		.uleb128 0xa
+ 1386 0413 3E000000 		.4byte	.LVL55
+ 1387 0417 E9060000 		.4byte	0x6e9
+ 1388 041b 2F040000 		.4byte	0x42f
+ 1389 041f 0B       		.uleb128 0xb
+ 1390 0420 01       		.uleb128 0x1
+ 1391 0421 51       		.byte	0x51
+ 1392 0422 05       		.uleb128 0x5
+ 1393 0423 03       		.byte	0x3
+ 1394 0424 00000000 		.4byte	.LC0
+ 1395 0428 0B       		.uleb128 0xb
+ 1396 0429 01       		.uleb128 0x1
+ 1397 042a 50       		.byte	0x50
+ 1398 042b 02       		.uleb128 0x2
+ 1399 042c 74       		.byte	0x74
+ 1400 042d 00       		.sleb128 0
+ 1401 042e 00       		.byte	0
+ 1402 042f 0C       		.uleb128 0xc
+ 1403 0430 44000000 		.4byte	.LVL56
+ 1404 0434 04070000 		.4byte	0x704
+ 1405 0438 0B       		.uleb128 0xb
+ 1406 0439 01       		.uleb128 0x1
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\cckLVLLS.s 			page 30
+
+
+ 1407 043a 50       		.byte	0x50
+ 1408 043b 02       		.uleb128 0x2
+ 1409 043c 74       		.byte	0x74
+ 1410 043d 00       		.sleb128 0
+ 1411 043e 00       		.byte	0
+ 1412 043f 00       		.byte	0
+ 1413 0440 14       		.uleb128 0x14
+ 1414 0441 68040000 		.4byte	.LASF39
+ 1415 0445 05       		.byte	0x5
+ 1416 0446 9606     		.2byte	0x696
+ 1417 0448 4C040000 		.4byte	0x44c
+ 1418 044c 15       		.uleb128 0x15
+ 1419 044d 76000000 		.4byte	0x76
+ 1420 0451 16       		.uleb128 0x16
+ 1421 0452 BF000000 		.4byte	0xbf
+ 1422 0456 61040000 		.4byte	0x461
+ 1423 045a 17       		.uleb128 0x17
+ 1424 045b C6000000 		.4byte	0xc6
+ 1425 045f 31       		.byte	0x31
+ 1426 0460 00       		.byte	0
+ 1427 0461 18       		.uleb128 0x18
+ 1428 0462 C5010000 		.4byte	.LASF40
+ 1429 0466 01       		.byte	0x1
+ 1430 0467 0C       		.byte	0xc
+ 1431 0468 51040000 		.4byte	0x451
+ 1432 046c 05       		.uleb128 0x5
+ 1433 046d 03       		.byte	0x3
+ 1434 046e 00000000 		.4byte	mystring
+ 1435 0472 18       		.uleb128 0x18
+ 1436 0473 F8010000 		.4byte	.LASF41
+ 1437 0477 01       		.byte	0x1
+ 1438 0478 12       		.byte	0x12
+ 1439 0479 4C000000 		.4byte	0x4c
+ 1440 047d 05       		.uleb128 0x5
+ 1441 047e 03       		.byte	0x3
+ 1442 047f 00000000 		.4byte	cur_dest_left
+ 1443 0483 18       		.uleb128 0x18
+ 1444 0484 D5030000 		.4byte	.LASF42
+ 1445 0488 01       		.byte	0x1
+ 1446 0489 13       		.byte	0x13
+ 1447 048a 4C000000 		.4byte	0x4c
+ 1448 048e 05       		.uleb128 0x5
+ 1449 048f 03       		.byte	0x3
+ 1450 0490 00000000 		.4byte	cur_dest_right
+ 1451 0494 18       		.uleb128 0x18
+ 1452 0495 4B020000 		.4byte	.LASF43
+ 1453 0499 01       		.byte	0x1
+ 1454 049a 14       		.byte	0x14
+ 1455 049b 4C000000 		.4byte	0x4c
+ 1456 049f 05       		.uleb128 0x5
+ 1457 04a0 03       		.byte	0x3
+ 1458 04a1 00000000 		.4byte	prev_dest_right
+ 1459 04a5 18       		.uleb128 0x18
+ 1460 04a6 1D030000 		.4byte	.LASF44
+ 1461 04aa 01       		.byte	0x1
+ 1462 04ab 15       		.byte	0x15
+ 1463 04ac 4C000000 		.4byte	0x4c
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\cckLVLLS.s 			page 31
+
+
+ 1464 04b0 05       		.uleb128 0x5
+ 1465 04b1 03       		.byte	0x3
+ 1466 04b2 00000000 		.4byte	prev_dest_left
+ 1467 04b6 18       		.uleb128 0x18
+ 1468 04b7 99010000 		.4byte	.LASF45
+ 1469 04bb 01       		.byte	0x1
+ 1470 04bc 17       		.byte	0x17
+ 1471 04bd 4C000000 		.4byte	0x4c
+ 1472 04c1 05       		.uleb128 0x5
+ 1473 04c2 03       		.byte	0x3
+ 1474 04c3 00000000 		.4byte	cur_pos_left
+ 1475 04c7 18       		.uleb128 0x18
+ 1476 04c8 F0020000 		.4byte	.LASF46
+ 1477 04cc 01       		.byte	0x1
+ 1478 04cd 18       		.byte	0x18
+ 1479 04ce 4C000000 		.4byte	0x4c
+ 1480 04d2 05       		.uleb128 0x5
+ 1481 04d3 03       		.byte	0x3
+ 1482 04d4 00000000 		.4byte	cur_pos_right
+ 1483 04d8 18       		.uleb128 0x18
+ 1484 04d9 29000000 		.4byte	.LASF47
+ 1485 04dd 01       		.byte	0x1
+ 1486 04de 19       		.byte	0x19
+ 1487 04df 4C000000 		.4byte	0x4c
+ 1488 04e3 05       		.uleb128 0x5
+ 1489 04e4 03       		.byte	0x3
+ 1490 04e5 00000000 		.4byte	last_pos_right
+ 1491 04e9 18       		.uleb128 0x18
+ 1492 04ea 55040000 		.4byte	.LASF48
+ 1493 04ee 01       		.byte	0x1
+ 1494 04ef 1A       		.byte	0x1a
+ 1495 04f0 4C000000 		.4byte	0x4c
+ 1496 04f4 05       		.uleb128 0x5
+ 1497 04f5 03       		.byte	0x3
+ 1498 04f6 00000000 		.4byte	last_pos_left
+ 1499 04fa 18       		.uleb128 0x18
+ 1500 04fb 24010000 		.4byte	.LASF49
+ 1501 04ff 01       		.byte	0x1
+ 1502 0500 1C       		.byte	0x1c
+ 1503 0501 68000000 		.4byte	0x68
+ 1504 0505 05       		.uleb128 0x5
+ 1505 0506 03       		.byte	0x3
+ 1506 0507 00000000 		.4byte	volt_motor_left
+ 1507 050b 18       		.uleb128 0x18
+ 1508 050c 57000000 		.4byte	.LASF50
+ 1509 0510 01       		.byte	0x1
+ 1510 0511 1D       		.byte	0x1d
+ 1511 0512 68000000 		.4byte	0x68
+ 1512 0516 05       		.uleb128 0x5
+ 1513 0517 03       		.byte	0x3
+ 1514 0518 00000000 		.4byte	volt_motor_right
+ 1515 051c 18       		.uleb128 0x18
+ 1516 051d 3C020000 		.4byte	.LASF51
+ 1517 0521 01       		.byte	0x1
+ 1518 0522 1F       		.byte	0x1f
+ 1519 0523 68000000 		.4byte	0x68
+ 1520 0527 05       		.uleb128 0x5
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\cckLVLLS.s 			page 32
+
+
+ 1521 0528 03       		.byte	0x3
+ 1522 0529 00000000 		.4byte	adj_motor_left
+ 1523 052d 18       		.uleb128 0x18
+ 1524 052e 38000000 		.4byte	.LASF52
+ 1525 0532 01       		.byte	0x1
+ 1526 0533 20       		.byte	0x20
+ 1527 0534 68000000 		.4byte	0x68
+ 1528 0538 05       		.uleb128 0x5
+ 1529 0539 03       		.byte	0x3
+ 1530 053a 00000000 		.4byte	adj_motor_right
+ 1531 053e 18       		.uleb128 0x18
+ 1532 053f AC010000 		.4byte	.LASF53
+ 1533 0543 01       		.byte	0x1
+ 1534 0544 22       		.byte	0x22
+ 1535 0545 68000000 		.4byte	0x68
+ 1536 0549 05       		.uleb128 0x5
+ 1537 054a 03       		.byte	0x3
+ 1538 054b 00000000 		.4byte	error_left
+ 1539 054f 18       		.uleb128 0x18
+ 1540 0550 11030000 		.4byte	.LASF54
+ 1541 0554 01       		.byte	0x1
+ 1542 0555 23       		.byte	0x23
+ 1543 0556 68000000 		.4byte	0x68
+ 1544 055a 05       		.uleb128 0x5
+ 1545 055b 03       		.byte	0x3
+ 1546 055c 00000000 		.4byte	error_right
+ 1547 0560 18       		.uleb128 0x18
+ 1548 0561 00000000 		.4byte	.LASF55
+ 1549 0565 01       		.byte	0x1
+ 1550 0566 25       		.byte	0x25
+ 1551 0567 68000000 		.4byte	0x68
+ 1552 056b 05       		.uleb128 0x5
+ 1553 056c 03       		.byte	0x3
+ 1554 056d 00000000 		.4byte	error_left_prev
+ 1555 0571 18       		.uleb128 0x18
+ 1556 0572 06010000 		.4byte	.LASF56
+ 1557 0576 01       		.byte	0x1
+ 1558 0577 26       		.byte	0x26
+ 1559 0578 68000000 		.4byte	0x68
+ 1560 057c 05       		.uleb128 0x5
+ 1561 057d 03       		.byte	0x3
+ 1562 057e 00000000 		.4byte	error_right_prev
+ 1563 0582 18       		.uleb128 0x18
+ 1564 0583 48000000 		.4byte	.LASF57
+ 1565 0587 01       		.byte	0x1
+ 1566 0588 28       		.byte	0x28
+ 1567 0589 68000000 		.4byte	0x68
+ 1568 058d 05       		.uleb128 0x5
+ 1569 058e 03       		.byte	0x3
+ 1570 058f 00000000 		.4byte	error_left_sum
+ 1571 0593 18       		.uleb128 0x18
+ 1572 0594 10040000 		.4byte	.LASF58
+ 1573 0598 01       		.byte	0x1
+ 1574 0599 29       		.byte	0x29
+ 1575 059a 68000000 		.4byte	0x68
+ 1576 059e 05       		.uleb128 0x5
+ 1577 059f 03       		.byte	0x3
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\cckLVLLS.s 			page 33
+
+
+ 1578 05a0 00000000 		.4byte	error_right_sum
+ 1579 05a4 18       		.uleb128 0x18
+ 1580 05a5 10000000 		.4byte	.LASF59
+ 1581 05a9 01       		.byte	0x1
+ 1582 05aa 2B       		.byte	0x2b
+ 1583 05ab 4C000000 		.4byte	0x4c
+ 1584 05af 05       		.uleb128 0x5
+ 1585 05b0 03       		.byte	0x3
+ 1586 05b1 00000000 		.4byte	distance_left
+ 1587 05b5 18       		.uleb128 0x18
+ 1588 05b6 52010000 		.4byte	.LASF60
+ 1589 05ba 01       		.byte	0x1
+ 1590 05bb 2C       		.byte	0x2c
+ 1591 05bc 4C000000 		.4byte	0x4c
+ 1592 05c0 05       		.uleb128 0x5
+ 1593 05c1 03       		.byte	0x3
+ 1594 05c2 00000000 		.4byte	distance_right
+ 1595 05c6 19       		.uleb128 0x19
+ 1596 05c7 4B7000   		.ascii	"Kp\000"
+ 1597 05ca 01       		.byte	0x1
+ 1598 05cb 2E       		.byte	0x2e
+ 1599 05cc AC000000 		.4byte	0xac
+ 1600 05d0 05       		.uleb128 0x5
+ 1601 05d1 03       		.byte	0x3
+ 1602 05d2 00000000 		.4byte	Kp
+ 1603 05d6 19       		.uleb128 0x19
+ 1604 05d7 4B6900   		.ascii	"Ki\000"
+ 1605 05da 01       		.byte	0x1
+ 1606 05db 2F       		.byte	0x2f
+ 1607 05dc AC000000 		.4byte	0xac
+ 1608 05e0 05       		.uleb128 0x5
+ 1609 05e1 03       		.byte	0x3
+ 1610 05e2 00000000 		.4byte	Ki
+ 1611 05e6 19       		.uleb128 0x19
+ 1612 05e7 4B6400   		.ascii	"Kd\000"
+ 1613 05ea 01       		.byte	0x1
+ 1614 05eb 30       		.byte	0x30
+ 1615 05ec AC000000 		.4byte	0xac
+ 1616 05f0 05       		.uleb128 0x5
+ 1617 05f1 03       		.byte	0x3
+ 1618 05f2 00000000 		.4byte	Kd
+ 1619 05f6 18       		.uleb128 0x18
+ 1620 05f7 68000000 		.4byte	.LASF61
+ 1621 05fb 01       		.byte	0x1
+ 1622 05fc 32       		.byte	0x32
+ 1623 05fd 68000000 		.4byte	0x68
+ 1624 0601 05       		.uleb128 0x5
+ 1625 0602 03       		.byte	0x3
+ 1626 0603 00000000 		.4byte	speed_left
+ 1627 0607 18       		.uleb128 0x18
+ 1628 0608 7E040000 		.4byte	.LASF62
+ 1629 060c 01       		.byte	0x1
+ 1630 060d 33       		.byte	0x33
+ 1631 060e 68000000 		.4byte	0x68
+ 1632 0612 05       		.uleb128 0x5
+ 1633 0613 03       		.byte	0x3
+ 1634 0614 00000000 		.4byte	speed_right
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\cckLVLLS.s 			page 34
+
+
+ 1635 0618 18       		.uleb128 0x18
+ 1636 0619 75040000 		.4byte	.LASF63
+ 1637 061d 01       		.byte	0x1
+ 1638 061e 35       		.byte	0x35
+ 1639 061f 68000000 		.4byte	0x68
+ 1640 0623 05       		.uleb128 0x5
+ 1641 0624 03       		.byte	0x3
+ 1642 0625 00000000 		.4byte	inc_left
+ 1643 0629 18       		.uleb128 0x18
+ 1644 062a E4030000 		.4byte	.LASF64
+ 1645 062e 01       		.byte	0x1
+ 1646 062f 36       		.byte	0x36
+ 1647 0630 68000000 		.4byte	0x68
+ 1648 0634 05       		.uleb128 0x5
+ 1649 0635 03       		.byte	0x3
+ 1650 0636 00000000 		.4byte	inc_right
+ 1651 063a 18       		.uleb128 0x18
+ 1652 063b CD030000 		.4byte	.LASF65
+ 1653 063f 01       		.byte	0x1
+ 1654 0640 38       		.byte	0x38
+ 1655 0641 4C000000 		.4byte	0x4c
+ 1656 0645 05       		.uleb128 0x5
+ 1657 0646 03       		.byte	0x3
+ 1658 0647 00000000 		.4byte	time_ms
+ 1659 064b 18       		.uleb128 0x18
+ 1660 064c 63020000 		.4byte	.LASF66
+ 1661 0650 01       		.byte	0x1
+ 1662 0651 39       		.byte	0x39
+ 1663 0652 4C000000 		.4byte	0x4c
+ 1664 0656 05       		.uleb128 0x5
+ 1665 0657 03       		.byte	0x3
+ 1666 0658 00000000 		.4byte	time_ms_start
+ 1667 065c 1A       		.uleb128 0x1a
+ 1668 065d 73000000 		.4byte	.LASF67
+ 1669 0661 06       		.byte	0x6
+ 1670 0662 26       		.byte	0x26
+ 1671 0663 6D060000 		.4byte	0x66d
+ 1672 0667 1B       		.uleb128 0x1b
+ 1673 0668 81000000 		.4byte	0x81
+ 1674 066c 00       		.byte	0
+ 1675 066d 1A       		.uleb128 0x1a
+ 1676 066e E4010000 		.4byte	.LASF68
+ 1677 0672 07       		.byte	0x7
+ 1678 0673 C3       		.byte	0xc3
+ 1679 0674 7E060000 		.4byte	0x67e
+ 1680 0678 1B       		.uleb128 0x1b
+ 1681 0679 8D000000 		.4byte	0x8d
+ 1682 067d 00       		.byte	0
+ 1683 067e 1A       		.uleb128 0x1a
+ 1684 067f 17010000 		.4byte	.LASF69
+ 1685 0683 08       		.byte	0x8
+ 1686 0684 26       		.byte	0x26
+ 1687 0685 8F060000 		.4byte	0x68f
+ 1688 0689 1B       		.uleb128 0x1b
+ 1689 068a 81000000 		.4byte	0x81
+ 1690 068e 00       		.byte	0
+ 1691 068f 1A       		.uleb128 0x1a
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\cckLVLLS.s 			page 35
+
+
+ 1692 0690 D7010000 		.4byte	.LASF70
+ 1693 0694 09       		.byte	0x9
+ 1694 0695 26       		.byte	0x26
+ 1695 0696 A0060000 		.4byte	0x6a0
+ 1696 069a 1B       		.uleb128 0x1b
+ 1697 069b 81000000 		.4byte	0x81
+ 1698 069f 00       		.byte	0
+ 1699 06a0 1A       		.uleb128 0x1a
+ 1700 06a1 AD020000 		.4byte	.LASF71
+ 1701 06a5 0A       		.byte	0xa
+ 1702 06a6 C3       		.byte	0xc3
+ 1703 06a7 B1060000 		.4byte	0x6b1
+ 1704 06ab 1B       		.uleb128 0x1b
+ 1705 06ac 8D000000 		.4byte	0x8d
+ 1706 06b0 00       		.byte	0
+ 1707 06b1 1A       		.uleb128 0x1a
+ 1708 06b2 77010000 		.4byte	.LASF72
+ 1709 06b6 0B       		.byte	0xb
+ 1710 06b7 26       		.byte	0x26
+ 1711 06b8 C2060000 		.4byte	0x6c2
+ 1712 06bc 1B       		.uleb128 0x1b
+ 1713 06bd 81000000 		.4byte	0x81
+ 1714 06c1 00       		.byte	0
+ 1715 06c2 1A       		.uleb128 0x1a
+ 1716 06c3 F1000000 		.4byte	.LASF73
+ 1717 06c7 0C       		.byte	0xc
+ 1718 06c8 26       		.byte	0x26
+ 1719 06c9 D3060000 		.4byte	0x6d3
+ 1720 06cd 1B       		.uleb128 0x1b
+ 1721 06ce 81000000 		.4byte	0x81
+ 1722 06d2 00       		.byte	0
+ 1723 06d3 1C       		.uleb128 0x1c
+ 1724 06d4 84010000 		.4byte	.LASF74
+ 1725 06d8 0D       		.byte	0xd
+ 1726 06d9 4E       		.byte	0x4e
+ 1727 06da 99000000 		.4byte	0x99
+ 1728 06de 1C       		.uleb128 0x1c
+ 1729 06df DC000000 		.4byte	.LASF75
+ 1730 06e3 0E       		.byte	0xe
+ 1731 06e4 4E       		.byte	0x4e
+ 1732 06e5 99000000 		.4byte	0x99
+ 1733 06e9 1D       		.uleb128 0x1d
+ 1734 06ea 5B020000 		.4byte	.LASF80
+ 1735 06ee 10       		.byte	0x10
+ 1736 06ef DE       		.byte	0xde
+ 1737 06f0 68000000 		.4byte	0x68
+ 1738 06f4 04070000 		.4byte	0x704
+ 1739 06f8 1B       		.uleb128 0x1b
+ 1740 06f9 CD000000 		.4byte	0xcd
+ 1741 06fd 1B       		.uleb128 0x1b
+ 1742 06fe D3000000 		.4byte	0xd3
+ 1743 0702 1E       		.uleb128 0x1e
+ 1744 0703 00       		.byte	0
+ 1745 0704 1A       		.uleb128 0x1a
+ 1746 0705 43010000 		.4byte	.LASF76
+ 1747 0709 0F       		.byte	0xf
+ 1748 070a 8B       		.byte	0x8b
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\cckLVLLS.s 			page 36
+
+
+ 1749 070b 15070000 		.4byte	0x715
+ 1750 070f 1B       		.uleb128 0x1b
+ 1751 0710 15070000 		.4byte	0x715
+ 1752 0714 00       		.byte	0
+ 1753 0715 06       		.uleb128 0x6
+ 1754 0716 04       		.byte	0x4
+ 1755 0717 1B070000 		.4byte	0x71b
+ 1756 071b 07       		.uleb128 0x7
+ 1757 071c B3000000 		.4byte	0xb3
+ 1758 0720 00       		.byte	0
+ 1759              		.section	.debug_abbrev,"",%progbits
+ 1760              	.Ldebug_abbrev0:
+ 1761 0000 01       		.uleb128 0x1
+ 1762 0001 11       		.uleb128 0x11
+ 1763 0002 01       		.byte	0x1
+ 1764 0003 25       		.uleb128 0x25
+ 1765 0004 0E       		.uleb128 0xe
+ 1766 0005 13       		.uleb128 0x13
+ 1767 0006 0B       		.uleb128 0xb
+ 1768 0007 03       		.uleb128 0x3
+ 1769 0008 0E       		.uleb128 0xe
+ 1770 0009 1B       		.uleb128 0x1b
+ 1771 000a 0E       		.uleb128 0xe
+ 1772 000b 55       		.uleb128 0x55
+ 1773 000c 17       		.uleb128 0x17
+ 1774 000d 11       		.uleb128 0x11
+ 1775 000e 01       		.uleb128 0x1
+ 1776 000f 10       		.uleb128 0x10
+ 1777 0010 17       		.uleb128 0x17
+ 1778 0011 00       		.byte	0
+ 1779 0012 00       		.byte	0
+ 1780 0013 02       		.uleb128 0x2
+ 1781 0014 24       		.uleb128 0x24
+ 1782 0015 00       		.byte	0
+ 1783 0016 0B       		.uleb128 0xb
+ 1784 0017 0B       		.uleb128 0xb
+ 1785 0018 3E       		.uleb128 0x3e
+ 1786 0019 0B       		.uleb128 0xb
+ 1787 001a 03       		.uleb128 0x3
+ 1788 001b 0E       		.uleb128 0xe
+ 1789 001c 00       		.byte	0
+ 1790 001d 00       		.byte	0
+ 1791 001e 03       		.uleb128 0x3
+ 1792 001f 16       		.uleb128 0x16
+ 1793 0020 00       		.byte	0
+ 1794 0021 03       		.uleb128 0x3
+ 1795 0022 0E       		.uleb128 0xe
+ 1796 0023 3A       		.uleb128 0x3a
+ 1797 0024 0B       		.uleb128 0xb
+ 1798 0025 3B       		.uleb128 0x3b
+ 1799 0026 0B       		.uleb128 0xb
+ 1800 0027 49       		.uleb128 0x49
+ 1801 0028 13       		.uleb128 0x13
+ 1802 0029 00       		.byte	0
+ 1803 002a 00       		.byte	0
+ 1804 002b 04       		.uleb128 0x4
+ 1805 002c 24       		.uleb128 0x24
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\cckLVLLS.s 			page 37
+
+
+ 1806 002d 00       		.byte	0
+ 1807 002e 0B       		.uleb128 0xb
+ 1808 002f 0B       		.uleb128 0xb
+ 1809 0030 3E       		.uleb128 0x3e
+ 1810 0031 0B       		.uleb128 0xb
+ 1811 0032 03       		.uleb128 0x3
+ 1812 0033 08       		.uleb128 0x8
+ 1813 0034 00       		.byte	0
+ 1814 0035 00       		.byte	0
+ 1815 0036 05       		.uleb128 0x5
+ 1816 0037 16       		.uleb128 0x16
+ 1817 0038 00       		.byte	0
+ 1818 0039 03       		.uleb128 0x3
+ 1819 003a 0E       		.uleb128 0xe
+ 1820 003b 3A       		.uleb128 0x3a
+ 1821 003c 0B       		.uleb128 0xb
+ 1822 003d 3B       		.uleb128 0x3b
+ 1823 003e 05       		.uleb128 0x5
+ 1824 003f 49       		.uleb128 0x49
+ 1825 0040 13       		.uleb128 0x13
+ 1826 0041 00       		.byte	0
+ 1827 0042 00       		.byte	0
+ 1828 0043 06       		.uleb128 0x6
+ 1829 0044 0F       		.uleb128 0xf
+ 1830 0045 00       		.byte	0
+ 1831 0046 0B       		.uleb128 0xb
+ 1832 0047 0B       		.uleb128 0xb
+ 1833 0048 49       		.uleb128 0x49
+ 1834 0049 13       		.uleb128 0x13
+ 1835 004a 00       		.byte	0
+ 1836 004b 00       		.byte	0
+ 1837 004c 07       		.uleb128 0x7
+ 1838 004d 26       		.uleb128 0x26
+ 1839 004e 00       		.byte	0
+ 1840 004f 49       		.uleb128 0x49
+ 1841 0050 13       		.uleb128 0x13
+ 1842 0051 00       		.byte	0
+ 1843 0052 00       		.byte	0
+ 1844 0053 08       		.uleb128 0x8
+ 1845 0054 2E       		.uleb128 0x2e
+ 1846 0055 01       		.byte	0x1
+ 1847 0056 3F       		.uleb128 0x3f
+ 1848 0057 19       		.uleb128 0x19
+ 1849 0058 03       		.uleb128 0x3
+ 1850 0059 0E       		.uleb128 0xe
+ 1851 005a 3A       		.uleb128 0x3a
+ 1852 005b 0B       		.uleb128 0xb
+ 1853 005c 3B       		.uleb128 0x3b
+ 1854 005d 0B       		.uleb128 0xb
+ 1855 005e 27       		.uleb128 0x27
+ 1856 005f 19       		.uleb128 0x19
+ 1857 0060 11       		.uleb128 0x11
+ 1858 0061 01       		.uleb128 0x1
+ 1859 0062 12       		.uleb128 0x12
+ 1860 0063 06       		.uleb128 0x6
+ 1861 0064 40       		.uleb128 0x40
+ 1862 0065 18       		.uleb128 0x18
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\cckLVLLS.s 			page 38
+
+
+ 1863 0066 9742     		.uleb128 0x2117
+ 1864 0068 19       		.uleb128 0x19
+ 1865 0069 01       		.uleb128 0x1
+ 1866 006a 13       		.uleb128 0x13
+ 1867 006b 00       		.byte	0
+ 1868 006c 00       		.byte	0
+ 1869 006d 09       		.uleb128 0x9
+ 1870 006e 05       		.uleb128 0x5
+ 1871 006f 00       		.byte	0
+ 1872 0070 03       		.uleb128 0x3
+ 1873 0071 0E       		.uleb128 0xe
+ 1874 0072 3A       		.uleb128 0x3a
+ 1875 0073 0B       		.uleb128 0xb
+ 1876 0074 3B       		.uleb128 0x3b
+ 1877 0075 0B       		.uleb128 0xb
+ 1878 0076 49       		.uleb128 0x49
+ 1879 0077 13       		.uleb128 0x13
+ 1880 0078 02       		.uleb128 0x2
+ 1881 0079 17       		.uleb128 0x17
+ 1882 007a 00       		.byte	0
+ 1883 007b 00       		.byte	0
+ 1884 007c 0A       		.uleb128 0xa
+ 1885 007d 898201   		.uleb128 0x4109
+ 1886 0080 01       		.byte	0x1
+ 1887 0081 11       		.uleb128 0x11
+ 1888 0082 01       		.uleb128 0x1
+ 1889 0083 31       		.uleb128 0x31
+ 1890 0084 13       		.uleb128 0x13
+ 1891 0085 01       		.uleb128 0x1
+ 1892 0086 13       		.uleb128 0x13
+ 1893 0087 00       		.byte	0
+ 1894 0088 00       		.byte	0
+ 1895 0089 0B       		.uleb128 0xb
+ 1896 008a 8A8201   		.uleb128 0x410a
+ 1897 008d 00       		.byte	0
+ 1898 008e 02       		.uleb128 0x2
+ 1899 008f 18       		.uleb128 0x18
+ 1900 0090 9142     		.uleb128 0x2111
+ 1901 0092 18       		.uleb128 0x18
+ 1902 0093 00       		.byte	0
+ 1903 0094 00       		.byte	0
+ 1904 0095 0C       		.uleb128 0xc
+ 1905 0096 898201   		.uleb128 0x4109
+ 1906 0099 01       		.byte	0x1
+ 1907 009a 11       		.uleb128 0x11
+ 1908 009b 01       		.uleb128 0x1
+ 1909 009c 31       		.uleb128 0x31
+ 1910 009d 13       		.uleb128 0x13
+ 1911 009e 00       		.byte	0
+ 1912 009f 00       		.byte	0
+ 1913 00a0 0D       		.uleb128 0xd
+ 1914 00a1 2E       		.uleb128 0x2e
+ 1915 00a2 01       		.byte	0x1
+ 1916 00a3 3F       		.uleb128 0x3f
+ 1917 00a4 19       		.uleb128 0x19
+ 1918 00a5 03       		.uleb128 0x3
+ 1919 00a6 0E       		.uleb128 0xe
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\cckLVLLS.s 			page 39
+
+
+ 1920 00a7 3A       		.uleb128 0x3a
+ 1921 00a8 0B       		.uleb128 0xb
+ 1922 00a9 3B       		.uleb128 0x3b
+ 1923 00aa 0B       		.uleb128 0xb
+ 1924 00ab 11       		.uleb128 0x11
+ 1925 00ac 01       		.uleb128 0x1
+ 1926 00ad 12       		.uleb128 0x12
+ 1927 00ae 06       		.uleb128 0x6
+ 1928 00af 40       		.uleb128 0x40
+ 1929 00b0 18       		.uleb128 0x18
+ 1930 00b1 9742     		.uleb128 0x2117
+ 1931 00b3 19       		.uleb128 0x19
+ 1932 00b4 01       		.uleb128 0x1
+ 1933 00b5 13       		.uleb128 0x13
+ 1934 00b6 00       		.byte	0
+ 1935 00b7 00       		.byte	0
+ 1936 00b8 0E       		.uleb128 0xe
+ 1937 00b9 05       		.uleb128 0x5
+ 1938 00ba 00       		.byte	0
+ 1939 00bb 03       		.uleb128 0x3
+ 1940 00bc 0E       		.uleb128 0xe
+ 1941 00bd 3A       		.uleb128 0x3a
+ 1942 00be 0B       		.uleb128 0xb
+ 1943 00bf 3B       		.uleb128 0x3b
+ 1944 00c0 0B       		.uleb128 0xb
+ 1945 00c1 49       		.uleb128 0x49
+ 1946 00c2 13       		.uleb128 0x13
+ 1947 00c3 02       		.uleb128 0x2
+ 1948 00c4 18       		.uleb128 0x18
+ 1949 00c5 00       		.byte	0
+ 1950 00c6 00       		.byte	0
+ 1951 00c7 0F       		.uleb128 0xf
+ 1952 00c8 05       		.uleb128 0x5
+ 1953 00c9 00       		.byte	0
+ 1954 00ca 03       		.uleb128 0x3
+ 1955 00cb 08       		.uleb128 0x8
+ 1956 00cc 3A       		.uleb128 0x3a
+ 1957 00cd 0B       		.uleb128 0xb
+ 1958 00ce 3B       		.uleb128 0x3b
+ 1959 00cf 0B       		.uleb128 0xb
+ 1960 00d0 49       		.uleb128 0x49
+ 1961 00d1 13       		.uleb128 0x13
+ 1962 00d2 02       		.uleb128 0x2
+ 1963 00d3 18       		.uleb128 0x18
+ 1964 00d4 00       		.byte	0
+ 1965 00d5 00       		.byte	0
+ 1966 00d6 10       		.uleb128 0x10
+ 1967 00d7 05       		.uleb128 0x5
+ 1968 00d8 00       		.byte	0
+ 1969 00d9 03       		.uleb128 0x3
+ 1970 00da 08       		.uleb128 0x8
+ 1971 00db 3A       		.uleb128 0x3a
+ 1972 00dc 0B       		.uleb128 0xb
+ 1973 00dd 3B       		.uleb128 0x3b
+ 1974 00de 0B       		.uleb128 0xb
+ 1975 00df 49       		.uleb128 0x49
+ 1976 00e0 13       		.uleb128 0x13
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\cckLVLLS.s 			page 40
+
+
+ 1977 00e1 02       		.uleb128 0x2
+ 1978 00e2 17       		.uleb128 0x17
+ 1979 00e3 00       		.byte	0
+ 1980 00e4 00       		.byte	0
+ 1981 00e5 11       		.uleb128 0x11
+ 1982 00e6 2E       		.uleb128 0x2e
+ 1983 00e7 00       		.byte	0
+ 1984 00e8 3F       		.uleb128 0x3f
+ 1985 00e9 19       		.uleb128 0x19
+ 1986 00ea 03       		.uleb128 0x3
+ 1987 00eb 0E       		.uleb128 0xe
+ 1988 00ec 3A       		.uleb128 0x3a
+ 1989 00ed 0B       		.uleb128 0xb
+ 1990 00ee 3B       		.uleb128 0x3b
+ 1991 00ef 0B       		.uleb128 0xb
+ 1992 00f0 11       		.uleb128 0x11
+ 1993 00f1 01       		.uleb128 0x1
+ 1994 00f2 12       		.uleb128 0x12
+ 1995 00f3 06       		.uleb128 0x6
+ 1996 00f4 40       		.uleb128 0x40
+ 1997 00f5 18       		.uleb128 0x18
+ 1998 00f6 9742     		.uleb128 0x2117
+ 1999 00f8 19       		.uleb128 0x19
+ 2000 00f9 00       		.byte	0
+ 2001 00fa 00       		.byte	0
+ 2002 00fb 12       		.uleb128 0x12
+ 2003 00fc 898201   		.uleb128 0x4109
+ 2004 00ff 00       		.byte	0
+ 2005 0100 11       		.uleb128 0x11
+ 2006 0101 01       		.uleb128 0x1
+ 2007 0102 31       		.uleb128 0x31
+ 2008 0103 13       		.uleb128 0x13
+ 2009 0104 00       		.byte	0
+ 2010 0105 00       		.byte	0
+ 2011 0106 13       		.uleb128 0x13
+ 2012 0107 2E       		.uleb128 0x2e
+ 2013 0108 00       		.byte	0
+ 2014 0109 3F       		.uleb128 0x3f
+ 2015 010a 19       		.uleb128 0x19
+ 2016 010b 03       		.uleb128 0x3
+ 2017 010c 0E       		.uleb128 0xe
+ 2018 010d 3A       		.uleb128 0x3a
+ 2019 010e 0B       		.uleb128 0xb
+ 2020 010f 3B       		.uleb128 0x3b
+ 2021 0110 0B       		.uleb128 0xb
+ 2022 0111 11       		.uleb128 0x11
+ 2023 0112 01       		.uleb128 0x1
+ 2024 0113 12       		.uleb128 0x12
+ 2025 0114 06       		.uleb128 0x6
+ 2026 0115 40       		.uleb128 0x40
+ 2027 0116 18       		.uleb128 0x18
+ 2028 0117 9642     		.uleb128 0x2116
+ 2029 0119 19       		.uleb128 0x19
+ 2030 011a 00       		.byte	0
+ 2031 011b 00       		.byte	0
+ 2032 011c 14       		.uleb128 0x14
+ 2033 011d 34       		.uleb128 0x34
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\cckLVLLS.s 			page 41
+
+
+ 2034 011e 00       		.byte	0
+ 2035 011f 03       		.uleb128 0x3
+ 2036 0120 0E       		.uleb128 0xe
+ 2037 0121 3A       		.uleb128 0x3a
+ 2038 0122 0B       		.uleb128 0xb
+ 2039 0123 3B       		.uleb128 0x3b
+ 2040 0124 05       		.uleb128 0x5
+ 2041 0125 49       		.uleb128 0x49
+ 2042 0126 13       		.uleb128 0x13
+ 2043 0127 3F       		.uleb128 0x3f
+ 2044 0128 19       		.uleb128 0x19
+ 2045 0129 3C       		.uleb128 0x3c
+ 2046 012a 19       		.uleb128 0x19
+ 2047 012b 00       		.byte	0
+ 2048 012c 00       		.byte	0
+ 2049 012d 15       		.uleb128 0x15
+ 2050 012e 35       		.uleb128 0x35
+ 2051 012f 00       		.byte	0
+ 2052 0130 49       		.uleb128 0x49
+ 2053 0131 13       		.uleb128 0x13
+ 2054 0132 00       		.byte	0
+ 2055 0133 00       		.byte	0
+ 2056 0134 16       		.uleb128 0x16
+ 2057 0135 01       		.uleb128 0x1
+ 2058 0136 01       		.byte	0x1
+ 2059 0137 49       		.uleb128 0x49
+ 2060 0138 13       		.uleb128 0x13
+ 2061 0139 01       		.uleb128 0x1
+ 2062 013a 13       		.uleb128 0x13
+ 2063 013b 00       		.byte	0
+ 2064 013c 00       		.byte	0
+ 2065 013d 17       		.uleb128 0x17
+ 2066 013e 21       		.uleb128 0x21
+ 2067 013f 00       		.byte	0
+ 2068 0140 49       		.uleb128 0x49
+ 2069 0141 13       		.uleb128 0x13
+ 2070 0142 2F       		.uleb128 0x2f
+ 2071 0143 0B       		.uleb128 0xb
+ 2072 0144 00       		.byte	0
+ 2073 0145 00       		.byte	0
+ 2074 0146 18       		.uleb128 0x18
+ 2075 0147 34       		.uleb128 0x34
+ 2076 0148 00       		.byte	0
+ 2077 0149 03       		.uleb128 0x3
+ 2078 014a 0E       		.uleb128 0xe
+ 2079 014b 3A       		.uleb128 0x3a
+ 2080 014c 0B       		.uleb128 0xb
+ 2081 014d 3B       		.uleb128 0x3b
+ 2082 014e 0B       		.uleb128 0xb
+ 2083 014f 49       		.uleb128 0x49
+ 2084 0150 13       		.uleb128 0x13
+ 2085 0151 3F       		.uleb128 0x3f
+ 2086 0152 19       		.uleb128 0x19
+ 2087 0153 02       		.uleb128 0x2
+ 2088 0154 18       		.uleb128 0x18
+ 2089 0155 00       		.byte	0
+ 2090 0156 00       		.byte	0
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\cckLVLLS.s 			page 42
+
+
+ 2091 0157 19       		.uleb128 0x19
+ 2092 0158 34       		.uleb128 0x34
+ 2093 0159 00       		.byte	0
+ 2094 015a 03       		.uleb128 0x3
+ 2095 015b 08       		.uleb128 0x8
+ 2096 015c 3A       		.uleb128 0x3a
+ 2097 015d 0B       		.uleb128 0xb
+ 2098 015e 3B       		.uleb128 0x3b
+ 2099 015f 0B       		.uleb128 0xb
+ 2100 0160 49       		.uleb128 0x49
+ 2101 0161 13       		.uleb128 0x13
+ 2102 0162 3F       		.uleb128 0x3f
+ 2103 0163 19       		.uleb128 0x19
+ 2104 0164 02       		.uleb128 0x2
+ 2105 0165 18       		.uleb128 0x18
+ 2106 0166 00       		.byte	0
+ 2107 0167 00       		.byte	0
+ 2108 0168 1A       		.uleb128 0x1a
+ 2109 0169 2E       		.uleb128 0x2e
+ 2110 016a 01       		.byte	0x1
+ 2111 016b 3F       		.uleb128 0x3f
+ 2112 016c 19       		.uleb128 0x19
+ 2113 016d 03       		.uleb128 0x3
+ 2114 016e 0E       		.uleb128 0xe
+ 2115 016f 3A       		.uleb128 0x3a
+ 2116 0170 0B       		.uleb128 0xb
+ 2117 0171 3B       		.uleb128 0x3b
+ 2118 0172 0B       		.uleb128 0xb
+ 2119 0173 27       		.uleb128 0x27
+ 2120 0174 19       		.uleb128 0x19
+ 2121 0175 3C       		.uleb128 0x3c
+ 2122 0176 19       		.uleb128 0x19
+ 2123 0177 01       		.uleb128 0x1
+ 2124 0178 13       		.uleb128 0x13
+ 2125 0179 00       		.byte	0
+ 2126 017a 00       		.byte	0
+ 2127 017b 1B       		.uleb128 0x1b
+ 2128 017c 05       		.uleb128 0x5
+ 2129 017d 00       		.byte	0
+ 2130 017e 49       		.uleb128 0x49
+ 2131 017f 13       		.uleb128 0x13
+ 2132 0180 00       		.byte	0
+ 2133 0181 00       		.byte	0
+ 2134 0182 1C       		.uleb128 0x1c
+ 2135 0183 2E       		.uleb128 0x2e
+ 2136 0184 00       		.byte	0
+ 2137 0185 3F       		.uleb128 0x3f
+ 2138 0186 19       		.uleb128 0x19
+ 2139 0187 03       		.uleb128 0x3
+ 2140 0188 0E       		.uleb128 0xe
+ 2141 0189 3A       		.uleb128 0x3a
+ 2142 018a 0B       		.uleb128 0xb
+ 2143 018b 3B       		.uleb128 0x3b
+ 2144 018c 0B       		.uleb128 0xb
+ 2145 018d 27       		.uleb128 0x27
+ 2146 018e 19       		.uleb128 0x19
+ 2147 018f 49       		.uleb128 0x49
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\cckLVLLS.s 			page 43
+
+
+ 2148 0190 13       		.uleb128 0x13
+ 2149 0191 3C       		.uleb128 0x3c
+ 2150 0192 19       		.uleb128 0x19
+ 2151 0193 00       		.byte	0
+ 2152 0194 00       		.byte	0
+ 2153 0195 1D       		.uleb128 0x1d
+ 2154 0196 2E       		.uleb128 0x2e
+ 2155 0197 01       		.byte	0x1
+ 2156 0198 3F       		.uleb128 0x3f
+ 2157 0199 19       		.uleb128 0x19
+ 2158 019a 03       		.uleb128 0x3
+ 2159 019b 0E       		.uleb128 0xe
+ 2160 019c 3A       		.uleb128 0x3a
+ 2161 019d 0B       		.uleb128 0xb
+ 2162 019e 3B       		.uleb128 0x3b
+ 2163 019f 0B       		.uleb128 0xb
+ 2164 01a0 27       		.uleb128 0x27
+ 2165 01a1 19       		.uleb128 0x19
+ 2166 01a2 49       		.uleb128 0x49
+ 2167 01a3 13       		.uleb128 0x13
+ 2168 01a4 3C       		.uleb128 0x3c
+ 2169 01a5 19       		.uleb128 0x19
+ 2170 01a6 01       		.uleb128 0x1
+ 2171 01a7 13       		.uleb128 0x13
+ 2172 01a8 00       		.byte	0
+ 2173 01a9 00       		.byte	0
+ 2174 01aa 1E       		.uleb128 0x1e
+ 2175 01ab 18       		.uleb128 0x18
+ 2176 01ac 00       		.byte	0
+ 2177 01ad 00       		.byte	0
+ 2178 01ae 00       		.byte	0
+ 2179 01af 00       		.byte	0
+ 2180              		.section	.debug_loc,"",%progbits
+ 2181              	.Ldebug_loc0:
+ 2182              	.LLST0:
+ 2183 0000 00000000 		.4byte	.LVL0
+ 2184 0004 0C000000 		.4byte	.LVL1
+ 2185 0008 0100     		.2byte	0x1
+ 2186 000a 50       		.byte	0x50
+ 2187 000b 0C000000 		.4byte	.LVL1
+ 2188 000f 98000000 		.4byte	.LFE63
+ 2189 0013 0400     		.2byte	0x4
+ 2190 0015 F3       		.byte	0xf3
+ 2191 0016 01       		.uleb128 0x1
+ 2192 0017 50       		.byte	0x50
+ 2193 0018 9F       		.byte	0x9f
+ 2194 0019 00000000 		.4byte	0
+ 2195 001d 00000000 		.4byte	0
+ 2196              	.LLST1:
+ 2197 0021 00000000 		.4byte	.LVL0
+ 2198 0025 0F000000 		.4byte	.LVL2-1
+ 2199 0029 0100     		.2byte	0x1
+ 2200 002b 51       		.byte	0x51
+ 2201 002c 0F000000 		.4byte	.LVL2-1
+ 2202 0030 98000000 		.4byte	.LFE63
+ 2203 0034 0100     		.2byte	0x1
+ 2204 0036 55       		.byte	0x55
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\cckLVLLS.s 			page 44
+
+
+ 2205 0037 00000000 		.4byte	0
+ 2206 003b 00000000 		.4byte	0
+ 2207              	.LLST2:
+ 2208 003f 00000000 		.4byte	.LVL22
+ 2209 0043 10000000 		.4byte	.LVL23
+ 2210 0047 0600     		.2byte	0x6
+ 2211 0049 52       		.byte	0x52
+ 2212 004a 93       		.byte	0x93
+ 2213 004b 04       		.uleb128 0x4
+ 2214 004c 53       		.byte	0x53
+ 2215 004d 93       		.byte	0x93
+ 2216 004e 04       		.uleb128 0x4
+ 2217 004f 10000000 		.4byte	.LVL23
+ 2218 0053 20000000 		.4byte	.LFE66
+ 2219 0057 0500     		.2byte	0x5
+ 2220 0059 03       		.byte	0x3
+ 2221 005a 00000000 		.4byte	Kd
+ 2222 005e 00000000 		.4byte	0
+ 2223 0062 00000000 		.4byte	0
+ 2224              	.LLST3:
+ 2225 0066 00000000 		.4byte	.LVL22
+ 2226 006a 18000000 		.4byte	.LVL24
+ 2227 006e 0200     		.2byte	0x2
+ 2228 0070 91       		.byte	0x91
+ 2229 0071 00       		.sleb128 0
+ 2230 0072 18000000 		.4byte	.LVL24
+ 2231 0076 20000000 		.4byte	.LFE66
+ 2232 007a 0200     		.2byte	0x2
+ 2233 007c 7D       		.byte	0x7d
+ 2234 007d 00       		.sleb128 0
+ 2235 007e 00000000 		.4byte	0
+ 2236 0082 00000000 		.4byte	0
+ 2237              	.LLST4:
+ 2238 0086 00000000 		.4byte	.LVL25
+ 2239 008a 08000000 		.4byte	.LVL26
+ 2240 008e 0100     		.2byte	0x1
+ 2241 0090 50       		.byte	0x50
+ 2242 0091 08000000 		.4byte	.LVL26
+ 2243 0095 34000000 		.4byte	.LFE67
+ 2244 0099 0400     		.2byte	0x4
+ 2245 009b F3       		.byte	0xf3
+ 2246 009c 01       		.uleb128 0x1
+ 2247 009d 50       		.byte	0x50
+ 2248 009e 9F       		.byte	0x9f
+ 2249 009f 00000000 		.4byte	0
+ 2250 00a3 00000000 		.4byte	0
+ 2251              	.LLST5:
+ 2252 00a7 00000000 		.4byte	.LVL25
+ 2253 00ab 12000000 		.4byte	.LVL27
+ 2254 00af 0100     		.2byte	0x1
+ 2255 00b1 51       		.byte	0x51
+ 2256 00b2 12000000 		.4byte	.LVL27
+ 2257 00b6 34000000 		.4byte	.LFE67
+ 2258 00ba 0400     		.2byte	0x4
+ 2259 00bc F3       		.byte	0xf3
+ 2260 00bd 01       		.uleb128 0x1
+ 2261 00be 51       		.byte	0x51
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\cckLVLLS.s 			page 45
+
+
+ 2262 00bf 9F       		.byte	0x9f
+ 2263 00c0 00000000 		.4byte	0
+ 2264 00c4 00000000 		.4byte	0
+ 2265              		.section	.debug_aranges,"",%progbits
+ 2266 0000 74000000 		.4byte	0x74
+ 2267 0004 0200     		.2byte	0x2
+ 2268 0006 00000000 		.4byte	.Ldebug_info0
+ 2269 000a 04       		.byte	0x4
+ 2270 000b 00       		.byte	0
+ 2271 000c 0000     		.2byte	0
+ 2272 000e 0000     		.2byte	0
+ 2273 0010 00000000 		.4byte	.LFB63
+ 2274 0014 98000000 		.4byte	.LFE63-.LFB63
+ 2275 0018 00000000 		.4byte	.LFB64
+ 2276 001c 14000000 		.4byte	.LFE64-.LFB64
+ 2277 0020 00000000 		.4byte	.LFB65
+ 2278 0024 30000000 		.4byte	.LFE65-.LFB65
+ 2279 0028 00000000 		.4byte	.LFB66
+ 2280 002c 20000000 		.4byte	.LFE66-.LFB66
+ 2281 0030 00000000 		.4byte	.LFB67
+ 2282 0034 34000000 		.4byte	.LFE67-.LFB67
+ 2283 0038 00000000 		.4byte	.LFB68
+ 2284 003c 24000000 		.4byte	.LFE68-.LFB68
+ 2285 0040 00000000 		.4byte	.LFB69
+ 2286 0044 24000000 		.4byte	.LFE69-.LFB69
+ 2287 0048 00000000 		.4byte	.LFB70
+ 2288 004c 64000000 		.4byte	.LFE70-.LFB70
+ 2289 0050 00000000 		.4byte	.LFB71
+ 2290 0054 44010000 		.4byte	.LFE71-.LFB71
+ 2291 0058 00000000 		.4byte	.LFB72
+ 2292 005c 20000000 		.4byte	.LFE72-.LFB72
+ 2293 0060 00000000 		.4byte	.LFB73
+ 2294 0064 24000000 		.4byte	.LFE73-.LFB73
+ 2295 0068 00000000 		.4byte	.LFB74
+ 2296 006c 70000000 		.4byte	.LFE74-.LFB74
+ 2297 0070 00000000 		.4byte	0
+ 2298 0074 00000000 		.4byte	0
+ 2299              		.section	.debug_ranges,"",%progbits
+ 2300              	.Ldebug_ranges0:
+ 2301 0000 00000000 		.4byte	.LFB63
+ 2302 0004 98000000 		.4byte	.LFE63
+ 2303 0008 00000000 		.4byte	.LFB64
+ 2304 000c 14000000 		.4byte	.LFE64
+ 2305 0010 00000000 		.4byte	.LFB65
+ 2306 0014 30000000 		.4byte	.LFE65
+ 2307 0018 00000000 		.4byte	.LFB66
+ 2308 001c 20000000 		.4byte	.LFE66
+ 2309 0020 00000000 		.4byte	.LFB67
+ 2310 0024 34000000 		.4byte	.LFE67
+ 2311 0028 00000000 		.4byte	.LFB68
+ 2312 002c 24000000 		.4byte	.LFE68
+ 2313 0030 00000000 		.4byte	.LFB69
+ 2314 0034 24000000 		.4byte	.LFE69
+ 2315 0038 00000000 		.4byte	.LFB70
+ 2316 003c 64000000 		.4byte	.LFE70
+ 2317 0040 00000000 		.4byte	.LFB71
+ 2318 0044 44010000 		.4byte	.LFE71
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\cckLVLLS.s 			page 46
+
+
+ 2319 0048 00000000 		.4byte	.LFB72
+ 2320 004c 20000000 		.4byte	.LFE72
+ 2321 0050 00000000 		.4byte	.LFB73
+ 2322 0054 24000000 		.4byte	.LFE73
+ 2323 0058 00000000 		.4byte	.LFB74
+ 2324 005c 70000000 		.4byte	.LFE74
+ 2325 0060 00000000 		.4byte	0
+ 2326 0064 00000000 		.4byte	0
+ 2327              		.section	.debug_line,"",%progbits
+ 2328              	.Ldebug_line0:
+ 2329 0000 E8020000 		.section	.debug_str,"MS",%progbits,1
+ 2329      0200D301 
+ 2329      00000201 
+ 2329      FB0E0D00 
+ 2329      01010101 
+ 2330              	.LASF55:
+ 2331 0000 6572726F 		.ascii	"error_left_prev\000"
+ 2331      725F6C65 
+ 2331      66745F70 
+ 2331      72657600 
+ 2332              	.LASF59:
+ 2333 0010 64697374 		.ascii	"distance_left\000"
+ 2333      616E6365 
+ 2333      5F6C6566 
+ 2333      7400
+ 2334              	.LASF26:
+ 2335 001e 72696768 		.ascii	"right_dest\000"
+ 2335      745F6465 
+ 2335      737400
+ 2336              	.LASF47:
+ 2337 0029 6C617374 		.ascii	"last_pos_right\000"
+ 2337      5F706F73 
+ 2337      5F726967 
+ 2337      687400
+ 2338              	.LASF52:
+ 2339 0038 61646A5F 		.ascii	"adj_motor_right\000"
+ 2339      6D6F746F 
+ 2339      725F7269 
+ 2339      67687400 
+ 2340              	.LASF57:
+ 2341 0048 6572726F 		.ascii	"error_left_sum\000"
+ 2341      725F6C65 
+ 2341      66745F73 
+ 2341      756D00
+ 2342              	.LASF50:
+ 2343 0057 766F6C74 		.ascii	"volt_motor_right\000"
+ 2343      5F6D6F74 
+ 2343      6F725F72 
+ 2343      69676874 
+ 2343      00
+ 2344              	.LASF61:
+ 2345 0068 73706565 		.ascii	"speed_left\000"
+ 2345      645F6C65 
+ 2345      667400
+ 2346              	.LASF67:
+ 2347 0073 5374616E 		.ascii	"Standby_Write\000"
+ 2347      6462795F 
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\cckLVLLS.s 			page 47
+
+
+ 2347      57726974 
+ 2347      6500
+ 2348              	.LASF18:
+ 2349 0081 73697A65 		.ascii	"sizetype\000"
+ 2349      74797065 
+ 2349      00
+ 2350              	.LASF79:
+ 2351 008a 433A5C55 		.ascii	"C:\\Users\\tadge\\Documents\\GitHub\\PSOC_Creator\\"
+ 2351      73657273 
+ 2351      5C746164 
+ 2351      67655C44 
+ 2351      6F63756D 
+ 2352 00b7 6C617365 		.ascii	"laser_follower\\FYP.cydsn\000"
+ 2352      725F666F 
+ 2352      6C6C6F77 
+ 2352      65725C46 
+ 2352      59502E63 
+ 2353              	.LASF27:
+ 2354 00d0 74657374 		.ascii	"test_values\000"
+ 2354      5F76616C 
+ 2354      75657300 
+ 2355              	.LASF75:
+ 2356 00dc 4D315175 		.ascii	"M1QuadDec_GetCounter\000"
+ 2356      61644465 
+ 2356      635F4765 
+ 2356      74436F75 
+ 2356      6E746572 
+ 2357              	.LASF73:
+ 2358 00f1 4D315F42 		.ascii	"M1_BWD_Write\000"
+ 2358      57445F57 
+ 2358      72697465 
+ 2358      00
+ 2359              	.LASF35:
+ 2360 00fe 4765745F 		.ascii	"Get_PID\000"
+ 2360      50494400 
+ 2361              	.LASF56:
+ 2362 0106 6572726F 		.ascii	"error_right_prev\000"
+ 2362      725F7269 
+ 2362      6768745F 
+ 2362      70726576 
+ 2362      00
+ 2363              	.LASF69:
+ 2364 0117 4D325F46 		.ascii	"M2_FWD_Write\000"
+ 2364      57445F57 
+ 2364      72697465 
+ 2364      00
+ 2365              	.LASF49:
+ 2366 0124 766F6C74 		.ascii	"volt_motor_left\000"
+ 2366      5F6D6F74 
+ 2366      6F725F6C 
+ 2366      65667400 
+ 2367              	.LASF2:
+ 2368 0134 73686F72 		.ascii	"short int\000"
+ 2368      7420696E 
+ 2368      7400
+ 2369              	.LASF21:
+ 2370 013e 766F6C74 		.ascii	"volt\000"
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\cckLVLLS.s 			page 48
+
+
+ 2370      00
+ 2371              	.LASF76:
+ 2372 0143 55415254 		.ascii	"UART_PutString\000"
+ 2372      5F507574 
+ 2372      53747269 
+ 2372      6E6700
+ 2373              	.LASF60:
+ 2374 0152 64697374 		.ascii	"distance_right\000"
+ 2374      616E6365 
+ 2374      5F726967 
+ 2374      687400
+ 2375              	.LASF12:
+ 2376 0161 75696E74 		.ascii	"uint16\000"
+ 2376      313600
+ 2377              	.LASF36:
+ 2378 0168 41646A5F 		.ascii	"Adj_Volt\000"
+ 2378      566F6C74 
+ 2378      00
+ 2379              	.LASF11:
+ 2380 0171 75696E74 		.ascii	"uint8\000"
+ 2380      3800
+ 2381              	.LASF72:
+ 2382 0177 4D315F46 		.ascii	"M1_FWD_Write\000"
+ 2382      57445F57 
+ 2382      72697465 
+ 2382      00
+ 2383              	.LASF74:
+ 2384 0184 4D325175 		.ascii	"M2QuadDec_GetCounter\000"
+ 2384      61644465 
+ 2384      635F4765 
+ 2384      74436F75 
+ 2384      6E746572 
+ 2385              	.LASF45:
+ 2386 0199 6375725F 		.ascii	"cur_pos_left\000"
+ 2386      706F735F 
+ 2386      6C656674 
+ 2386      00
+ 2387              	.LASF14:
+ 2388 01a6 666C6F61 		.ascii	"float\000"
+ 2388      7400
+ 2389              	.LASF53:
+ 2390 01ac 6572726F 		.ascii	"error_left\000"
+ 2390      725F6C65 
+ 2390      667400
+ 2391              	.LASF6:
+ 2392 01b7 6C6F6E67 		.ascii	"long long int\000"
+ 2392      206C6F6E 
+ 2392      6720696E 
+ 2392      7400
+ 2393              	.LASF40:
+ 2394 01c5 6D797374 		.ascii	"mystring\000"
+ 2394      72696E67 
+ 2394      00
+ 2395              	.LASF4:
+ 2396 01ce 6C6F6E67 		.ascii	"long int\000"
+ 2396      20696E74 
+ 2396      00
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\cckLVLLS.s 			page 49
+
+
+ 2397              	.LASF70:
+ 2398 01d7 4D325F42 		.ascii	"M2_BWD_Write\000"
+ 2398      57445F57 
+ 2398      72697465 
+ 2398      00
+ 2399              	.LASF68:
+ 2400 01e4 50574D5F 		.ascii	"PWM_M2_WriteCompare\000"
+ 2400      4D325F57 
+ 2400      72697465 
+ 2400      436F6D70 
+ 2400      61726500 
+ 2401              	.LASF41:
+ 2402 01f8 6375725F 		.ascii	"cur_dest_left\000"
+ 2402      64657374 
+ 2402      5F6C6566 
+ 2402      7400
+ 2403              	.LASF29:
+ 2404 0206 696E636C 		.ascii	"incleft\000"
+ 2404      65667400 
+ 2405              	.LASF1:
+ 2406 020e 756E7369 		.ascii	"unsigned char\000"
+ 2406      676E6564 
+ 2406      20636861 
+ 2406      7200
+ 2407              	.LASF25:
+ 2408 021c 6C656674 		.ascii	"left_dest\000"
+ 2408      5F646573 
+ 2408      7400
+ 2409              	.LASF34:
+ 2410 0226 4765745F 		.ascii	"Get_Error\000"
+ 2410      4572726F 
+ 2410      7200
+ 2411              	.LASF19:
+ 2412 0230 6C6F6E67 		.ascii	"long double\000"
+ 2412      20646F75 
+ 2412      626C6500 
+ 2413              	.LASF51:
+ 2414 023c 61646A5F 		.ascii	"adj_motor_left\000"
+ 2414      6D6F746F 
+ 2414      725F6C65 
+ 2414      667400
+ 2415              	.LASF43:
+ 2416 024b 70726576 		.ascii	"prev_dest_right\000"
+ 2416      5F646573 
+ 2416      745F7269 
+ 2416      67687400 
+ 2417              	.LASF80:
+ 2418 025b 73707269 		.ascii	"sprintf\000"
+ 2418      6E746600 
+ 2419              	.LASF66:
+ 2420 0263 74696D65 		.ascii	"time_ms_start\000"
+ 2420      5F6D735F 
+ 2420      73746172 
+ 2420      7400
+ 2421              	.LASF23:
+ 2422 0271 7475726E 		.ascii	"turn_wheel\000"
+ 2422      5F776865 
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\cckLVLLS.s 			page 50
+
+
+ 2422      656C00
+ 2423              	.LASF0:
+ 2424 027c 7369676E 		.ascii	"signed char\000"
+ 2424      65642063 
+ 2424      68617200 
+ 2425              	.LASF24:
+ 2426 0288 73746570 		.ascii	"step_response\000"
+ 2426      5F726573 
+ 2426      706F6E73 
+ 2426      6500
+ 2427              	.LASF7:
+ 2428 0296 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 2428      206C6F6E 
+ 2428      6720756E 
+ 2428      7369676E 
+ 2428      65642069 
+ 2429              	.LASF71:
+ 2430 02ad 50574D5F 		.ascii	"PWM_M1_WriteCompare\000"
+ 2430      4D315F57 
+ 2430      72697465 
+ 2430      436F6D70 
+ 2430      61726500 
+ 2431              	.LASF8:
+ 2432 02c1 756E7369 		.ascii	"unsigned int\000"
+ 2432      676E6564 
+ 2432      20696E74 
+ 2432      00
+ 2433              	.LASF5:
+ 2434 02ce 6C6F6E67 		.ascii	"long unsigned int\000"
+ 2434      20756E73 
+ 2434      69676E65 
+ 2434      6420696E 
+ 2434      7400
+ 2435              	.LASF33:
+ 2436 02e0 4765745F 		.ascii	"Get_Destination\000"
+ 2436      44657374 
+ 2436      696E6174 
+ 2436      696F6E00 
+ 2437              	.LASF46:
+ 2438 02f0 6375725F 		.ascii	"cur_pos_right\000"
+ 2438      706F735F 
+ 2438      72696768 
+ 2438      7400
+ 2439              	.LASF3:
+ 2440 02fe 73686F72 		.ascii	"short unsigned int\000"
+ 2440      7420756E 
+ 2440      7369676E 
+ 2440      65642069 
+ 2440      6E7400
+ 2441              	.LASF54:
+ 2442 0311 6572726F 		.ascii	"error_right\000"
+ 2442      725F7269 
+ 2442      67687400 
+ 2443              	.LASF44:
+ 2444 031d 70726576 		.ascii	"prev_dest_left\000"
+ 2444      5F646573 
+ 2444      745F6C65 
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\cckLVLLS.s 			page 51
+
+
+ 2444      667400
+ 2445              	.LASF17:
+ 2446 032c 63686172 		.ascii	"char\000"
+ 2446      00
+ 2447              	.LASF77:
+ 2448 0331 474E5520 		.ascii	"GNU C 4.9.3 20150303 (release) [ARM/embedded-4_9-br"
+ 2448      4320342E 
+ 2448      392E3320 
+ 2448      32303135 
+ 2448      30333033 
+ 2449 0364 616E6368 		.ascii	"anch revision 221220] -mcpu=cortex-m3 -mthumb -g -O"
+ 2449      20726576 
+ 2449      6973696F 
+ 2449      6E203232 
+ 2449      31323230 
+ 2450 0397 67202D66 		.ascii	"g -ffunction-sections -ffat-lto-objects\000"
+ 2450      66756E63 
+ 2450      74696F6E 
+ 2450      2D736563 
+ 2450      74696F6E 
+ 2451              	.LASF10:
+ 2452 03bf 696E7433 		.ascii	"int32_t\000"
+ 2452      325F7400 
+ 2453              	.LASF16:
+ 2454 03c7 63686172 		.ascii	"char8\000"
+ 2454      3800
+ 2455              	.LASF65:
+ 2456 03cd 74696D65 		.ascii	"time_ms\000"
+ 2456      5F6D7300 
+ 2457              	.LASF42:
+ 2458 03d5 6375725F 		.ascii	"cur_dest_right\000"
+ 2458      64657374 
+ 2458      5F726967 
+ 2458      687400
+ 2459              	.LASF64:
+ 2460 03e4 696E635F 		.ascii	"inc_right\000"
+ 2460      72696768 
+ 2460      7400
+ 2461              	.LASF30:
+ 2462 03ee 696E6372 		.ascii	"incright\000"
+ 2462      69676874 
+ 2462      00
+ 2463              	.LASF13:
+ 2464 03f7 696E7433 		.ascii	"int32\000"
+ 2464      3200
+ 2465              	.LASF15:
+ 2466 03fd 646F7562 		.ascii	"double\000"
+ 2466      6C6500
+ 2467              	.LASF37:
+ 2468 0404 43686563 		.ascii	"Check_Speed\000"
+ 2468      6B5F5370 
+ 2468      65656400 
+ 2469              	.LASF58:
+ 2470 0410 6572726F 		.ascii	"error_right_sum\000"
+ 2470      725F7269 
+ 2470      6768745F 
+ 2470      73756D00 
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\cckLVLLS.s 			page 52
+
+
+ 2471              	.LASF32:
+ 2472 0420 4765745F 		.ascii	"Get_Position\000"
+ 2472      506F7369 
+ 2472      74696F6E 
+ 2472      00
+ 2473              	.LASF9:
+ 2474 042d 5F5F696E 		.ascii	"__int32_t\000"
+ 2474      7433325F 
+ 2474      7400
+ 2475              	.LASF78:
+ 2476 0437 6D6F7665 		.ascii	"movement.c\000"
+ 2476      6D656E74 
+ 2476      2E6300
+ 2477              	.LASF38:
+ 2478 0442 5072696E 		.ascii	"Print_Values\000"
+ 2478      745F5661 
+ 2478      6C756573 
+ 2478      00
+ 2479              	.LASF22:
+ 2480 044f 616E676C 		.ascii	"angle\000"
+ 2480      6500
+ 2481              	.LASF48:
+ 2482 0455 6C617374 		.ascii	"last_pos_left\000"
+ 2482      5F706F73 
+ 2482      5F6C6566 
+ 2482      7400
+ 2483              	.LASF20:
+ 2484 0463 73696465 		.ascii	"side\000"
+ 2484      00
+ 2485              	.LASF39:
+ 2486 0468 49544D5F 		.ascii	"ITM_RxBuffer\000"
+ 2486      52784275 
+ 2486      66666572 
+ 2486      00
+ 2487              	.LASF63:
+ 2488 0475 696E635F 		.ascii	"inc_left\000"
+ 2488      6C656674 
+ 2488      00
+ 2489              	.LASF62:
+ 2490 047e 73706565 		.ascii	"speed_right\000"
+ 2490      645F7269 
+ 2490      67687400 
+ 2491              	.LASF31:
+ 2492 048a 75706461 		.ascii	"update_angle\000"
+ 2492      74655F61 
+ 2492      6E676C65 
+ 2492      00
+ 2493              	.LASF28:
+ 2494 0497 6E65775F 		.ascii	"new_path\000"
+ 2494      70617468 
+ 2494      00
+ 2495              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 4.9.3 20150303 (release) [ARM/embedded-4_9-br

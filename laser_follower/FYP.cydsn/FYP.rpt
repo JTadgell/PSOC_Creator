@@ -1,12 +1,15 @@
-Loading plugins phase: Elapsed time ==> 3s.323ms
+Loading plugins phase: Elapsed time ==> 1s.572ms
 <CYPRESSTAG name="CyDsfit arguments...">
-cydsfit arguments: -.fdsnotice -.fdswarpdepfile=warp_dependencies.txt -.fdselabdepfile=elab_dependencies.txt -.fdsbldfile=generated_files.txt -.fdsreffile=referenced_files.txt -p C:\Users\shevi\Downloads\Workspace01\Workspace01\FYP.cydsn\FYP.cyprj -d CY8C5888LTI-LP097 -s C:\Users\shevi\Downloads\Workspace01\Workspace01\FYP.cydsn\Generated_Source\PSoC5 -- -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE</CYPRESSTAG>
+cydsfit arguments: -.fdsnotice -.fdswarpdepfile=warp_dependencies.txt -.fdselabdepfile=elab_dependencies.txt -.fdsbldfile=generated_files.txt -.fdsreffile=referenced_files.txt -p C:\Users\tadge\Documents\GitHub\PSOC_Creator\laser_follower\FYP.cydsn\FYP.cyprj -d CY8C5888LTI-LP097 -s C:\Users\tadge\Documents\GitHub\PSOC_Creator\laser_follower\FYP.cydsn\Generated_Source\PSoC5 -- -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE</CYPRESSTAG>
 <CYPRESSTAG name="Design elaboration results...">
+ADD: pft.M0074: information: A (re)build is required to use the analog device editor. Unable to load the necessary information from the cyfit file. Partial/wrong data will be displayed until this has been resolved.
+ * C:\Users\tadge\Documents\GitHub\PSOC_Creator\laser_follower\FYP.cydsn\FYP.cydwr ()
+
 </CYPRESSTAG>
-Elaboration phase: Elapsed time ==> 8s.664ms
+Elaboration phase: Elapsed time ==> 1s.666ms
 <CYPRESSTAG name="HDL generation results...">
 </CYPRESSTAG>
-HDL generation phase: Elapsed time ==> 0s.141ms
+HDL generation phase: Elapsed time ==> 0s.100ms
 <CYPRESSTAG name="Synthesis results...">
 
      | | | | | | |
@@ -24,23 +27,23 @@ HDL generation phase: Elapsed time ==> 0s.141ms
 ======================================================================
 Compiling:  FYP.v
 Program  :   C:\Program Files (x86)\Cypress\PSoC Creator\4.0\PSoC Creator\warp\bin\warp.exe
-Options  :    -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE -ya -.fftprj=C:\Users\shevi\Downloads\Workspace01\Workspace01\FYP.cydsn\FYP.cyprj -dcpsoc3 FYP.v -verilog
+Options  :    -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE -ya -.fftprj=C:\Users\tadge\Documents\GitHub\PSOC_Creator\laser_follower\FYP.cydsn\FYP.cyprj -dcpsoc3 FYP.v -verilog
 ======================================================================
 
 ======================================================================
 Compiling:  FYP.v
 Program  :   C:\Program Files (x86)\Cypress\PSoC Creator\4.0\PSoC Creator\warp\bin\warp.exe
-Options  :    -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE -ya -.fftprj=C:\Users\shevi\Downloads\Workspace01\Workspace01\FYP.cydsn\FYP.cyprj -dcpsoc3 FYP.v -verilog
+Options  :    -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE -ya -.fftprj=C:\Users\tadge\Documents\GitHub\PSOC_Creator\laser_follower\FYP.cydsn\FYP.cyprj -dcpsoc3 FYP.v -verilog
 ======================================================================
 
 ======================================================================
 Compiling:  FYP.v
 Program  :   vlogfe
-Options  :    -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE -ya -.fftprj=C:\Users\shevi\Downloads\Workspace01\Workspace01\FYP.cydsn\FYP.cyprj -dcpsoc3 -verilog FYP.v
+Options  :    -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE -ya -.fftprj=C:\Users\tadge\Documents\GitHub\PSOC_Creator\laser_follower\FYP.cydsn\FYP.cyprj -dcpsoc3 -verilog FYP.v
 ======================================================================
 
 vlogfe V6.3 IR 41:  Verilog parser
-Tue May 08 14:10:39 2018
+Mon May 21 11:34:00 2018
 
 
 ======================================================================
@@ -50,7 +53,7 @@ Options  :    -yv2 -q10 FYP.v
 ======================================================================
 
 vpp V6.3 IR 41:  Verilog Pre-Processor
-Tue May 08 14:10:39 2018
+Mon May 21 11:34:00 2018
 
 Flattening file 'C:\Program Files (x86)\Cypress\PSoC Creator\4.0\PSoC Creator\psoc\content\cycomponentlibrary\CyComponentLibrary.cylib\B_PWM_v3_30\B_PWM_v3_30.v'
 Flattening file 'C:\Program Files (x86)\Cypress\PSoC Creator\4.0\PSoC Creator\warp\lib\common\cypress.v'
@@ -105,11 +108,11 @@ vlogfe:  No errors.
 ======================================================================
 Compiling:  FYP.v
 Program  :   tovif
-Options  :    -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE -ya -.fftprj=C:\Users\shevi\Downloads\Workspace01\Workspace01\FYP.cydsn\FYP.cyprj -dcpsoc3 -verilog FYP.v
+Options  :    -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE -ya -.fftprj=C:\Users\tadge\Documents\GitHub\PSOC_Creator\laser_follower\FYP.cydsn\FYP.cyprj -dcpsoc3 -verilog FYP.v
 ======================================================================
 
 tovif V6.3 IR 41:  High-level synthesis
-Tue May 08 14:10:41 2018
+Mon May 21 11:34:01 2018
 
 Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.0\PSoC Creator\warp\lib\common\std.vhd'.
 Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.0\PSoC Creator\warp\lib\common\cypress.vhd'.
@@ -120,11 +123,11 @@ Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.0\PSoC Creator\warp\lib\c
 Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.0\PSoC Creator\warp\lib\common\stdlogic\mod_cnst.vif'.
 Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.0\PSoC Creator\warp\lib\common\stdlogic\mod_mthv.vif'.
 Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.0\PSoC Creator\warp\lib\common\stdlogic\mod_genv.vif'.
-Linking 'C:\Users\shevi\Downloads\Workspace01\Workspace01\FYP.cydsn\codegentemp\FYP.ctl'.
+Linking 'C:\Users\tadge\Documents\GitHub\PSOC_Creator\laser_follower\FYP.cydsn\codegentemp\FYP.ctl'.
 Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.0\PSoC Creator\psoc\content\cycomponentlibrary\CyComponentLibrary.cylib\B_PWM_v3_30\B_PWM_v3_30.v'.
 Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.0\PSoC Creator\warp\lib\common\cypress.v'.
 Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.0\PSoC Creator\warp\lib\common\cy_psoc3_inc.v'.
-Linking 'C:\Users\shevi\Downloads\Workspace01\Workspace01\FYP.cydsn\codegentemp\FYP.v'.
+Linking 'C:\Users\tadge\Documents\GitHub\PSOC_Creator\laser_follower\FYP.cydsn\codegentemp\FYP.v'.
 Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.0\PSoC Creator\psoc\content\cyprimitives\CyPrimitives.cylib\cy_virtualmux_v1_0\cy_virtualmux_v1_0.v'.
 Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.0\PSoC Creator\psoc\content\cyprimitives\CyPrimitives.cylib\OneTerminal\OneTerminal.v'.
 Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.0\PSoC Creator\psoc\content\cyprimitives\CyPrimitives.cylib\ZeroTerminal\ZeroTerminal.v'.
@@ -145,11 +148,11 @@ tovif:  No errors.
 ======================================================================
 Compiling:  FYP.v
 Program  :   topld
-Options  :    -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE -ya -.fftprj=C:\Users\shevi\Downloads\Workspace01\Workspace01\FYP.cydsn\FYP.cyprj -dcpsoc3 -verilog FYP.v
+Options  :    -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE -ya -.fftprj=C:\Users\tadge\Documents\GitHub\PSOC_Creator\laser_follower\FYP.cydsn\FYP.cyprj -dcpsoc3 -verilog FYP.v
 ======================================================================
 
 topld V6.3 IR 41:  Synthesis and optimization
-Tue May 08 14:10:44 2018
+Mon May 21 11:34:03 2018
 
 Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.0\PSoC Creator\warp\lib\common\std.vhd'.
 Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.0\PSoC Creator\warp\lib\common\cypress.vhd'.
@@ -160,11 +163,11 @@ Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.0\PSoC Creator\warp\lib\c
 Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.0\PSoC Creator\warp\lib\common\stdlogic\mod_cnst.vif'.
 Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.0\PSoC Creator\warp\lib\common\stdlogic\mod_mthv.vif'.
 Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.0\PSoC Creator\warp\lib\common\stdlogic\mod_genv.vif'.
-Linking 'C:\Users\shevi\Downloads\Workspace01\Workspace01\FYP.cydsn\codegentemp\FYP.ctl'.
+Linking 'C:\Users\tadge\Documents\GitHub\PSOC_Creator\laser_follower\FYP.cydsn\codegentemp\FYP.ctl'.
 Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.0\PSoC Creator\psoc\content\cycomponentlibrary\CyComponentLibrary.cylib\B_PWM_v3_30\B_PWM_v3_30.v'.
 Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.0\PSoC Creator\warp\lib\common\cypress.v'.
 Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.0\PSoC Creator\warp\lib\common\cy_psoc3_inc.v'.
-Linking 'C:\Users\shevi\Downloads\Workspace01\Workspace01\FYP.cydsn\codegentemp\FYP.v'.
+Linking 'C:\Users\tadge\Documents\GitHub\PSOC_Creator\laser_follower\FYP.cydsn\codegentemp\FYP.v'.
 Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.0\PSoC Creator\psoc\content\cyprimitives\CyPrimitives.cylib\cy_virtualmux_v1_0\cy_virtualmux_v1_0.v'.
 Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.0\PSoC Creator\psoc\content\cyprimitives\CyPrimitives.cylib\OneTerminal\OneTerminal.v'.
 Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.0\PSoC Creator\psoc\content\cyprimitives\CyPrimitives.cylib\ZeroTerminal\ZeroTerminal.v'.
@@ -1597,16 +1600,16 @@ topld:  No errors.
 
 CYPRESS_DIR    : C:\Program Files (x86)\Cypress\PSoC Creator\4.0\PSoC Creator\warp
 Warp Program   : C:\Program Files (x86)\Cypress\PSoC Creator\4.0\PSoC Creator\warp\bin\warp.exe
-Warp Arguments : -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE -ya -.fftprj=C:\Users\shevi\Downloads\Workspace01\Workspace01\FYP.cydsn\FYP.cyprj -dcpsoc3 FYP.v -verilog
+Warp Arguments : -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE -ya -.fftprj=C:\Users\tadge\Documents\GitHub\PSOC_Creator\laser_follower\FYP.cydsn\FYP.cyprj -dcpsoc3 FYP.v -verilog
 </CYPRESSTAG>
-Warp synthesis phase: Elapsed time ==> 7s.822ms
+Warp synthesis phase: Elapsed time ==> 4s.077ms
 <CYPRESSTAG name="Fitter results...">
 <CYPRESSTAG name="Fitter startup details...">
-cyp3fit: V4.0.0.432, Family: PSoC3, Started at: Tuesday, 08 May 2018 14:10:46
-Options: -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE -ya -.fftprj=C:\Users\shevi\Downloads\Workspace01\Workspace01\FYP.cydsn\FYP.cyprj -d CY8C5888LTI-LP097 FYP.v -verilog
+cyp3fit: V4.0.0.432, Family: PSoC3, Started at: Monday, 21 May 2018 11:34:03
+Options: -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE -ya -.fftprj=C:\Users\tadge\Documents\GitHub\PSOC_Creator\laser_follower\FYP.cydsn\FYP.cyprj -d CY8C5888LTI-LP097 FYP.v -verilog
 </CYPRESSTAG>
 <CYPRESSTAG name="Design parsing">
-Design parsing phase: Elapsed time ==> 0s.092ms
+Design parsing phase: Elapsed time ==> 0s.031ms
 </CYPRESSTAG>
 <CYPRESSTAG name="Tech Mapping">
 <CYPRESSTAG name="Initial Mapping" icon="FILE_RPT_TECHM">
@@ -4654,8 +4657,8 @@ Analog (SC/CT) Blocks         :    0 :    4 :    4 :  0.00 %
 DAC                           :      :      :      :        
   VIDAC                       :    0 :    4 :    4 :  0.00 %
 </CYPRESSTAG>
-Technology Mapping: Elapsed time ==> 0s.328ms
-Tech Mapping phase: Elapsed time ==> 0s.495ms
+Technology Mapping: Elapsed time ==> 0s.169ms
+Tech Mapping phase: Elapsed time ==> 0s.254ms
 </CYPRESSTAG>
 <CYPRESSTAG name="Analog Placement">
 Initial Analog Placement Results:
@@ -4672,7 +4675,7 @@ IO_0@[IOP=(0)][IoId=(0)] : PWM_Out_2(0) (fixed)
 IO_6@[IOP=(12)][IoId=(6)] : Rx_1(0) (fixed)
 IO_3@[IOP=(0)][IoId=(3)] : Standby(0) (fixed)
 IO_7@[IOP=(12)][IoId=(7)] : Tx_1(0) (fixed)
-Analog Placement phase: Elapsed time ==> 0s.134ms
+Analog Placement phase: Elapsed time ==> 0s.046ms
 </CYPRESSTAG>
 <CYPRESSTAG name="Analog Routing">
 Analog Routing phase: Elapsed time ==> 0s.000ms
@@ -4690,11 +4693,11 @@ Dump of CyP35AnalogRoutingResultsDB
 IsVddaHalfUsedForComp = False
 IsVddaHalfUsedForSar0 = False
 IsVddaHalfUsedForSar1 = False
-Analog Code Generation phase: Elapsed time ==> 0s.488ms
+Analog Code Generation phase: Elapsed time ==> 0s.354ms
 </CYPRESSTAG>
 <CYPRESSTAG name="Digital Placement">
 <CYPRESSTAG name="Detailed placement messages">
-I2076: Total run-time: 3.8 sec.
+I2076: Total run-time: 2.6 sec.
 
 </CYPRESSTAG>
 <CYPRESSTAG name="PLD Packing">
@@ -4718,14 +4721,14 @@ PLD Packing Summary
 <CYPRESSTAG name="Packed PLD Contents">
 Packed PLD Contents not displayed at this verbose level.</CYPRESSTAG>
 </CYPRESSTAG>
-PLD Packing: Elapsed time ==> 0s.003ms
+PLD Packing: Elapsed time ==> 0s.000ms
 </CYPRESSTAG>
 <CYPRESSTAG name="Partitioning">
 <CYPRESSTAG name="Initial Partitioning Summary">
 Initial Partitioning Summary not displayed at this verbose level.</CYPRESSTAG>
 <CYPRESSTAG name="Final Partitioning Summary">
 Final Partitioning Summary not displayed at this verbose level.</CYPRESSTAG>
-Partitioning: Elapsed time ==> 0s.199ms
+Partitioning: Elapsed time ==> 0s.140ms
 </CYPRESSTAG>
 <CYPRESSTAG name="Final Placement Summary">
 
@@ -8076,32 +8079,35 @@ Port | Pin | Fixed |      Type |       Drive Mode |         Name | Connections
 </CYPRESSTAG>
 </CYPRESSTAG>
 </CYPRESSTAG>
-Digital component placer commit/Report: Elapsed time ==> 0s.009ms
-Digital Placement phase: Elapsed time ==> 5s.172ms
+Digital component placer commit/Report: Elapsed time ==> 0s.010ms
+Digital Placement phase: Elapsed time ==> 3s.386ms
 </CYPRESSTAG>
 <CYPRESSTAG name="Digital Routing">
 Routing successful.
-Digital Routing phase: Elapsed time ==> 5s.035ms
+Digital Routing phase: Elapsed time ==> 4s.209ms
 </CYPRESSTAG>
 <CYPRESSTAG name="Bitstream Generation">
-Bitstream Generation phase: Elapsed time ==> 0s.602ms
+Bitstream Generation phase: Elapsed time ==> 0s.355ms
 </CYPRESSTAG>
 <CYPRESSTAG name="Bitstream Verification">
-Bitstream Verification phase: Elapsed time ==> 0s.132ms
+Bitstream Verification phase: Elapsed time ==> 0s.072ms
 </CYPRESSTAG>
 <CYPRESSTAG name="Static timing analysis">
 Timing report is in FYP_timing.html.
-Static timing analysis phase: Elapsed time ==> 1s.253ms
+Static timing analysis phase: Elapsed time ==> 0s.793ms
 </CYPRESSTAG>
 <CYPRESSTAG name="Data reporting">
 Data reporting phase: Elapsed time ==> 0s.000ms
 </CYPRESSTAG>
 <CYPRESSTAG name="Database update...">
-Design database save phase: Elapsed time ==> 0s.621ms
+Design database save phase: Elapsed time ==> 0s.397ms
 </CYPRESSTAG>
-cydsfit: Elapsed time ==> 14s.118ms
+cydsfit: Elapsed time ==> 9s.978ms
 </CYPRESSTAG>
-Fitter phase: Elapsed time ==> 14s.120ms
-API generation phase: Elapsed time ==> 4s.075ms
-Dependency generation phase: Elapsed time ==> 0s.077ms
-Cleanup phase: Elapsed time ==> 0s.001ms
+Fitter phase: Elapsed time ==> 9s.979ms
+DEL: pft.M0074: information: A (re)build is required to use the analog device editor. Unable to load the necessary information from the cyfit file. Partial/wrong data will be displayed until this has been resolved.
+ * C:\Users\tadge\Documents\GitHub\PSOC_Creator\laser_follower\FYP.cydsn\FYP.cydwr ()
+
+API generation phase: Elapsed time ==> 3s.032ms
+Dependency generation phase: Elapsed time ==> 0s.023ms
+Cleanup phase: Elapsed time ==> 0s.000ms

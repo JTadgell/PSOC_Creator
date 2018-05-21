@@ -20,6 +20,7 @@ extern void get_serial_speed();
 extern void get_serial_control();
 extern void test_values();
 extern void step_response();
+extern void update_angle();
 
 
 char mystring[50];
