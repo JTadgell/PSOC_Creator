@@ -10,7 +10,7 @@
 #include <time.h>
     
 char mystring[50];
-
+//Shevin
 
 /* declare global variables */
 
