@@ -40,6 +40,9 @@ char mystring[50];
     int error_left_sum;
     int error_right_sum;
 
+    long int distance_left;
+    long int distance_right;
+
     double Kp=100;
     double Ki=0.1;
     double Kd=1000;
@@ -52,6 +55,8 @@ char mystring[50];
 
     long int time_ms;
     long int time_ms_start;
+
+
     
 
 void turn_wheel(char side, int volt){
@@ -99,9 +104,11 @@ void turn_wheel(char side, int volt){
         }
     }
 }
-void stop(){
-    turn_wheel('r', 0);
-    turn_wheel('l', 0);
+void update_angle(angle){
+
+    distance_left = 1/2 * angle;
+    distance_right = -1/2 * angle; 
+
 }
 
 void step_response(long int left_dest, long int right_dest){
@@ -130,10 +137,11 @@ void test_values(double kp, double kd, double ki)
 void new_path(int incleft, int incright){
     
     
-    inc_left = incleft;
-    inc_right = incright;
+    inc_left = incleft + distance_left;
+    inc_right = incright + distance_right;
     
-    
+    distance_left = 0;
+    distance_right = 0;
     
     
     /*

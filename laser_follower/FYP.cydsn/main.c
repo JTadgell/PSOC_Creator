@@ -80,8 +80,7 @@ int main(void){
     double int11;
     double int22;
     double int33;
-    long int int111;
-    long int int222;
+    long int angle;
     int i;
      /*  
     for(;;){ 
@@ -126,7 +125,6 @@ int main(void){
     }
     */
     
-
     
     for(;;){
         get_serial_update(&update);
@@ -136,12 +134,28 @@ int main(void){
             CySoftwareReset();
             
         }
+        // update the base speed of the robot
         else if (update==2){
             UART_PutString("----- Speed -----\n"); 
             get_serial_speed(&int1, &int2);
             new_path(int1,int2);
         }
+
+        // update a 1 time increment
+        else if (update==3){
+        UART_PutString("----- Angle -----\n"); 
+        get_serial_update(&angle);
+        update_angle(angle);
         
+        do {                
+            Print_Values();
+            if((0u != UART_ReadRxStatus())||(0u != UART_GetRxBufferSize())){trigger1=1;}
+        } while(trigger1==0);
+    
+    }
+
+
+
         trigger1=0;
     }
     

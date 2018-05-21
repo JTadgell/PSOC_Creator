@@ -1,0 +1,5 @@
+C:\Users\tadge\Documents\GitHub\PSOC_Creator\laser_follower\FYP.cydsn\FYP.cyprj|90effb80-65c8-4ad6-b778-f6b42b5caf49
+C:\Program Files (x86)\Cypress\PSoC Creator\4.0\PSoC Creator\psoc\content\default\CyAnnotationLibrary\CyAnnotationLibrary.cylib\CyAnnotationLibrary.cyprj|d62749dc-a6de-40de-a02a-2f8e096f8443
+C:\Program Files (x86)\Cypress\PSoC Creator\4.0\PSoC Creator\psoc\content\cycomponentlibraryupdates\CyComponentLibraryUpdates.cylib\CyComponentLibraryUpdates.cyprj|4bacaad3-d9e2-4377-8143-f0e6efa7a85f
+C:\Program Files (x86)\Cypress\PSoC Creator\4.0\PSoC Creator\psoc\content\cycomponentlibrary\CyComponentLibrary.cylib\CyComponentLibrary.cyprj|c809f6e9-a3a4-455c-8e8f-678b656ac4b3
+C:\Program Files (x86)\Cypress\PSoC Creator\4.0\PSoC Creator\psoc\content\cyprimitives\CyPrimitives.cylib\CyPrimitives.cyprj|958f2a09-677f-4389-bf07-49703b17372f
