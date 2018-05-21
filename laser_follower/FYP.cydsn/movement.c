@@ -44,7 +44,7 @@ char mystring[50];
     long int distance_right;
 
     double Kp=100;
-    double Ki=0.1;
+    double Ki=0;
     double Kd=1000;
 
     int speed_left;
@@ -56,6 +56,7 @@ char mystring[50];
     long int time_ms;
     long int time_ms_start;
 
+    long int angle_local;
 
     
 
@@ -106,8 +107,9 @@ void turn_wheel(char side, int volt){
 }
 void update_angle(angle){
 
-    distance_left = 1/2 * angle;
-    distance_right = -1/2 * angle; 
+    distance_left = angle;
+    distance_right = -angle;
+    angle_local = angle; 
 
 }
 
@@ -122,60 +124,29 @@ void step_response(long int left_dest, long int right_dest){
      inc_right = 0;
     
 }
-/*
-void Get_StartSpeed(){
-    speed_left = 10*(cur_dest_left - prev_dest_left);
-    speed_right = 10*(cur_dest_right - prev_dest_left);
-}
-  
-*/
+
 void test_values(double kp, double kd, double ki)
 {   Kp=kp;
     Kd=kd;
     Ki=ki;
 }
+
 void new_path(int incleft, int incright){
-    
-    
-    inc_left = incleft + distance_left;
-    inc_right = incright + distance_right;
-    
-    distance_left = 0;
-    distance_right = 0;
-    
-    
-    /*
-    
-    int speed = 30;
-    inc_left = speed;
-    inc_right = speed;
-    
-    if (cur_dest_right < fin_dest_right){
-        direction_right = 1;}
-    else{
-        direction_right = -1;}
-    
-    if (cur_dest_left < fin_dest_left){
-        direction_left = 1;}
-    else{
-        direction_left = -1;}
-    
-    iterations_left = fin_dest_left - cur_dest_left;
-    iterations_count_left = 0;
-    
-    iterations_right = fin_dest_right - cur_dest_right;
-    iterations_count_right = 0;
-    
-    */
-    
+        
+    inc_left = incleft;
+    inc_right = incright;
+ 
 }
 
 
 
 void Get_Destination(){
     
-    cur_dest_left = cur_dest_left + inc_left;
-    cur_dest_right = cur_dest_right + inc_right;
+    cur_dest_left = cur_dest_left + inc_left + distance_left;
+    cur_dest_right = cur_dest_right + inc_right + distance_right;
+
+    distance_right = 0;
+    distance_left = 0;
 }
 void Get_Position(){
     cur_pos_right = -64*M2QuadDec_GetCounter();
@@ -195,7 +166,6 @@ void Get_Error(){
 
 void Get_PID(){   
     volt_motor_left =  ( Kp * error_left ) + ( Ki * error_left_sum ) + ( Kd * (error_left - error_left_prev) );
-    //volt_motor_left =  adj_motor_left;
     
         if (volt_motor_left < -65535){
             volt_motor_left = -65535;}
@@ -203,7 +173,6 @@ void Get_PID(){
             volt_motor_left = 65535;}
     
     volt_motor_right = ( Kp * error_right ) + ( Ki * error_right_sum ) + ( Kd * (error_right - error_right_prev ));
-    //volt_motor_right =  adj_motor_right;
     
         if (volt_motor_right < -65535){
             volt_motor_right = -65535;}
@@ -227,7 +196,7 @@ void Check_Speed(){
 }
 
 void Print_Values(){
-    sprintf(mystring, "%d|%d|%ld|%ld|%ld|%d|%d|%d\n", error_left, volt_motor_left, cur_pos_left, cur_dest_left, time_ms-time_ms_start,error_left,(error_left-error_left_prev), (error_left_sum));
+    sprintf(mystring, "%d|%d|%ld|%ld|%ld|%d|%d|%d|%ld\n", error_left, volt_motor_left, cur_pos_left, cur_dest_left, time_ms-time_ms_start,error_left,(error_left-error_left_prev), (error_left_sum), angle_local);
     UART_PutString(mystring);
     
     /*

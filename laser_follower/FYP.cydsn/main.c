@@ -16,12 +16,12 @@ extern void Check_Speed();
 extern void Print_Values();
 extern void new_path();
 extern int get_serial_update();
+extern int get_serial_update2();
 extern void get_serial_speed();
 extern void get_serial_control();
 extern void test_values();
 extern void step_response();
 extern void update_angle();
-
 
 char mystring[50];
 
@@ -144,16 +144,16 @@ int main(void){
 
         // update a 1 time increment
         else if (update==3){
-        UART_PutString("----- Angle -----\n"); 
-        get_serial_update(&angle);
-        update_angle(angle);
+            UART_PutString("----- Angle -----\n"); 
+            get_serial_update2(&angle);
+            update_angle(angle);
         
-        do {                
-            Print_Values();
-            if((0u != UART_ReadRxStatus())||(0u != UART_GetRxBufferSize())){trigger1=1;}
-        } while(trigger1==0);
+            do {                
+                Print_Values();
+                if((0u != UART_ReadRxStatus())||(0u != UART_GetRxBufferSize())){trigger1=1;}
+            } while(trigger1==0);
     
-    }
+        }
 
 
 

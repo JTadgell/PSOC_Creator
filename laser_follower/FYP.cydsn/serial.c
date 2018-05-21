@@ -149,4 +149,40 @@ int get_serial_update(int *int1){
                 }
     }
     return 0;
+
+
+
+
+}
+
+
+int get_serial_update2(long int *int1){
+    int counter=0;
+    UART_ClearRxBuffer();
+    while(counter<1){
+        if ((0u != UART_ReadRxStatus())||(0u != UART_GetRxBufferSize()))
+            {trigger=1;}
+                if (0u != trigger)
+                {
+                    CyDelay(10);
+                    strncpy(buffer, (const char *)UART_rxBuffer, UART_RXBUFFERSIZE);
+                    if (counter==0)
+                        {
+                            
+                            char str[100];
+                            *int1=atoi(buffer);
+                            //sprintf(str,"Recieved 1st [%i] \n",*int1);
+                            //UART_PutString(str);
+           
+                            UART_ClearRxBuffer();
+                            strncpy((char *)UART_rxBuffer,"",sizeof(UART_rxBuffer));
+                            strncpy(buffer,"",sizeof(buffer));
+                            
+                        }
+                    
+                        trigger=0;
+                        counter=counter+1;
+                }
+    }
+    return 0;
 }

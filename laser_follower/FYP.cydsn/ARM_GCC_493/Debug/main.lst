@@ -1,4 +1,4 @@
-ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 1
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccqAM5J5.s 			page 1
 
 
    1              		.syntax unified
@@ -45,12 +45,12 @@ ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 1
   16:main.c        **** extern void Print_Values();
   17:main.c        **** extern void new_path();
   18:main.c        **** extern int get_serial_update();
-  19:main.c        **** extern void get_serial_speed();
-  20:main.c        **** extern void get_serial_control();
-  21:main.c        **** extern void test_values();
-  22:main.c        **** extern void step_response();
-  23:main.c        **** extern void update_angle();
-  24:main.c        **** 
+  19:main.c        **** extern int get_serial_update2();
+  20:main.c        **** extern void get_serial_speed();
+  21:main.c        **** extern void get_serial_control();
+  22:main.c        **** extern void test_values();
+  23:main.c        **** extern void step_response();
+  24:main.c        **** extern void update_angle();
   25:main.c        **** 
   26:main.c        **** char mystring[50];
   27:main.c        **** 
@@ -58,7 +58,7 @@ ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 1
   29:main.c        **** void Setup(){
   30:main.c        ****     
   31:main.c        ****     PWM_M1_Start();
-ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 2
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccqAM5J5.s 			page 2
 
 
   32:main.c        ****     PWM_M2_Start();
@@ -118,7 +118,7 @@ ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 1
   52              	Setup:
   53              	.LFB63:
   29:main.c        ****     
-ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 3
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccqAM5J5.s 			page 3
 
 
   54              		.loc 1 29 0
@@ -178,7 +178,7 @@ ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 1
   97              	.LVL12:
   45:main.c        ****     CyDelay(1000);
   98              		.loc 1 45 0
-ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 4
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccqAM5J5.s 			page 4
 
 
   99 0038 FFF7FEFF 		bl	M2QuadDec_Enable
@@ -238,7 +238,7 @@ ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 1
  146              		.align	2
  147              		.global	main
  148              		.thumb
-ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 5
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccqAM5J5.s 			page 5
 
 
  149              		.thumb_func
@@ -298,7 +298,7 @@ ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 1
  185              	.L8:
   79:main.c        ****     int int3=0;
   80:main.c        ****     int update;
-ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 6
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccqAM5J5.s 			page 6
 
 
   81:main.c        ****     double int11;
@@ -358,7 +358,7 @@ ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 1
  189              	.LVL24:
  132:main.c        ****         
  133:main.c        ****         if(update==0){      
-ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 7
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccqAM5J5.s 			page 7
 
 
  190              		.loc 1 133 0
@@ -408,20 +408,20 @@ ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 1
  221              		.loc 1 146 0
  222 0050 032B     		cmp	r3, #3
  223 0052 E4D1     		bne	.L8
- 147:main.c        ****         UART_PutString("----- Angle -----\n"); 
+ 147:main.c        ****             UART_PutString("----- Angle -----\n"); 
  224              		.loc 1 147 0
  225 0054 0F48     		ldr	r0, .L17+12
  226 0056 FFF7FEFF 		bl	UART_PutString
  227              	.LVL30:
- 148:main.c        ****         get_serial_update(&angle);
+ 148:main.c        ****             get_serial_update2(&angle);
  228              		.loc 1 148 0
  229 005a 6846     		mov	r0, sp
- 230 005c FFF7FEFF 		bl	get_serial_update
+ 230 005c FFF7FEFF 		bl	get_serial_update2
  231              	.LVL31:
-ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 8
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccqAM5J5.s 			page 8
 
 
- 149:main.c        ****         update_angle(angle);
+ 149:main.c        ****             update_angle(angle);
  232              		.loc 1 149 0
  233 0060 0098     		ldr	r0, [sp]
  234 0062 FFF7FEFF 		bl	update_angle
@@ -430,12 +430,12 @@ ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 1
  237              	.LVL33:
  238              	.L13:
  150:main.c        ****         
- 151:main.c        ****         do {                
- 152:main.c        ****             Print_Values();
+ 151:main.c        ****             do {                
+ 152:main.c        ****                 Print_Values();
  239              		.loc 1 152 0
  240 0068 FFF7FEFF 		bl	Print_Values
  241              	.LVL34:
- 153:main.c        ****             if((0u != UART_ReadRxStatus())||(0u != UART_GetRxBufferSize())){trigger1=1;}
+ 153:main.c        ****                 if((0u != UART_ReadRxStatus())||(0u != UART_GetRxBufferSize())){trigger1=1;}
  242              		.loc 1 153 0
  243 006c FFF7FEFF 		bl	UART_ReadRxStatus
  244              	.LVL35:
@@ -455,7 +455,7 @@ ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 1
  258 007e 0124     		movs	r4, #1
  259              	.LVL39:
  260              	.L12:
- 154:main.c        ****         } while(trigger1==0);
+ 154:main.c        ****             } while(trigger1==0);
  261              		.loc 1 154 0 is_stmt 1
  262 0080 002C     		cmp	r4, #0
  263 0082 F1D0     		beq	.L13
@@ -478,7 +478,7 @@ ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 1
  279      2D205265 
  279      73657420 
  279      2D2D2D2D 
-ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 9
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccqAM5J5.s 			page 9
 
 
  279      2D0A00
@@ -514,58 +514,58 @@ ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 1
  301              		.file 15 "Generated_Source\\PSoC5/isr_1ms.h"
  302              		.section	.debug_info,"",%progbits
  303              	.Ldebug_info0:
- 304 0000 40050000 		.4byte	0x540
+ 304 0000 51050000 		.4byte	0x551
  305 0004 0400     		.2byte	0x4
  306 0006 00000000 		.4byte	.Ldebug_abbrev0
  307 000a 04       		.byte	0x4
  308 000b 01       		.uleb128 0x1
- 309 000c 76020000 		.4byte	.LASF65
+ 309 000c 84020000 		.4byte	.LASF66
  310 0010 01       		.byte	0x1
- 311 0011 58030000 		.4byte	.LASF66
- 312 0015 F1000000 		.4byte	.LASF67
+ 311 0011 6B030000 		.4byte	.LASF67
+ 312 0015 EB000000 		.4byte	.LASF68
  313 0019 00000000 		.4byte	.Ldebug_ranges0+0
  314 001d 00000000 		.4byte	0
  315 0021 00000000 		.4byte	.Ldebug_line0
  316 0025 02       		.uleb128 0x2
  317 0026 01       		.byte	0x1
  318 0027 06       		.byte	0x6
- 319 0028 C5000000 		.4byte	.LASF0
+ 319 0028 BF000000 		.4byte	.LASF0
  320 002c 02       		.uleb128 0x2
  321 002d 01       		.byte	0x1
  322 002e 08       		.byte	0x8
- 323 002f 80010000 		.4byte	.LASF1
+ 323 002f 86010000 		.4byte	.LASF1
  324 0033 02       		.uleb128 0x2
  325 0034 02       		.byte	0x2
  326 0035 05       		.byte	0x5
- 327 0036 25000000 		.4byte	.LASF2
-ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 10
+ 327 0036 1F000000 		.4byte	.LASF2
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccqAM5J5.s 			page 10
 
 
  328 003a 02       		.uleb128 0x2
  329 003b 02       		.byte	0x2
  330 003c 07       		.byte	0x7
- 331 003d 5E020000 		.4byte	.LASF3
+ 331 003d 6C020000 		.4byte	.LASF3
  332 0041 03       		.uleb128 0x3
- 333 0042 A1030000 		.4byte	.LASF9
+ 333 0042 B4030000 		.4byte	.LASF9
  334 0046 02       		.byte	0x2
  335 0047 3F       		.byte	0x3f
  336 0048 4C000000 		.4byte	0x4c
  337 004c 02       		.uleb128 0x2
  338 004d 04       		.byte	0x4
  339 004e 05       		.byte	0x5
- 340 004f 55010000 		.4byte	.LASF4
+ 340 004f 5B010000 		.4byte	.LASF4
  341 0053 02       		.uleb128 0x2
  342 0054 04       		.byte	0x4
  343 0055 07       		.byte	0x7
- 344 0056 5F030000 		.4byte	.LASF5
+ 344 0056 72030000 		.4byte	.LASF5
  345 005a 02       		.uleb128 0x2
  346 005b 08       		.byte	0x8
  347 005c 05       		.byte	0x5
- 348 005d 37010000 		.4byte	.LASF6
+ 348 005d 31010000 		.4byte	.LASF6
  349 0061 02       		.uleb128 0x2
  350 0062 08       		.byte	0x8
  351 0063 07       		.byte	0x7
- 352 0064 0F020000 		.4byte	.LASF7
+ 352 0064 1D020000 		.4byte	.LASF7
  353 0068 04       		.uleb128 0x4
  354 0069 04       		.byte	0x4
  355 006a 05       		.byte	0x5
@@ -573,54 +573,54 @@ ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 1
  357 006f 02       		.uleb128 0x2
  358 0070 04       		.byte	0x4
  359 0071 07       		.byte	0x7
- 360 0072 26020000 		.4byte	.LASF8
+ 360 0072 34020000 		.4byte	.LASF8
  361 0076 03       		.uleb128 0x3
- 362 0077 0F030000 		.4byte	.LASF10
+ 362 0077 15020000 		.4byte	.LASF10
  363 007b 03       		.byte	0x3
  364 007c 2C       		.byte	0x2c
  365 007d 41000000 		.4byte	0x41
  366 0081 05       		.uleb128 0x5
- 367 0082 BF000000 		.4byte	.LASF11
+ 367 0082 B9000000 		.4byte	.LASF11
  368 0086 04       		.byte	0x4
  369 0087 9201     		.2byte	0x192
  370 0089 2C000000 		.4byte	0x2c
  371 008d 05       		.uleb128 0x5
- 372 008e 23030000 		.4byte	.LASF12
+ 372 008e 36030000 		.4byte	.LASF12
  373 0092 04       		.byte	0x4
  374 0093 9301     		.2byte	0x193
  375 0095 3A000000 		.4byte	0x3a
  376 0099 05       		.uleb128 0x5
- 377 009a 8E030000 		.4byte	.LASF13
+ 377 009a A1030000 		.4byte	.LASF13
  378 009e 04       		.byte	0x4
  379 009f 9401     		.2byte	0x194
  380 00a1 53000000 		.4byte	0x53
  381 00a5 05       		.uleb128 0x5
- 382 00a6 82030000 		.4byte	.LASF14
+ 382 00a6 95030000 		.4byte	.LASF14
  383 00aa 04       		.byte	0x4
  384 00ab 9701     		.2byte	0x197
-ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 11
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccqAM5J5.s 			page 11
 
 
  385 00ad 4C000000 		.4byte	0x4c
  386 00b1 02       		.uleb128 0x2
  387 00b2 04       		.byte	0x4
  388 00b3 04       		.byte	0x4
- 389 00b4 E1000000 		.4byte	.LASF15
+ 389 00b4 DB000000 		.4byte	.LASF15
  390 00b8 02       		.uleb128 0x2
  391 00b9 08       		.byte	0x8
  392 00ba 04       		.byte	0x4
- 393 00bb C3030000 		.4byte	.LASF16
+ 393 00bb D6030000 		.4byte	.LASF16
  394 00bf 05       		.uleb128 0x5
- 395 00c0 49000000 		.4byte	.LASF17
+ 395 00c0 43000000 		.4byte	.LASF17
  396 00c4 04       		.byte	0x4
  397 00c5 A301     		.2byte	0x1a3
  398 00c7 CB000000 		.4byte	0xcb
  399 00cb 02       		.uleb128 0x2
  400 00cc 01       		.byte	0x1
  401 00cd 08       		.byte	0x8
- 402 00ce 71020000 		.4byte	.LASF18
+ 402 00ce 7F020000 		.4byte	.LASF18
  403 00d2 05       		.uleb128 0x5
- 404 00d3 CA010000 		.4byte	.LASF19
+ 404 00d3 D0010000 		.4byte	.LASF19
  405 00d7 04       		.byte	0x4
  406 00d8 4E02     		.2byte	0x24e
  407 00da DE000000 		.4byte	0xde
@@ -631,13 +631,13 @@ ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 1
  412 00e5 02       		.uleb128 0x2
  413 00e6 04       		.byte	0x4
  414 00e7 07       		.byte	0x7
- 415 00e8 2F000000 		.4byte	.LASF20
+ 415 00e8 29000000 		.4byte	.LASF20
  416 00ec 02       		.uleb128 0x2
  417 00ed 08       		.byte	0x8
  418 00ee 04       		.byte	0x4
- 419 00ef AC010000 		.4byte	.LASF21
+ 419 00ef B2010000 		.4byte	.LASF21
  420 00f3 08       		.uleb128 0x8
- 421 00f4 D1000000 		.4byte	.LASF68
+ 421 00f4 CB000000 		.4byte	.LASF69
  422 00f8 01       		.byte	0x1
  423 00f9 39       		.byte	0x39
  424 00fa 00000000 		.4byte	.LFB65
@@ -658,12 +658,12 @@ ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 1
  439 011b 0B       		.uleb128 0xb
  440 011c 0C000000 		.4byte	.LVL1
  441 0120 0A040000 		.4byte	0x40a
-ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 12
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccqAM5J5.s 			page 12
 
 
  442 0124 00       		.byte	0
  443 0125 0C       		.uleb128 0xc
- 444 0126 58020000 		.4byte	.LASF22
+ 444 0126 66020000 		.4byte	.LASF22
  445 012a 01       		.byte	0x1
  446 012b 1D       		.byte	0x1d
  447 012c 00000000 		.4byte	.LFB63
@@ -718,7 +718,7 @@ ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 1
  496 01a6 46040000 		.4byte	0x446
  497 01aa B6010000 		.4byte	0x1b6
  498 01ae 0A       		.uleb128 0xa
-ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 13
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccqAM5J5.s 			page 13
 
 
  499 01af 01       		.uleb128 0x1
@@ -762,7 +762,7 @@ ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 1
  537 01fe 8E040000 		.4byte	0x48e
  538 0202 00       		.byte	0
  539 0203 0C       		.uleb128 0xc
- 540 0204 AB030000 		.4byte	.LASF23
+ 540 0204 BE030000 		.4byte	.LASF23
  541 0208 01       		.byte	0x1
  542 0209 36       		.byte	0x36
  543 020a 00000000 		.4byte	.LFB64
@@ -778,10 +778,10 @@ ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 1
  553 0226 9C040000 		.4byte	0x49c
  554 022a 00       		.byte	0
  555 022b 0D       		.uleb128 0xd
-ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 14
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccqAM5J5.s 			page 14
 
 
- 556 022c 61000000 		.4byte	.LASF69
+ 556 022c 5B000000 		.4byte	.LASF70
  557 0230 01       		.byte	0x1
  558 0231 42       		.byte	0x42
  559 0232 68000000 		.4byte	0x68
@@ -802,13 +802,13 @@ ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 1
  574 0256 68000000 		.4byte	0x68
  575 025a 00       		.byte	0
  576 025b 10       		.uleb128 0x10
- 577 025c 77010000 		.4byte	.LASF25
+ 577 025c 7D010000 		.4byte	.LASF25
  578 0260 01       		.byte	0x1
  579 0261 4C       		.byte	0x4c
  580 0262 68000000 		.4byte	0x68
  581 0266 00000000 		.4byte	.LLST0
  582 026a 11       		.uleb128 0x11
- 583 026b 5E010000 		.4byte	.LASF26
+ 583 026b 64010000 		.4byte	.LASF26
  584 026f 01       		.byte	0x1
  585 0270 4D       		.byte	0x4d
  586 0271 68000000 		.4byte	0x68
@@ -816,7 +816,7 @@ ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 1
  588 0276 91       		.byte	0x91
  589 0277 74       		.sleb128 -12
  590 0278 11       		.uleb128 0x11
- 591 0279 E7000000 		.4byte	.LASF27
+ 591 0279 E1000000 		.4byte	.LASF27
  592 027d 01       		.byte	0x1
  593 027e 4E       		.byte	0x4e
  594 027f 68000000 		.4byte	0x68
@@ -824,13 +824,13 @@ ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 1
  596 0284 91       		.byte	0x91
  597 0285 70       		.sleb128 -16
  598 0286 0F       		.uleb128 0xf
- 599 0287 EC000000 		.4byte	.LASF28
+ 599 0287 E6000000 		.4byte	.LASF28
  600 028b 01       		.byte	0x1
  601 028c 4F       		.byte	0x4f
  602 028d 68000000 		.4byte	0x68
  603 0291 00       		.byte	0
  604 0292 11       		.uleb128 0x11
- 605 0293 4E010000 		.4byte	.LASF29
+ 605 0293 18000000 		.4byte	.LASF29
  606 0297 01       		.byte	0x1
  607 0298 50       		.byte	0x50
  608 0299 68000000 		.4byte	0x68
@@ -838,25 +838,25 @@ ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 1
  610 029e 91       		.byte	0x91
  611 029f 6C       		.sleb128 -20
  612 02a0 12       		.uleb128 0x12
-ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 15
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccqAM5J5.s 			page 15
 
 
- 613 02a1 A9000000 		.4byte	.LASF30
+ 613 02a1 A3000000 		.4byte	.LASF30
  614 02a5 01       		.byte	0x1
  615 02a6 51       		.byte	0x51
  616 02a7 B8000000 		.4byte	0xb8
  617 02ab 12       		.uleb128 0x12
- 618 02ac D7010000 		.4byte	.LASF31
+ 618 02ac DD010000 		.4byte	.LASF31
  619 02b0 01       		.byte	0x1
  620 02b1 52       		.byte	0x52
  621 02b2 B8000000 		.4byte	0xb8
  622 02b6 12       		.uleb128 0x12
- 623 02b7 88030000 		.4byte	.LASF32
+ 623 02b7 9B030000 		.4byte	.LASF32
  624 02bb 01       		.byte	0x1
  625 02bc 53       		.byte	0x53
  626 02bd B8000000 		.4byte	0xb8
  627 02c1 11       		.uleb128 0x11
- 628 02c2 BD030000 		.4byte	.LASF33
+ 628 02c2 D0030000 		.4byte	.LASF33
  629 02c6 01       		.byte	0x1
  630 02c7 54       		.byte	0x54
  631 02c8 4C000000 		.4byte	0x4c
@@ -898,7 +898,7 @@ ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 1
  667 0312 C5040000 		.4byte	0x4c5
  668 0316 21030000 		.4byte	0x321
  669 031a 0A       		.uleb128 0xa
-ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 16
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccqAM5J5.s 			page 16
 
 
  670 031b 01       		.uleb128 0x1
@@ -958,7 +958,7 @@ ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 1
  724 0384 92030000 		.4byte	0x392
  725 0388 0A       		.uleb128 0xa
  726 0389 01       		.uleb128 0x1
-ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 17
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccqAM5J5.s 			page 17
 
 
  727 038a 50       		.byte	0x50
@@ -968,7 +968,7 @@ ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 1
  731 0391 00       		.byte	0
  732 0392 09       		.uleb128 0x9
  733 0393 60000000 		.4byte	.LVL31
- 734 0397 C5040000 		.4byte	0x4c5
+ 734 0397 13050000 		.4byte	0x513
  735 039b A6030000 		.4byte	0x3a6
  736 039f 0A       		.uleb128 0xa
  737 03a0 01       		.uleb128 0x1
@@ -979,16 +979,16 @@ ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 1
  742 03a5 00       		.byte	0
  743 03a6 0B       		.uleb128 0xb
  744 03a7 66000000 		.4byte	.LVL32
- 745 03ab 13050000 		.4byte	0x513
+ 745 03ab 24050000 		.4byte	0x524
  746 03af 0B       		.uleb128 0xb
  747 03b0 6C000000 		.4byte	.LVL34
- 748 03b4 20050000 		.4byte	0x520
+ 748 03b4 31050000 		.4byte	0x531
  749 03b8 0B       		.uleb128 0xb
  750 03b9 70000000 		.4byte	.LVL35
- 751 03bd 2D050000 		.4byte	0x52d
+ 751 03bd 3E050000 		.4byte	0x53e
  752 03c1 0B       		.uleb128 0xb
  753 03c2 76000000 		.4byte	.LVL36
- 754 03c6 38050000 		.4byte	0x538
+ 754 03c6 49050000 		.4byte	0x549
  755 03ca 00       		.byte	0
  756 03cb 13       		.uleb128 0x13
  757 03cc CB000000 		.4byte	0xcb
@@ -998,14 +998,14 @@ ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 1
  761 03d9 31       		.byte	0x31
  762 03da 00       		.byte	0
  763 03db 15       		.uleb128 0x15
- 764 03dc CA030000 		.4byte	.LASF34
+ 764 03dc DD030000 		.4byte	.LASF34
  765 03e0 05       		.byte	0x5
  766 03e1 9606     		.2byte	0x696
  767 03e3 E7030000 		.4byte	0x3e7
  768 03e7 16       		.uleb128 0x16
  769 03e8 76000000 		.4byte	0x76
  770 03ec 17       		.uleb128 0x17
- 771 03ed 45010000 		.4byte	.LASF35
+ 771 03ed 3F010000 		.4byte	.LASF35
  772 03f1 01       		.byte	0x1
  773 03f2 1A       		.byte	0x1a
  774 03f3 CB030000 		.4byte	0x3cb
@@ -1013,50 +1013,50 @@ ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 1
  776 03f8 03       		.byte	0x3
  777 03f9 00000000 		.4byte	mystring
  778 03fd 18       		.uleb128 0x18
- 779 03fe 95030000 		.4byte	.LASF57
+ 779 03fe A8030000 		.4byte	.LASF57
  780 0402 01       		.byte	0x1
  781 0403 0F       		.byte	0xf
  782 0404 0A040000 		.4byte	0x40a
  783 0408 19       		.uleb128 0x19
-ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 18
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccqAM5J5.s 			page 18
 
 
  784 0409 00       		.byte	0
  785 040a 1A       		.uleb128 0x1a
- 786 040b 8E000000 		.4byte	.LASF62
+ 786 040b 88000000 		.4byte	.LASF63
  787 040f 0E       		.byte	0xe
  788 0410 5E       		.byte	0x5e
  789 0411 81000000 		.4byte	0x81
  790 0415 1B       		.uleb128 0x1b
- 791 0416 72000000 		.4byte	.LASF36
+ 791 0416 6C000000 		.4byte	.LASF36
  792 041a 06       		.byte	0x6
  793 041b 92       		.byte	0x92
  794 041c 1B       		.uleb128 0x1b
- 795 041d 4B030000 		.4byte	.LASF37
+ 795 041d 5E030000 		.4byte	.LASF37
  796 0421 07       		.byte	0x7
  797 0422 92       		.byte	0x92
  798 0423 1B       		.uleb128 0x1b
- 799 0424 04030000 		.4byte	.LASF38
+ 799 0424 12030000 		.4byte	.LASF38
  800 0428 08       		.byte	0x8
  801 0429 54       		.byte	0x54
  802 042a 1B       		.uleb128 0x1b
- 803 042b EC030000 		.4byte	.LASF39
+ 803 042b FF030000 		.4byte	.LASF39
  804 042f 09       		.byte	0x9
  805 0430 27       		.byte	0x27
  806 0431 1B       		.uleb128 0x1b
- 807 0432 18000000 		.4byte	.LASF40
+ 807 0432 1D030000 		.4byte	.LASF40
  808 0436 0A       		.byte	0xa
  809 0437 27       		.byte	0x27
  810 0438 1B       		.uleb128 0x1b
- 811 0439 AF000000 		.4byte	.LASF41
+ 811 0439 A9000000 		.4byte	.LASF41
  812 043d 0B       		.byte	0xb
  813 043e 48       		.byte	0x48
  814 043f 1B       		.uleb128 0x1b
- 815 0440 2A030000 		.4byte	.LASF42
+ 815 0440 3D030000 		.4byte	.LASF42
  816 0444 0B       		.byte	0xb
  817 0445 4A       		.byte	0x4a
  818 0446 1C       		.uleb128 0x1c
- 819 0447 D7030000 		.4byte	.LASF43
+ 819 0447 EA030000 		.4byte	.LASF43
  820 044b 0C       		.byte	0xc
  821 044c 76       		.byte	0x76
  822 044d 57040000 		.4byte	0x457
@@ -1064,7 +1064,7 @@ ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 1
  824 0452 99000000 		.4byte	0x99
  825 0456 00       		.byte	0
  826 0457 1C       		.uleb128 0x1c
- 827 0458 8E010000 		.4byte	.LASF44
+ 827 0458 94010000 		.4byte	.LASF44
  828 045c 0B       		.byte	0xb
  829 045d 4F       		.byte	0x4f
  830 045e 68040000 		.4byte	0x468
@@ -1072,18 +1072,18 @@ ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 1
  832 0463 A5000000 		.4byte	0xa5
  833 0467 00       		.byte	0
  834 0468 1B       		.uleb128 0x1b
- 835 0469 48020000 		.4byte	.LASF45
+ 835 0469 56020000 		.4byte	.LASF45
  836 046d 0D       		.byte	0xd
  837 046e 48       		.byte	0x48
  838 046f 1B       		.uleb128 0x1b
- 839 0470 71030000 		.4byte	.LASF46
+ 839 0470 84030000 		.4byte	.LASF46
  840 0474 0D       		.byte	0xd
-ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 19
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccqAM5J5.s 			page 19
 
 
  841 0475 4A       		.byte	0x4a
  842 0476 1C       		.uleb128 0x1c
- 843 0477 33020000 		.4byte	.LASF47
+ 843 0477 41020000 		.4byte	.LASF47
  844 047b 0D       		.byte	0xd
  845 047c 4F       		.byte	0x4f
  846 047d 87040000 		.4byte	0x487
@@ -1091,19 +1091,19 @@ ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 1
  848 0482 A5000000 		.4byte	0xa5
  849 0486 00       		.byte	0
  850 0487 1B       		.uleb128 0x1b
- 851 0488 01020000 		.4byte	.LASF48
+ 851 0488 07020000 		.4byte	.LASF48
  852 048c 0E       		.byte	0xe
  853 048d 5A       		.byte	0x5a
  854 048e 1B       		.uleb128 0x1b
- 855 048f DD010000 		.4byte	.LASF49
+ 855 048f E3010000 		.4byte	.LASF49
  856 0493 0F       		.byte	0xf
  857 0494 23       		.byte	0x23
  858 0495 1B       		.uleb128 0x1b
- 859 0496 17030000 		.4byte	.LASF50
+ 859 0496 2A030000 		.4byte	.LASF50
  860 049a 06       		.byte	0x6
  861 049b 93       		.byte	0x93
  862 049c 1B       		.uleb128 0x1b
- 863 049d 66000000 		.4byte	.LASF51
+ 863 049d 60000000 		.4byte	.LASF51
  864 04a1 07       		.byte	0x7
  865 04a2 93       		.byte	0x93
  866 04a3 1C       		.uleb128 0x1c
@@ -1115,7 +1115,7 @@ ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 1
  872 04af D2000000 		.4byte	0xd2
  873 04b3 00       		.byte	0
  874 04b4 1C       		.uleb128 0x1c
- 875 04b5 63010000 		.4byte	.LASF53
+ 875 04b5 69010000 		.4byte	.LASF53
  876 04b9 0E       		.byte	0xe
  877 04ba 68       		.byte	0x68
  878 04bb C5040000 		.4byte	0x4c5
@@ -1123,7 +1123,7 @@ ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 1
  880 04c0 99000000 		.4byte	0x99
  881 04c4 00       		.byte	0
  882 04c5 1E       		.uleb128 0x1e
- 883 04c6 B8010000 		.4byte	.LASF54
+ 883 04c6 BE010000 		.4byte	.LASF54
  884 04ca 01       		.byte	0x1
  885 04cb 12       		.byte	0x12
  886 04cc 68000000 		.4byte	0x68
@@ -1131,14 +1131,14 @@ ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 1
  888 04d4 19       		.uleb128 0x19
  889 04d5 00       		.byte	0
  890 04d6 1C       		.uleb128 0x1c
- 891 04d7 7F000000 		.4byte	.LASF55
+ 891 04d7 79000000 		.4byte	.LASF55
  892 04db 08       		.byte	0x8
  893 04dc 8B       		.byte	0x8b
  894 04dd E7040000 		.4byte	0x4e7
  895 04e1 1D       		.uleb128 0x1d
  896 04e2 E7040000 		.4byte	0x4e7
  897 04e6 00       		.byte	0
-ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 20
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccqAM5J5.s 			page 20
 
 
  898 04e7 06       		.uleb128 0x6
@@ -1147,897 +1147,911 @@ ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 1
  901 04ed 1F       		.uleb128 0x1f
  902 04ee BF000000 		.4byte	0xbf
  903 04f2 1B       		.uleb128 0x1b
- 904 04f3 3B030000 		.4byte	.LASF56
+ 904 04f3 4E030000 		.4byte	.LASF56
  905 04f7 0C       		.byte	0xc
  906 04f8 7B       		.byte	0x7b
  907 04f9 18       		.uleb128 0x18
- 908 04fa 38000000 		.4byte	.LASF58
+ 908 04fa 32000000 		.4byte	.LASF58
  909 04fe 01       		.byte	0x1
- 910 04ff 13       		.byte	0x13
+ 910 04ff 14       		.byte	0x14
  911 0500 06050000 		.4byte	0x506
  912 0504 19       		.uleb128 0x19
  913 0505 00       		.byte	0
  914 0506 18       		.uleb128 0x18
- 915 0507 A3010000 		.4byte	.LASF59
+ 915 0507 A9010000 		.4byte	.LASF59
  916 050b 01       		.byte	0x1
  917 050c 11       		.byte	0x11
  918 050d 13050000 		.4byte	0x513
  919 0511 19       		.uleb128 0x19
  920 0512 00       		.byte	0
- 921 0513 18       		.uleb128 0x18
- 922 0514 DF030000 		.4byte	.LASF60
+ 921 0513 1E       		.uleb128 0x1e
+ 922 0514 48010000 		.4byte	.LASF60
  923 0518 01       		.byte	0x1
- 924 0519 17       		.byte	0x17
- 925 051a 20050000 		.4byte	0x520
- 926 051e 19       		.uleb128 0x19
- 927 051f 00       		.byte	0
- 928 0520 18       		.uleb128 0x18
- 929 0521 B0030000 		.4byte	.LASF61
- 930 0525 01       		.byte	0x1
- 931 0526 10       		.byte	0x10
- 932 0527 2D050000 		.4byte	0x52d
- 933 052b 19       		.uleb128 0x19
- 934 052c 00       		.byte	0
- 935 052d 1A       		.uleb128 0x1a
- 936 052e 4F000000 		.4byte	.LASF63
- 937 0532 08       		.byte	0x8
- 938 0533 70       		.byte	0x70
- 939 0534 81000000 		.4byte	0x81
- 940 0538 1A       		.uleb128 0x1a
- 941 0539 EC010000 		.4byte	.LASF64
- 942 053d 08       		.byte	0x8
- 943 053e 73       		.byte	0x73
- 944 053f 8D000000 		.4byte	0x8d
- 945 0543 00       		.byte	0
- 946              		.section	.debug_abbrev,"",%progbits
- 947              	.Ldebug_abbrev0:
- 948 0000 01       		.uleb128 0x1
- 949 0001 11       		.uleb128 0x11
- 950 0002 01       		.byte	0x1
- 951 0003 25       		.uleb128 0x25
- 952 0004 0E       		.uleb128 0xe
- 953 0005 13       		.uleb128 0x13
- 954 0006 0B       		.uleb128 0xb
-ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 21
+ 924 0519 13       		.byte	0x13
+ 925 051a 68000000 		.4byte	0x68
+ 926 051e 24050000 		.4byte	0x524
+ 927 0522 19       		.uleb128 0x19
+ 928 0523 00       		.byte	0
+ 929 0524 18       		.uleb128 0x18
+ 930 0525 F2030000 		.4byte	.LASF61
+ 931 0529 01       		.byte	0x1
+ 932 052a 18       		.byte	0x18
+ 933 052b 31050000 		.4byte	0x531
+ 934 052f 19       		.uleb128 0x19
+ 935 0530 00       		.byte	0
+ 936 0531 18       		.uleb128 0x18
+ 937 0532 C3030000 		.4byte	.LASF62
+ 938 0536 01       		.byte	0x1
+ 939 0537 10       		.byte	0x10
+ 940 0538 3E050000 		.4byte	0x53e
+ 941 053c 19       		.uleb128 0x19
+ 942 053d 00       		.byte	0
+ 943 053e 1A       		.uleb128 0x1a
+ 944 053f 49000000 		.4byte	.LASF64
+ 945 0543 08       		.byte	0x8
+ 946 0544 70       		.byte	0x70
+ 947 0545 81000000 		.4byte	0x81
+ 948 0549 1A       		.uleb128 0x1a
+ 949 054a F2010000 		.4byte	.LASF65
+ 950 054e 08       		.byte	0x8
+ 951 054f 73       		.byte	0x73
+ 952 0550 8D000000 		.4byte	0x8d
+ 953 0554 00       		.byte	0
+ 954              		.section	.debug_abbrev,"",%progbits
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccqAM5J5.s 			page 21
 
 
- 955 0007 03       		.uleb128 0x3
- 956 0008 0E       		.uleb128 0xe
- 957 0009 1B       		.uleb128 0x1b
- 958 000a 0E       		.uleb128 0xe
- 959 000b 55       		.uleb128 0x55
- 960 000c 17       		.uleb128 0x17
- 961 000d 11       		.uleb128 0x11
- 962 000e 01       		.uleb128 0x1
- 963 000f 10       		.uleb128 0x10
- 964 0010 17       		.uleb128 0x17
- 965 0011 00       		.byte	0
- 966 0012 00       		.byte	0
- 967 0013 02       		.uleb128 0x2
- 968 0014 24       		.uleb128 0x24
- 969 0015 00       		.byte	0
- 970 0016 0B       		.uleb128 0xb
- 971 0017 0B       		.uleb128 0xb
- 972 0018 3E       		.uleb128 0x3e
- 973 0019 0B       		.uleb128 0xb
- 974 001a 03       		.uleb128 0x3
- 975 001b 0E       		.uleb128 0xe
- 976 001c 00       		.byte	0
- 977 001d 00       		.byte	0
- 978 001e 03       		.uleb128 0x3
- 979 001f 16       		.uleb128 0x16
- 980 0020 00       		.byte	0
- 981 0021 03       		.uleb128 0x3
- 982 0022 0E       		.uleb128 0xe
- 983 0023 3A       		.uleb128 0x3a
- 984 0024 0B       		.uleb128 0xb
- 985 0025 3B       		.uleb128 0x3b
- 986 0026 0B       		.uleb128 0xb
- 987 0027 49       		.uleb128 0x49
- 988 0028 13       		.uleb128 0x13
- 989 0029 00       		.byte	0
- 990 002a 00       		.byte	0
- 991 002b 04       		.uleb128 0x4
- 992 002c 24       		.uleb128 0x24
- 993 002d 00       		.byte	0
- 994 002e 0B       		.uleb128 0xb
- 995 002f 0B       		.uleb128 0xb
- 996 0030 3E       		.uleb128 0x3e
- 997 0031 0B       		.uleb128 0xb
- 998 0032 03       		.uleb128 0x3
- 999 0033 08       		.uleb128 0x8
- 1000 0034 00       		.byte	0
- 1001 0035 00       		.byte	0
- 1002 0036 05       		.uleb128 0x5
- 1003 0037 16       		.uleb128 0x16
- 1004 0038 00       		.byte	0
- 1005 0039 03       		.uleb128 0x3
- 1006 003a 0E       		.uleb128 0xe
- 1007 003b 3A       		.uleb128 0x3a
- 1008 003c 0B       		.uleb128 0xb
- 1009 003d 3B       		.uleb128 0x3b
- 1010 003e 05       		.uleb128 0x5
- 1011 003f 49       		.uleb128 0x49
-ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 22
+ 955              	.Ldebug_abbrev0:
+ 956 0000 01       		.uleb128 0x1
+ 957 0001 11       		.uleb128 0x11
+ 958 0002 01       		.byte	0x1
+ 959 0003 25       		.uleb128 0x25
+ 960 0004 0E       		.uleb128 0xe
+ 961 0005 13       		.uleb128 0x13
+ 962 0006 0B       		.uleb128 0xb
+ 963 0007 03       		.uleb128 0x3
+ 964 0008 0E       		.uleb128 0xe
+ 965 0009 1B       		.uleb128 0x1b
+ 966 000a 0E       		.uleb128 0xe
+ 967 000b 55       		.uleb128 0x55
+ 968 000c 17       		.uleb128 0x17
+ 969 000d 11       		.uleb128 0x11
+ 970 000e 01       		.uleb128 0x1
+ 971 000f 10       		.uleb128 0x10
+ 972 0010 17       		.uleb128 0x17
+ 973 0011 00       		.byte	0
+ 974 0012 00       		.byte	0
+ 975 0013 02       		.uleb128 0x2
+ 976 0014 24       		.uleb128 0x24
+ 977 0015 00       		.byte	0
+ 978 0016 0B       		.uleb128 0xb
+ 979 0017 0B       		.uleb128 0xb
+ 980 0018 3E       		.uleb128 0x3e
+ 981 0019 0B       		.uleb128 0xb
+ 982 001a 03       		.uleb128 0x3
+ 983 001b 0E       		.uleb128 0xe
+ 984 001c 00       		.byte	0
+ 985 001d 00       		.byte	0
+ 986 001e 03       		.uleb128 0x3
+ 987 001f 16       		.uleb128 0x16
+ 988 0020 00       		.byte	0
+ 989 0021 03       		.uleb128 0x3
+ 990 0022 0E       		.uleb128 0xe
+ 991 0023 3A       		.uleb128 0x3a
+ 992 0024 0B       		.uleb128 0xb
+ 993 0025 3B       		.uleb128 0x3b
+ 994 0026 0B       		.uleb128 0xb
+ 995 0027 49       		.uleb128 0x49
+ 996 0028 13       		.uleb128 0x13
+ 997 0029 00       		.byte	0
+ 998 002a 00       		.byte	0
+ 999 002b 04       		.uleb128 0x4
+ 1000 002c 24       		.uleb128 0x24
+ 1001 002d 00       		.byte	0
+ 1002 002e 0B       		.uleb128 0xb
+ 1003 002f 0B       		.uleb128 0xb
+ 1004 0030 3E       		.uleb128 0x3e
+ 1005 0031 0B       		.uleb128 0xb
+ 1006 0032 03       		.uleb128 0x3
+ 1007 0033 08       		.uleb128 0x8
+ 1008 0034 00       		.byte	0
+ 1009 0035 00       		.byte	0
+ 1010 0036 05       		.uleb128 0x5
+ 1011 0037 16       		.uleb128 0x16
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccqAM5J5.s 			page 22
 
 
- 1012 0040 13       		.uleb128 0x13
- 1013 0041 00       		.byte	0
- 1014 0042 00       		.byte	0
- 1015 0043 06       		.uleb128 0x6
- 1016 0044 0F       		.uleb128 0xf
- 1017 0045 00       		.byte	0
- 1018 0046 0B       		.uleb128 0xb
- 1019 0047 0B       		.uleb128 0xb
- 1020 0048 49       		.uleb128 0x49
- 1021 0049 13       		.uleb128 0x13
- 1022 004a 00       		.byte	0
- 1023 004b 00       		.byte	0
- 1024 004c 07       		.uleb128 0x7
- 1025 004d 15       		.uleb128 0x15
- 1026 004e 00       		.byte	0
- 1027 004f 27       		.uleb128 0x27
- 1028 0050 19       		.uleb128 0x19
- 1029 0051 00       		.byte	0
- 1030 0052 00       		.byte	0
- 1031 0053 08       		.uleb128 0x8
- 1032 0054 2E       		.uleb128 0x2e
- 1033 0055 01       		.byte	0x1
- 1034 0056 3F       		.uleb128 0x3f
- 1035 0057 19       		.uleb128 0x19
- 1036 0058 03       		.uleb128 0x3
- 1037 0059 0E       		.uleb128 0xe
- 1038 005a 3A       		.uleb128 0x3a
- 1039 005b 0B       		.uleb128 0xb
- 1040 005c 3B       		.uleb128 0x3b
- 1041 005d 0B       		.uleb128 0xb
- 1042 005e 27       		.uleb128 0x27
- 1043 005f 19       		.uleb128 0x19
- 1044 0060 11       		.uleb128 0x11
- 1045 0061 01       		.uleb128 0x1
- 1046 0062 12       		.uleb128 0x12
- 1047 0063 06       		.uleb128 0x6
- 1048 0064 40       		.uleb128 0x40
- 1049 0065 18       		.uleb128 0x18
- 1050 0066 9742     		.uleb128 0x2117
- 1051 0068 19       		.uleb128 0x19
- 1052 0069 01       		.uleb128 0x1
- 1053 006a 13       		.uleb128 0x13
- 1054 006b 00       		.byte	0
- 1055 006c 00       		.byte	0
- 1056 006d 09       		.uleb128 0x9
- 1057 006e 898201   		.uleb128 0x4109
- 1058 0071 01       		.byte	0x1
- 1059 0072 11       		.uleb128 0x11
- 1060 0073 01       		.uleb128 0x1
- 1061 0074 31       		.uleb128 0x31
- 1062 0075 13       		.uleb128 0x13
- 1063 0076 01       		.uleb128 0x1
- 1064 0077 13       		.uleb128 0x13
- 1065 0078 00       		.byte	0
- 1066 0079 00       		.byte	0
- 1067 007a 0A       		.uleb128 0xa
- 1068 007b 8A8201   		.uleb128 0x410a
-ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 23
+ 1012 0038 00       		.byte	0
+ 1013 0039 03       		.uleb128 0x3
+ 1014 003a 0E       		.uleb128 0xe
+ 1015 003b 3A       		.uleb128 0x3a
+ 1016 003c 0B       		.uleb128 0xb
+ 1017 003d 3B       		.uleb128 0x3b
+ 1018 003e 05       		.uleb128 0x5
+ 1019 003f 49       		.uleb128 0x49
+ 1020 0040 13       		.uleb128 0x13
+ 1021 0041 00       		.byte	0
+ 1022 0042 00       		.byte	0
+ 1023 0043 06       		.uleb128 0x6
+ 1024 0044 0F       		.uleb128 0xf
+ 1025 0045 00       		.byte	0
+ 1026 0046 0B       		.uleb128 0xb
+ 1027 0047 0B       		.uleb128 0xb
+ 1028 0048 49       		.uleb128 0x49
+ 1029 0049 13       		.uleb128 0x13
+ 1030 004a 00       		.byte	0
+ 1031 004b 00       		.byte	0
+ 1032 004c 07       		.uleb128 0x7
+ 1033 004d 15       		.uleb128 0x15
+ 1034 004e 00       		.byte	0
+ 1035 004f 27       		.uleb128 0x27
+ 1036 0050 19       		.uleb128 0x19
+ 1037 0051 00       		.byte	0
+ 1038 0052 00       		.byte	0
+ 1039 0053 08       		.uleb128 0x8
+ 1040 0054 2E       		.uleb128 0x2e
+ 1041 0055 01       		.byte	0x1
+ 1042 0056 3F       		.uleb128 0x3f
+ 1043 0057 19       		.uleb128 0x19
+ 1044 0058 03       		.uleb128 0x3
+ 1045 0059 0E       		.uleb128 0xe
+ 1046 005a 3A       		.uleb128 0x3a
+ 1047 005b 0B       		.uleb128 0xb
+ 1048 005c 3B       		.uleb128 0x3b
+ 1049 005d 0B       		.uleb128 0xb
+ 1050 005e 27       		.uleb128 0x27
+ 1051 005f 19       		.uleb128 0x19
+ 1052 0060 11       		.uleb128 0x11
+ 1053 0061 01       		.uleb128 0x1
+ 1054 0062 12       		.uleb128 0x12
+ 1055 0063 06       		.uleb128 0x6
+ 1056 0064 40       		.uleb128 0x40
+ 1057 0065 18       		.uleb128 0x18
+ 1058 0066 9742     		.uleb128 0x2117
+ 1059 0068 19       		.uleb128 0x19
+ 1060 0069 01       		.uleb128 0x1
+ 1061 006a 13       		.uleb128 0x13
+ 1062 006b 00       		.byte	0
+ 1063 006c 00       		.byte	0
+ 1064 006d 09       		.uleb128 0x9
+ 1065 006e 898201   		.uleb128 0x4109
+ 1066 0071 01       		.byte	0x1
+ 1067 0072 11       		.uleb128 0x11
+ 1068 0073 01       		.uleb128 0x1
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccqAM5J5.s 			page 23
 
 
- 1069 007e 00       		.byte	0
- 1070 007f 02       		.uleb128 0x2
- 1071 0080 18       		.uleb128 0x18
- 1072 0081 9142     		.uleb128 0x2111
- 1073 0083 18       		.uleb128 0x18
- 1074 0084 00       		.byte	0
- 1075 0085 00       		.byte	0
- 1076 0086 0B       		.uleb128 0xb
- 1077 0087 898201   		.uleb128 0x4109
- 1078 008a 00       		.byte	0
- 1079 008b 11       		.uleb128 0x11
- 1080 008c 01       		.uleb128 0x1
- 1081 008d 31       		.uleb128 0x31
- 1082 008e 13       		.uleb128 0x13
- 1083 008f 00       		.byte	0
- 1084 0090 00       		.byte	0
- 1085 0091 0C       		.uleb128 0xc
- 1086 0092 2E       		.uleb128 0x2e
- 1087 0093 01       		.byte	0x1
- 1088 0094 3F       		.uleb128 0x3f
- 1089 0095 19       		.uleb128 0x19
- 1090 0096 03       		.uleb128 0x3
- 1091 0097 0E       		.uleb128 0xe
- 1092 0098 3A       		.uleb128 0x3a
- 1093 0099 0B       		.uleb128 0xb
- 1094 009a 3B       		.uleb128 0x3b
- 1095 009b 0B       		.uleb128 0xb
- 1096 009c 11       		.uleb128 0x11
- 1097 009d 01       		.uleb128 0x1
- 1098 009e 12       		.uleb128 0x12
- 1099 009f 06       		.uleb128 0x6
- 1100 00a0 40       		.uleb128 0x40
- 1101 00a1 18       		.uleb128 0x18
- 1102 00a2 9742     		.uleb128 0x2117
- 1103 00a4 19       		.uleb128 0x19
- 1104 00a5 01       		.uleb128 0x1
- 1105 00a6 13       		.uleb128 0x13
- 1106 00a7 00       		.byte	0
- 1107 00a8 00       		.byte	0
- 1108 00a9 0D       		.uleb128 0xd
- 1109 00aa 2E       		.uleb128 0x2e
- 1110 00ab 01       		.byte	0x1
- 1111 00ac 3F       		.uleb128 0x3f
- 1112 00ad 19       		.uleb128 0x19
- 1113 00ae 03       		.uleb128 0x3
- 1114 00af 0E       		.uleb128 0xe
- 1115 00b0 3A       		.uleb128 0x3a
- 1116 00b1 0B       		.uleb128 0xb
- 1117 00b2 3B       		.uleb128 0x3b
- 1118 00b3 0B       		.uleb128 0xb
- 1119 00b4 27       		.uleb128 0x27
- 1120 00b5 19       		.uleb128 0x19
- 1121 00b6 49       		.uleb128 0x49
- 1122 00b7 13       		.uleb128 0x13
- 1123 00b8 11       		.uleb128 0x11
- 1124 00b9 01       		.uleb128 0x1
- 1125 00ba 12       		.uleb128 0x12
-ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 24
+ 1069 0074 31       		.uleb128 0x31
+ 1070 0075 13       		.uleb128 0x13
+ 1071 0076 01       		.uleb128 0x1
+ 1072 0077 13       		.uleb128 0x13
+ 1073 0078 00       		.byte	0
+ 1074 0079 00       		.byte	0
+ 1075 007a 0A       		.uleb128 0xa
+ 1076 007b 8A8201   		.uleb128 0x410a
+ 1077 007e 00       		.byte	0
+ 1078 007f 02       		.uleb128 0x2
+ 1079 0080 18       		.uleb128 0x18
+ 1080 0081 9142     		.uleb128 0x2111
+ 1081 0083 18       		.uleb128 0x18
+ 1082 0084 00       		.byte	0
+ 1083 0085 00       		.byte	0
+ 1084 0086 0B       		.uleb128 0xb
+ 1085 0087 898201   		.uleb128 0x4109
+ 1086 008a 00       		.byte	0
+ 1087 008b 11       		.uleb128 0x11
+ 1088 008c 01       		.uleb128 0x1
+ 1089 008d 31       		.uleb128 0x31
+ 1090 008e 13       		.uleb128 0x13
+ 1091 008f 00       		.byte	0
+ 1092 0090 00       		.byte	0
+ 1093 0091 0C       		.uleb128 0xc
+ 1094 0092 2E       		.uleb128 0x2e
+ 1095 0093 01       		.byte	0x1
+ 1096 0094 3F       		.uleb128 0x3f
+ 1097 0095 19       		.uleb128 0x19
+ 1098 0096 03       		.uleb128 0x3
+ 1099 0097 0E       		.uleb128 0xe
+ 1100 0098 3A       		.uleb128 0x3a
+ 1101 0099 0B       		.uleb128 0xb
+ 1102 009a 3B       		.uleb128 0x3b
+ 1103 009b 0B       		.uleb128 0xb
+ 1104 009c 11       		.uleb128 0x11
+ 1105 009d 01       		.uleb128 0x1
+ 1106 009e 12       		.uleb128 0x12
+ 1107 009f 06       		.uleb128 0x6
+ 1108 00a0 40       		.uleb128 0x40
+ 1109 00a1 18       		.uleb128 0x18
+ 1110 00a2 9742     		.uleb128 0x2117
+ 1111 00a4 19       		.uleb128 0x19
+ 1112 00a5 01       		.uleb128 0x1
+ 1113 00a6 13       		.uleb128 0x13
+ 1114 00a7 00       		.byte	0
+ 1115 00a8 00       		.byte	0
+ 1116 00a9 0D       		.uleb128 0xd
+ 1117 00aa 2E       		.uleb128 0x2e
+ 1118 00ab 01       		.byte	0x1
+ 1119 00ac 3F       		.uleb128 0x3f
+ 1120 00ad 19       		.uleb128 0x19
+ 1121 00ae 03       		.uleb128 0x3
+ 1122 00af 0E       		.uleb128 0xe
+ 1123 00b0 3A       		.uleb128 0x3a
+ 1124 00b1 0B       		.uleb128 0xb
+ 1125 00b2 3B       		.uleb128 0x3b
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccqAM5J5.s 			page 24
 
 
- 1126 00bb 06       		.uleb128 0x6
- 1127 00bc 40       		.uleb128 0x40
- 1128 00bd 18       		.uleb128 0x18
- 1129 00be 9742     		.uleb128 0x2117
- 1130 00c0 19       		.uleb128 0x19
- 1131 00c1 01       		.uleb128 0x1
- 1132 00c2 13       		.uleb128 0x13
- 1133 00c3 00       		.byte	0
- 1134 00c4 00       		.byte	0
- 1135 00c5 0E       		.uleb128 0xe
- 1136 00c6 34       		.uleb128 0x34
- 1137 00c7 00       		.byte	0
- 1138 00c8 03       		.uleb128 0x3
- 1139 00c9 08       		.uleb128 0x8
- 1140 00ca 3A       		.uleb128 0x3a
- 1141 00cb 0B       		.uleb128 0xb
- 1142 00cc 3B       		.uleb128 0x3b
- 1143 00cd 0B       		.uleb128 0xb
- 1144 00ce 49       		.uleb128 0x49
- 1145 00cf 13       		.uleb128 0x13
- 1146 00d0 00       		.byte	0
- 1147 00d1 00       		.byte	0
- 1148 00d2 0F       		.uleb128 0xf
- 1149 00d3 34       		.uleb128 0x34
- 1150 00d4 00       		.byte	0
- 1151 00d5 03       		.uleb128 0x3
- 1152 00d6 0E       		.uleb128 0xe
- 1153 00d7 3A       		.uleb128 0x3a
- 1154 00d8 0B       		.uleb128 0xb
- 1155 00d9 3B       		.uleb128 0x3b
- 1156 00da 0B       		.uleb128 0xb
- 1157 00db 49       		.uleb128 0x49
- 1158 00dc 13       		.uleb128 0x13
- 1159 00dd 1C       		.uleb128 0x1c
- 1160 00de 0B       		.uleb128 0xb
- 1161 00df 00       		.byte	0
- 1162 00e0 00       		.byte	0
- 1163 00e1 10       		.uleb128 0x10
- 1164 00e2 34       		.uleb128 0x34
- 1165 00e3 00       		.byte	0
- 1166 00e4 03       		.uleb128 0x3
- 1167 00e5 0E       		.uleb128 0xe
- 1168 00e6 3A       		.uleb128 0x3a
- 1169 00e7 0B       		.uleb128 0xb
- 1170 00e8 3B       		.uleb128 0x3b
- 1171 00e9 0B       		.uleb128 0xb
- 1172 00ea 49       		.uleb128 0x49
- 1173 00eb 13       		.uleb128 0x13
- 1174 00ec 02       		.uleb128 0x2
- 1175 00ed 17       		.uleb128 0x17
- 1176 00ee 00       		.byte	0
- 1177 00ef 00       		.byte	0
- 1178 00f0 11       		.uleb128 0x11
- 1179 00f1 34       		.uleb128 0x34
- 1180 00f2 00       		.byte	0
- 1181 00f3 03       		.uleb128 0x3
- 1182 00f4 0E       		.uleb128 0xe
-ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 25
+ 1126 00b3 0B       		.uleb128 0xb
+ 1127 00b4 27       		.uleb128 0x27
+ 1128 00b5 19       		.uleb128 0x19
+ 1129 00b6 49       		.uleb128 0x49
+ 1130 00b7 13       		.uleb128 0x13
+ 1131 00b8 11       		.uleb128 0x11
+ 1132 00b9 01       		.uleb128 0x1
+ 1133 00ba 12       		.uleb128 0x12
+ 1134 00bb 06       		.uleb128 0x6
+ 1135 00bc 40       		.uleb128 0x40
+ 1136 00bd 18       		.uleb128 0x18
+ 1137 00be 9742     		.uleb128 0x2117
+ 1138 00c0 19       		.uleb128 0x19
+ 1139 00c1 01       		.uleb128 0x1
+ 1140 00c2 13       		.uleb128 0x13
+ 1141 00c3 00       		.byte	0
+ 1142 00c4 00       		.byte	0
+ 1143 00c5 0E       		.uleb128 0xe
+ 1144 00c6 34       		.uleb128 0x34
+ 1145 00c7 00       		.byte	0
+ 1146 00c8 03       		.uleb128 0x3
+ 1147 00c9 08       		.uleb128 0x8
+ 1148 00ca 3A       		.uleb128 0x3a
+ 1149 00cb 0B       		.uleb128 0xb
+ 1150 00cc 3B       		.uleb128 0x3b
+ 1151 00cd 0B       		.uleb128 0xb
+ 1152 00ce 49       		.uleb128 0x49
+ 1153 00cf 13       		.uleb128 0x13
+ 1154 00d0 00       		.byte	0
+ 1155 00d1 00       		.byte	0
+ 1156 00d2 0F       		.uleb128 0xf
+ 1157 00d3 34       		.uleb128 0x34
+ 1158 00d4 00       		.byte	0
+ 1159 00d5 03       		.uleb128 0x3
+ 1160 00d6 0E       		.uleb128 0xe
+ 1161 00d7 3A       		.uleb128 0x3a
+ 1162 00d8 0B       		.uleb128 0xb
+ 1163 00d9 3B       		.uleb128 0x3b
+ 1164 00da 0B       		.uleb128 0xb
+ 1165 00db 49       		.uleb128 0x49
+ 1166 00dc 13       		.uleb128 0x13
+ 1167 00dd 1C       		.uleb128 0x1c
+ 1168 00de 0B       		.uleb128 0xb
+ 1169 00df 00       		.byte	0
+ 1170 00e0 00       		.byte	0
+ 1171 00e1 10       		.uleb128 0x10
+ 1172 00e2 34       		.uleb128 0x34
+ 1173 00e3 00       		.byte	0
+ 1174 00e4 03       		.uleb128 0x3
+ 1175 00e5 0E       		.uleb128 0xe
+ 1176 00e6 3A       		.uleb128 0x3a
+ 1177 00e7 0B       		.uleb128 0xb
+ 1178 00e8 3B       		.uleb128 0x3b
+ 1179 00e9 0B       		.uleb128 0xb
+ 1180 00ea 49       		.uleb128 0x49
+ 1181 00eb 13       		.uleb128 0x13
+ 1182 00ec 02       		.uleb128 0x2
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccqAM5J5.s 			page 25
 
 
- 1183 00f5 3A       		.uleb128 0x3a
- 1184 00f6 0B       		.uleb128 0xb
- 1185 00f7 3B       		.uleb128 0x3b
- 1186 00f8 0B       		.uleb128 0xb
- 1187 00f9 49       		.uleb128 0x49
- 1188 00fa 13       		.uleb128 0x13
- 1189 00fb 02       		.uleb128 0x2
- 1190 00fc 18       		.uleb128 0x18
- 1191 00fd 00       		.byte	0
- 1192 00fe 00       		.byte	0
- 1193 00ff 12       		.uleb128 0x12
- 1194 0100 34       		.uleb128 0x34
- 1195 0101 00       		.byte	0
- 1196 0102 03       		.uleb128 0x3
- 1197 0103 0E       		.uleb128 0xe
- 1198 0104 3A       		.uleb128 0x3a
- 1199 0105 0B       		.uleb128 0xb
- 1200 0106 3B       		.uleb128 0x3b
- 1201 0107 0B       		.uleb128 0xb
- 1202 0108 49       		.uleb128 0x49
- 1203 0109 13       		.uleb128 0x13
- 1204 010a 00       		.byte	0
- 1205 010b 00       		.byte	0
- 1206 010c 13       		.uleb128 0x13
- 1207 010d 01       		.uleb128 0x1
- 1208 010e 01       		.byte	0x1
- 1209 010f 49       		.uleb128 0x49
- 1210 0110 13       		.uleb128 0x13
- 1211 0111 01       		.uleb128 0x1
- 1212 0112 13       		.uleb128 0x13
- 1213 0113 00       		.byte	0
- 1214 0114 00       		.byte	0
- 1215 0115 14       		.uleb128 0x14
- 1216 0116 21       		.uleb128 0x21
- 1217 0117 00       		.byte	0
- 1218 0118 49       		.uleb128 0x49
- 1219 0119 13       		.uleb128 0x13
- 1220 011a 2F       		.uleb128 0x2f
- 1221 011b 0B       		.uleb128 0xb
- 1222 011c 00       		.byte	0
- 1223 011d 00       		.byte	0
- 1224 011e 15       		.uleb128 0x15
- 1225 011f 34       		.uleb128 0x34
- 1226 0120 00       		.byte	0
- 1227 0121 03       		.uleb128 0x3
- 1228 0122 0E       		.uleb128 0xe
- 1229 0123 3A       		.uleb128 0x3a
- 1230 0124 0B       		.uleb128 0xb
- 1231 0125 3B       		.uleb128 0x3b
- 1232 0126 05       		.uleb128 0x5
- 1233 0127 49       		.uleb128 0x49
- 1234 0128 13       		.uleb128 0x13
- 1235 0129 3F       		.uleb128 0x3f
- 1236 012a 19       		.uleb128 0x19
- 1237 012b 3C       		.uleb128 0x3c
- 1238 012c 19       		.uleb128 0x19
- 1239 012d 00       		.byte	0
-ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 26
+ 1183 00ed 17       		.uleb128 0x17
+ 1184 00ee 00       		.byte	0
+ 1185 00ef 00       		.byte	0
+ 1186 00f0 11       		.uleb128 0x11
+ 1187 00f1 34       		.uleb128 0x34
+ 1188 00f2 00       		.byte	0
+ 1189 00f3 03       		.uleb128 0x3
+ 1190 00f4 0E       		.uleb128 0xe
+ 1191 00f5 3A       		.uleb128 0x3a
+ 1192 00f6 0B       		.uleb128 0xb
+ 1193 00f7 3B       		.uleb128 0x3b
+ 1194 00f8 0B       		.uleb128 0xb
+ 1195 00f9 49       		.uleb128 0x49
+ 1196 00fa 13       		.uleb128 0x13
+ 1197 00fb 02       		.uleb128 0x2
+ 1198 00fc 18       		.uleb128 0x18
+ 1199 00fd 00       		.byte	0
+ 1200 00fe 00       		.byte	0
+ 1201 00ff 12       		.uleb128 0x12
+ 1202 0100 34       		.uleb128 0x34
+ 1203 0101 00       		.byte	0
+ 1204 0102 03       		.uleb128 0x3
+ 1205 0103 0E       		.uleb128 0xe
+ 1206 0104 3A       		.uleb128 0x3a
+ 1207 0105 0B       		.uleb128 0xb
+ 1208 0106 3B       		.uleb128 0x3b
+ 1209 0107 0B       		.uleb128 0xb
+ 1210 0108 49       		.uleb128 0x49
+ 1211 0109 13       		.uleb128 0x13
+ 1212 010a 00       		.byte	0
+ 1213 010b 00       		.byte	0
+ 1214 010c 13       		.uleb128 0x13
+ 1215 010d 01       		.uleb128 0x1
+ 1216 010e 01       		.byte	0x1
+ 1217 010f 49       		.uleb128 0x49
+ 1218 0110 13       		.uleb128 0x13
+ 1219 0111 01       		.uleb128 0x1
+ 1220 0112 13       		.uleb128 0x13
+ 1221 0113 00       		.byte	0
+ 1222 0114 00       		.byte	0
+ 1223 0115 14       		.uleb128 0x14
+ 1224 0116 21       		.uleb128 0x21
+ 1225 0117 00       		.byte	0
+ 1226 0118 49       		.uleb128 0x49
+ 1227 0119 13       		.uleb128 0x13
+ 1228 011a 2F       		.uleb128 0x2f
+ 1229 011b 0B       		.uleb128 0xb
+ 1230 011c 00       		.byte	0
+ 1231 011d 00       		.byte	0
+ 1232 011e 15       		.uleb128 0x15
+ 1233 011f 34       		.uleb128 0x34
+ 1234 0120 00       		.byte	0
+ 1235 0121 03       		.uleb128 0x3
+ 1236 0122 0E       		.uleb128 0xe
+ 1237 0123 3A       		.uleb128 0x3a
+ 1238 0124 0B       		.uleb128 0xb
+ 1239 0125 3B       		.uleb128 0x3b
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccqAM5J5.s 			page 26
 
 
- 1240 012e 00       		.byte	0
- 1241 012f 16       		.uleb128 0x16
- 1242 0130 35       		.uleb128 0x35
- 1243 0131 00       		.byte	0
- 1244 0132 49       		.uleb128 0x49
- 1245 0133 13       		.uleb128 0x13
- 1246 0134 00       		.byte	0
- 1247 0135 00       		.byte	0
- 1248 0136 17       		.uleb128 0x17
- 1249 0137 34       		.uleb128 0x34
- 1250 0138 00       		.byte	0
- 1251 0139 03       		.uleb128 0x3
- 1252 013a 0E       		.uleb128 0xe
- 1253 013b 3A       		.uleb128 0x3a
- 1254 013c 0B       		.uleb128 0xb
- 1255 013d 3B       		.uleb128 0x3b
- 1256 013e 0B       		.uleb128 0xb
- 1257 013f 49       		.uleb128 0x49
- 1258 0140 13       		.uleb128 0x13
- 1259 0141 3F       		.uleb128 0x3f
- 1260 0142 19       		.uleb128 0x19
- 1261 0143 02       		.uleb128 0x2
- 1262 0144 18       		.uleb128 0x18
- 1263 0145 00       		.byte	0
- 1264 0146 00       		.byte	0
- 1265 0147 18       		.uleb128 0x18
- 1266 0148 2E       		.uleb128 0x2e
- 1267 0149 01       		.byte	0x1
- 1268 014a 3F       		.uleb128 0x3f
- 1269 014b 19       		.uleb128 0x19
- 1270 014c 03       		.uleb128 0x3
- 1271 014d 0E       		.uleb128 0xe
- 1272 014e 3A       		.uleb128 0x3a
- 1273 014f 0B       		.uleb128 0xb
- 1274 0150 3B       		.uleb128 0x3b
- 1275 0151 0B       		.uleb128 0xb
- 1276 0152 3C       		.uleb128 0x3c
- 1277 0153 19       		.uleb128 0x19
- 1278 0154 01       		.uleb128 0x1
- 1279 0155 13       		.uleb128 0x13
- 1280 0156 00       		.byte	0
- 1281 0157 00       		.byte	0
- 1282 0158 19       		.uleb128 0x19
- 1283 0159 18       		.uleb128 0x18
- 1284 015a 00       		.byte	0
- 1285 015b 00       		.byte	0
- 1286 015c 00       		.byte	0
- 1287 015d 1A       		.uleb128 0x1a
- 1288 015e 2E       		.uleb128 0x2e
- 1289 015f 00       		.byte	0
- 1290 0160 3F       		.uleb128 0x3f
- 1291 0161 19       		.uleb128 0x19
- 1292 0162 03       		.uleb128 0x3
- 1293 0163 0E       		.uleb128 0xe
- 1294 0164 3A       		.uleb128 0x3a
- 1295 0165 0B       		.uleb128 0xb
- 1296 0166 3B       		.uleb128 0x3b
-ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 27
+ 1240 0126 05       		.uleb128 0x5
+ 1241 0127 49       		.uleb128 0x49
+ 1242 0128 13       		.uleb128 0x13
+ 1243 0129 3F       		.uleb128 0x3f
+ 1244 012a 19       		.uleb128 0x19
+ 1245 012b 3C       		.uleb128 0x3c
+ 1246 012c 19       		.uleb128 0x19
+ 1247 012d 00       		.byte	0
+ 1248 012e 00       		.byte	0
+ 1249 012f 16       		.uleb128 0x16
+ 1250 0130 35       		.uleb128 0x35
+ 1251 0131 00       		.byte	0
+ 1252 0132 49       		.uleb128 0x49
+ 1253 0133 13       		.uleb128 0x13
+ 1254 0134 00       		.byte	0
+ 1255 0135 00       		.byte	0
+ 1256 0136 17       		.uleb128 0x17
+ 1257 0137 34       		.uleb128 0x34
+ 1258 0138 00       		.byte	0
+ 1259 0139 03       		.uleb128 0x3
+ 1260 013a 0E       		.uleb128 0xe
+ 1261 013b 3A       		.uleb128 0x3a
+ 1262 013c 0B       		.uleb128 0xb
+ 1263 013d 3B       		.uleb128 0x3b
+ 1264 013e 0B       		.uleb128 0xb
+ 1265 013f 49       		.uleb128 0x49
+ 1266 0140 13       		.uleb128 0x13
+ 1267 0141 3F       		.uleb128 0x3f
+ 1268 0142 19       		.uleb128 0x19
+ 1269 0143 02       		.uleb128 0x2
+ 1270 0144 18       		.uleb128 0x18
+ 1271 0145 00       		.byte	0
+ 1272 0146 00       		.byte	0
+ 1273 0147 18       		.uleb128 0x18
+ 1274 0148 2E       		.uleb128 0x2e
+ 1275 0149 01       		.byte	0x1
+ 1276 014a 3F       		.uleb128 0x3f
+ 1277 014b 19       		.uleb128 0x19
+ 1278 014c 03       		.uleb128 0x3
+ 1279 014d 0E       		.uleb128 0xe
+ 1280 014e 3A       		.uleb128 0x3a
+ 1281 014f 0B       		.uleb128 0xb
+ 1282 0150 3B       		.uleb128 0x3b
+ 1283 0151 0B       		.uleb128 0xb
+ 1284 0152 3C       		.uleb128 0x3c
+ 1285 0153 19       		.uleb128 0x19
+ 1286 0154 01       		.uleb128 0x1
+ 1287 0155 13       		.uleb128 0x13
+ 1288 0156 00       		.byte	0
+ 1289 0157 00       		.byte	0
+ 1290 0158 19       		.uleb128 0x19
+ 1291 0159 18       		.uleb128 0x18
+ 1292 015a 00       		.byte	0
+ 1293 015b 00       		.byte	0
+ 1294 015c 00       		.byte	0
+ 1295 015d 1A       		.uleb128 0x1a
+ 1296 015e 2E       		.uleb128 0x2e
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccqAM5J5.s 			page 27
 
 
- 1297 0167 0B       		.uleb128 0xb
- 1298 0168 27       		.uleb128 0x27
- 1299 0169 19       		.uleb128 0x19
- 1300 016a 49       		.uleb128 0x49
- 1301 016b 13       		.uleb128 0x13
- 1302 016c 3C       		.uleb128 0x3c
- 1303 016d 19       		.uleb128 0x19
- 1304 016e 00       		.byte	0
- 1305 016f 00       		.byte	0
- 1306 0170 1B       		.uleb128 0x1b
- 1307 0171 2E       		.uleb128 0x2e
- 1308 0172 00       		.byte	0
- 1309 0173 3F       		.uleb128 0x3f
- 1310 0174 19       		.uleb128 0x19
- 1311 0175 03       		.uleb128 0x3
- 1312 0176 0E       		.uleb128 0xe
- 1313 0177 3A       		.uleb128 0x3a
- 1314 0178 0B       		.uleb128 0xb
- 1315 0179 3B       		.uleb128 0x3b
- 1316 017a 0B       		.uleb128 0xb
- 1317 017b 27       		.uleb128 0x27
- 1318 017c 19       		.uleb128 0x19
- 1319 017d 3C       		.uleb128 0x3c
- 1320 017e 19       		.uleb128 0x19
- 1321 017f 00       		.byte	0
- 1322 0180 00       		.byte	0
- 1323 0181 1C       		.uleb128 0x1c
- 1324 0182 2E       		.uleb128 0x2e
- 1325 0183 01       		.byte	0x1
- 1326 0184 3F       		.uleb128 0x3f
- 1327 0185 19       		.uleb128 0x19
- 1328 0186 03       		.uleb128 0x3
- 1329 0187 0E       		.uleb128 0xe
- 1330 0188 3A       		.uleb128 0x3a
- 1331 0189 0B       		.uleb128 0xb
- 1332 018a 3B       		.uleb128 0x3b
- 1333 018b 0B       		.uleb128 0xb
- 1334 018c 27       		.uleb128 0x27
- 1335 018d 19       		.uleb128 0x19
- 1336 018e 3C       		.uleb128 0x3c
- 1337 018f 19       		.uleb128 0x19
- 1338 0190 01       		.uleb128 0x1
- 1339 0191 13       		.uleb128 0x13
- 1340 0192 00       		.byte	0
- 1341 0193 00       		.byte	0
- 1342 0194 1D       		.uleb128 0x1d
- 1343 0195 05       		.uleb128 0x5
- 1344 0196 00       		.byte	0
- 1345 0197 49       		.uleb128 0x49
- 1346 0198 13       		.uleb128 0x13
- 1347 0199 00       		.byte	0
- 1348 019a 00       		.byte	0
- 1349 019b 1E       		.uleb128 0x1e
- 1350 019c 2E       		.uleb128 0x2e
- 1351 019d 01       		.byte	0x1
- 1352 019e 3F       		.uleb128 0x3f
- 1353 019f 19       		.uleb128 0x19
-ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 28
+ 1297 015f 00       		.byte	0
+ 1298 0160 3F       		.uleb128 0x3f
+ 1299 0161 19       		.uleb128 0x19
+ 1300 0162 03       		.uleb128 0x3
+ 1301 0163 0E       		.uleb128 0xe
+ 1302 0164 3A       		.uleb128 0x3a
+ 1303 0165 0B       		.uleb128 0xb
+ 1304 0166 3B       		.uleb128 0x3b
+ 1305 0167 0B       		.uleb128 0xb
+ 1306 0168 27       		.uleb128 0x27
+ 1307 0169 19       		.uleb128 0x19
+ 1308 016a 49       		.uleb128 0x49
+ 1309 016b 13       		.uleb128 0x13
+ 1310 016c 3C       		.uleb128 0x3c
+ 1311 016d 19       		.uleb128 0x19
+ 1312 016e 00       		.byte	0
+ 1313 016f 00       		.byte	0
+ 1314 0170 1B       		.uleb128 0x1b
+ 1315 0171 2E       		.uleb128 0x2e
+ 1316 0172 00       		.byte	0
+ 1317 0173 3F       		.uleb128 0x3f
+ 1318 0174 19       		.uleb128 0x19
+ 1319 0175 03       		.uleb128 0x3
+ 1320 0176 0E       		.uleb128 0xe
+ 1321 0177 3A       		.uleb128 0x3a
+ 1322 0178 0B       		.uleb128 0xb
+ 1323 0179 3B       		.uleb128 0x3b
+ 1324 017a 0B       		.uleb128 0xb
+ 1325 017b 27       		.uleb128 0x27
+ 1326 017c 19       		.uleb128 0x19
+ 1327 017d 3C       		.uleb128 0x3c
+ 1328 017e 19       		.uleb128 0x19
+ 1329 017f 00       		.byte	0
+ 1330 0180 00       		.byte	0
+ 1331 0181 1C       		.uleb128 0x1c
+ 1332 0182 2E       		.uleb128 0x2e
+ 1333 0183 01       		.byte	0x1
+ 1334 0184 3F       		.uleb128 0x3f
+ 1335 0185 19       		.uleb128 0x19
+ 1336 0186 03       		.uleb128 0x3
+ 1337 0187 0E       		.uleb128 0xe
+ 1338 0188 3A       		.uleb128 0x3a
+ 1339 0189 0B       		.uleb128 0xb
+ 1340 018a 3B       		.uleb128 0x3b
+ 1341 018b 0B       		.uleb128 0xb
+ 1342 018c 27       		.uleb128 0x27
+ 1343 018d 19       		.uleb128 0x19
+ 1344 018e 3C       		.uleb128 0x3c
+ 1345 018f 19       		.uleb128 0x19
+ 1346 0190 01       		.uleb128 0x1
+ 1347 0191 13       		.uleb128 0x13
+ 1348 0192 00       		.byte	0
+ 1349 0193 00       		.byte	0
+ 1350 0194 1D       		.uleb128 0x1d
+ 1351 0195 05       		.uleb128 0x5
+ 1352 0196 00       		.byte	0
+ 1353 0197 49       		.uleb128 0x49
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccqAM5J5.s 			page 28
 
 
- 1354 01a0 03       		.uleb128 0x3
- 1355 01a1 0E       		.uleb128 0xe
- 1356 01a2 3A       		.uleb128 0x3a
- 1357 01a3 0B       		.uleb128 0xb
- 1358 01a4 3B       		.uleb128 0x3b
- 1359 01a5 0B       		.uleb128 0xb
- 1360 01a6 49       		.uleb128 0x49
- 1361 01a7 13       		.uleb128 0x13
- 1362 01a8 3C       		.uleb128 0x3c
- 1363 01a9 19       		.uleb128 0x19
- 1364 01aa 01       		.uleb128 0x1
- 1365 01ab 13       		.uleb128 0x13
- 1366 01ac 00       		.byte	0
- 1367 01ad 00       		.byte	0
- 1368 01ae 1F       		.uleb128 0x1f
- 1369 01af 26       		.uleb128 0x26
- 1370 01b0 00       		.byte	0
- 1371 01b1 49       		.uleb128 0x49
- 1372 01b2 13       		.uleb128 0x13
- 1373 01b3 00       		.byte	0
- 1374 01b4 00       		.byte	0
- 1375 01b5 00       		.byte	0
- 1376              		.section	.debug_loc,"",%progbits
- 1377              	.Ldebug_loc0:
- 1378              	.LLST0:
- 1379 0000 18000000 		.4byte	.LVL22
- 1380 0004 68000000 		.4byte	.LVL33
- 1381 0008 0200     		.2byte	0x2
- 1382 000a 30       		.byte	0x30
- 1383 000b 9F       		.byte	0x9f
- 1384 000c 68000000 		.4byte	.LVL33
- 1385 0010 7C000000 		.4byte	.LVL37
- 1386 0014 0100     		.2byte	0x1
- 1387 0016 54       		.byte	0x54
- 1388 0017 7E000000 		.4byte	.LVL38
- 1389 001b 98000000 		.4byte	.LFE66
- 1390 001f 0100     		.2byte	0x1
- 1391 0021 54       		.byte	0x54
- 1392 0022 00000000 		.4byte	0
- 1393 0026 00000000 		.4byte	0
- 1394              		.section	.debug_aranges,"",%progbits
- 1395 0000 34000000 		.4byte	0x34
- 1396 0004 0200     		.2byte	0x2
- 1397 0006 00000000 		.4byte	.Ldebug_info0
- 1398 000a 04       		.byte	0x4
- 1399 000b 00       		.byte	0
- 1400 000c 0000     		.2byte	0
- 1401 000e 0000     		.2byte	0
- 1402 0010 00000000 		.4byte	.LFB65
- 1403 0014 0E000000 		.4byte	.LFE65-.LFB65
- 1404 0018 00000000 		.4byte	.LFB63
- 1405 001c 54000000 		.4byte	.LFE63-.LFB63
- 1406 0020 00000000 		.4byte	.LFB64
- 1407 0024 0C000000 		.4byte	.LFE64-.LFB64
- 1408 0028 00000000 		.4byte	.LFB66
- 1409 002c 98000000 		.4byte	.LFE66-.LFB66
- 1410 0030 00000000 		.4byte	0
-ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 29
+ 1354 0198 13       		.uleb128 0x13
+ 1355 0199 00       		.byte	0
+ 1356 019a 00       		.byte	0
+ 1357 019b 1E       		.uleb128 0x1e
+ 1358 019c 2E       		.uleb128 0x2e
+ 1359 019d 01       		.byte	0x1
+ 1360 019e 3F       		.uleb128 0x3f
+ 1361 019f 19       		.uleb128 0x19
+ 1362 01a0 03       		.uleb128 0x3
+ 1363 01a1 0E       		.uleb128 0xe
+ 1364 01a2 3A       		.uleb128 0x3a
+ 1365 01a3 0B       		.uleb128 0xb
+ 1366 01a4 3B       		.uleb128 0x3b
+ 1367 01a5 0B       		.uleb128 0xb
+ 1368 01a6 49       		.uleb128 0x49
+ 1369 01a7 13       		.uleb128 0x13
+ 1370 01a8 3C       		.uleb128 0x3c
+ 1371 01a9 19       		.uleb128 0x19
+ 1372 01aa 01       		.uleb128 0x1
+ 1373 01ab 13       		.uleb128 0x13
+ 1374 01ac 00       		.byte	0
+ 1375 01ad 00       		.byte	0
+ 1376 01ae 1F       		.uleb128 0x1f
+ 1377 01af 26       		.uleb128 0x26
+ 1378 01b0 00       		.byte	0
+ 1379 01b1 49       		.uleb128 0x49
+ 1380 01b2 13       		.uleb128 0x13
+ 1381 01b3 00       		.byte	0
+ 1382 01b4 00       		.byte	0
+ 1383 01b5 00       		.byte	0
+ 1384              		.section	.debug_loc,"",%progbits
+ 1385              	.Ldebug_loc0:
+ 1386              	.LLST0:
+ 1387 0000 18000000 		.4byte	.LVL22
+ 1388 0004 68000000 		.4byte	.LVL33
+ 1389 0008 0200     		.2byte	0x2
+ 1390 000a 30       		.byte	0x30
+ 1391 000b 9F       		.byte	0x9f
+ 1392 000c 68000000 		.4byte	.LVL33
+ 1393 0010 7C000000 		.4byte	.LVL37
+ 1394 0014 0100     		.2byte	0x1
+ 1395 0016 54       		.byte	0x54
+ 1396 0017 7E000000 		.4byte	.LVL38
+ 1397 001b 98000000 		.4byte	.LFE66
+ 1398 001f 0100     		.2byte	0x1
+ 1399 0021 54       		.byte	0x54
+ 1400 0022 00000000 		.4byte	0
+ 1401 0026 00000000 		.4byte	0
+ 1402              		.section	.debug_aranges,"",%progbits
+ 1403 0000 34000000 		.4byte	0x34
+ 1404 0004 0200     		.2byte	0x2
+ 1405 0006 00000000 		.4byte	.Ldebug_info0
+ 1406 000a 04       		.byte	0x4
+ 1407 000b 00       		.byte	0
+ 1408 000c 0000     		.2byte	0
+ 1409 000e 0000     		.2byte	0
+ 1410 0010 00000000 		.4byte	.LFB65
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccqAM5J5.s 			page 29
 
 
- 1411 0034 00000000 		.4byte	0
- 1412              		.section	.debug_ranges,"",%progbits
- 1413              	.Ldebug_ranges0:
- 1414 0000 00000000 		.4byte	.LFB65
- 1415 0004 0E000000 		.4byte	.LFE65
- 1416 0008 00000000 		.4byte	.LFB63
- 1417 000c 54000000 		.4byte	.LFE63
- 1418 0010 00000000 		.4byte	.LFB64
- 1419 0014 0C000000 		.4byte	.LFE64
- 1420 0018 00000000 		.4byte	.LFB66
- 1421 001c 98000000 		.4byte	.LFE66
- 1422 0020 00000000 		.4byte	0
- 1423 0024 00000000 		.4byte	0
- 1424              		.section	.debug_line,"",%progbits
- 1425              	.Ldebug_line0:
- 1426 0000 3B020000 		.section	.debug_str,"MS",%progbits,1
- 1426      0200C501 
- 1426      00000201 
- 1426      FB0E0D00 
- 1426      01010101 
- 1427              	.LASF24:
- 1428 0000 636F756E 		.ascii	"counter\000"
- 1428      74657200 
- 1429              	.LASF52:
- 1430 0008 6973725F 		.ascii	"isr_1ms_StartEx\000"
- 1430      316D735F 
- 1430      53746172 
- 1430      74457800 
- 1431              	.LASF40:
- 1432 0018 4D436C6F 		.ascii	"MClock_Start\000"
- 1432      636B5F53 
- 1432      74617274 
- 1432      00
- 1433              	.LASF2:
- 1434 0025 73686F72 		.ascii	"short int\000"
- 1434      7420696E 
- 1434      7400
- 1435              	.LASF20:
- 1436 002f 73697A65 		.ascii	"sizetype\000"
- 1436      74797065 
- 1436      00
- 1437              	.LASF58:
- 1438 0038 6765745F 		.ascii	"get_serial_speed\000"
- 1438      73657269 
- 1438      616C5F73 
- 1438      70656564 
- 1438      00
- 1439              	.LASF17:
- 1440 0049 63686172 		.ascii	"char8\000"
- 1440      3800
- 1441              	.LASF63:
- 1442 004f 55415254 		.ascii	"UART_ReadRxStatus\000"
- 1442      5F526561 
- 1442      64527853 
- 1442      74617475 
- 1442      7300
- 1443              	.LASF69:
-ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 30
-
-
- 1444 0061 6D61696E 		.ascii	"main\000"
+ 1411 0014 0E000000 		.4byte	.LFE65-.LFB65
+ 1412 0018 00000000 		.4byte	.LFB63
+ 1413 001c 54000000 		.4byte	.LFE63-.LFB63
+ 1414 0020 00000000 		.4byte	.LFB64
+ 1415 0024 0C000000 		.4byte	.LFE64-.LFB64
+ 1416 0028 00000000 		.4byte	.LFB66
+ 1417 002c 98000000 		.4byte	.LFE66-.LFB66
+ 1418 0030 00000000 		.4byte	0
+ 1419 0034 00000000 		.4byte	0
+ 1420              		.section	.debug_ranges,"",%progbits
+ 1421              	.Ldebug_ranges0:
+ 1422 0000 00000000 		.4byte	.LFB65
+ 1423 0004 0E000000 		.4byte	.LFE65
+ 1424 0008 00000000 		.4byte	.LFB63
+ 1425 000c 54000000 		.4byte	.LFE63
+ 1426 0010 00000000 		.4byte	.LFB64
+ 1427 0014 0C000000 		.4byte	.LFE64
+ 1428 0018 00000000 		.4byte	.LFB66
+ 1429 001c 98000000 		.4byte	.LFE66
+ 1430 0020 00000000 		.4byte	0
+ 1431 0024 00000000 		.4byte	0
+ 1432              		.section	.debug_line,"",%progbits
+ 1433              	.Ldebug_line0:
+ 1434 0000 3B020000 		.section	.debug_str,"MS",%progbits,1
+ 1434      0200C501 
+ 1434      00000201 
+ 1434      FB0E0D00 
+ 1434      01010101 
+ 1435              	.LASF24:
+ 1436 0000 636F756E 		.ascii	"counter\000"
+ 1436      74657200 
+ 1437              	.LASF52:
+ 1438 0008 6973725F 		.ascii	"isr_1ms_StartEx\000"
+ 1438      316D735F 
+ 1438      53746172 
+ 1438      74457800 
+ 1439              	.LASF29:
+ 1440 0018 75706461 		.ascii	"update\000"
+ 1440      746500
+ 1441              	.LASF2:
+ 1442 001f 73686F72 		.ascii	"short int\000"
+ 1442      7420696E 
+ 1442      7400
+ 1443              	.LASF20:
+ 1444 0029 73697A65 		.ascii	"sizetype\000"
+ 1444      74797065 
  1444      00
- 1445              	.LASF51:
- 1446 0066 50574D5F 		.ascii	"PWM_M2_Stop\000"
- 1446      4D325F53 
- 1446      746F7000 
- 1447              	.LASF36:
- 1448 0072 50574D5F 		.ascii	"PWM_M1_Start\000"
- 1448      4D315F53 
- 1448      74617274 
- 1448      00
- 1449              	.LASF55:
- 1450 007f 55415254 		.ascii	"UART_PutString\000"
- 1450      5F507574 
- 1450      53747269 
- 1450      6E6700
- 1451              	.LASF62:
- 1452 008e 54696D65 		.ascii	"Timer_1_ReadStatusRegister\000"
- 1452      725F315F 
- 1452      52656164 
- 1452      53746174 
- 1452      75735265 
- 1453              	.LASF30:
- 1454 00a9 696E7431 		.ascii	"int11\000"
- 1454      3100
- 1455              	.LASF41:
- 1456 00af 4D315175 		.ascii	"M1QuadDec_Start\000"
- 1456      61644465 
- 1456      635F5374 
- 1456      61727400 
- 1457              	.LASF11:
- 1458 00bf 75696E74 		.ascii	"uint8\000"
- 1458      3800
- 1459              	.LASF0:
- 1460 00c5 7369676E 		.ascii	"signed char\000"
- 1460      65642063 
- 1460      68617200 
- 1461              	.LASF68:
- 1462 00d1 54696D65 		.ascii	"Timer_1_Handler\000"
- 1462      725F315F 
- 1462      48616E64 
- 1462      6C657200 
- 1463              	.LASF15:
- 1464 00e1 666C6F61 		.ascii	"float\000"
- 1464      7400
- 1465              	.LASF27:
- 1466 00e7 696E7432 		.ascii	"int2\000"
- 1466      00
- 1467              	.LASF28:
- 1468 00ec 696E7433 		.ascii	"int3\000"
- 1468      00
- 1469              	.LASF67:
- 1470 00f1 433A5C55 		.ascii	"C:\\Users\\tadge\\Documents\\GitHub\\PSOC_Creator\\"
- 1470      73657273 
- 1470      5C746164 
- 1470      67655C44 
- 1470      6F63756D 
-ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 31
+ 1445              	.LASF58:
+ 1446 0032 6765745F 		.ascii	"get_serial_speed\000"
+ 1446      73657269 
+ 1446      616C5F73 
+ 1446      70656564 
+ 1446      00
+ 1447              	.LASF17:
+ 1448 0043 63686172 		.ascii	"char8\000"
+ 1448      3800
+ 1449              	.LASF64:
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccqAM5J5.s 			page 30
 
 
- 1471 011e 6C617365 		.ascii	"laser_follower\\FYP.cydsn\000"
- 1471      725F666F 
- 1471      6C6C6F77 
- 1471      65725C46 
- 1471      59502E63 
- 1472              	.LASF6:
- 1473 0137 6C6F6E67 		.ascii	"long long int\000"
- 1473      206C6F6E 
- 1473      6720696E 
- 1473      7400
- 1474              	.LASF35:
- 1475 0145 6D797374 		.ascii	"mystring\000"
- 1475      72696E67 
- 1475      00
- 1476              	.LASF29:
- 1477 014e 75706461 		.ascii	"update\000"
- 1477      746500
- 1478              	.LASF4:
- 1479 0155 6C6F6E67 		.ascii	"long int\000"
- 1479      20696E74 
- 1479      00
- 1480              	.LASF26:
- 1481 015e 696E7431 		.ascii	"int1\000"
- 1481      00
- 1482              	.LASF53:
- 1483 0163 54696D65 		.ascii	"Timer_1_WritePeriod\000"
- 1483      725F315F 
- 1483      57726974 
- 1483      65506572 
- 1483      696F6400 
- 1484              	.LASF25:
- 1485 0177 74726967 		.ascii	"trigger1\000"
- 1485      67657231 
- 1485      00
- 1486              	.LASF1:
- 1487 0180 756E7369 		.ascii	"unsigned char\000"
- 1487      676E6564 
- 1487      20636861 
- 1487      7200
- 1488              	.LASF44:
- 1489 018e 4D315175 		.ascii	"M1QuadDec_SetCounter\000"
- 1489      61644465 
- 1489      635F5365 
- 1489      74436F75 
- 1489      6E746572 
- 1490              	.LASF59:
- 1491 01a3 6E65775F 		.ascii	"new_path\000"
- 1491      70617468 
- 1491      00
- 1492              	.LASF21:
- 1493 01ac 6C6F6E67 		.ascii	"long double\000"
- 1493      20646F75 
- 1493      626C6500 
- 1494              	.LASF54:
- 1495 01b8 6765745F 		.ascii	"get_serial_update\000"
- 1495      73657269 
- 1495      616C5F75 
-ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 32
+ 1450 0049 55415254 		.ascii	"UART_ReadRxStatus\000"
+ 1450      5F526561 
+ 1450      64527853 
+ 1450      74617475 
+ 1450      7300
+ 1451              	.LASF70:
+ 1452 005b 6D61696E 		.ascii	"main\000"
+ 1452      00
+ 1453              	.LASF51:
+ 1454 0060 50574D5F 		.ascii	"PWM_M2_Stop\000"
+ 1454      4D325F53 
+ 1454      746F7000 
+ 1455              	.LASF36:
+ 1456 006c 50574D5F 		.ascii	"PWM_M1_Start\000"
+ 1456      4D315F53 
+ 1456      74617274 
+ 1456      00
+ 1457              	.LASF55:
+ 1458 0079 55415254 		.ascii	"UART_PutString\000"
+ 1458      5F507574 
+ 1458      53747269 
+ 1458      6E6700
+ 1459              	.LASF63:
+ 1460 0088 54696D65 		.ascii	"Timer_1_ReadStatusRegister\000"
+ 1460      725F315F 
+ 1460      52656164 
+ 1460      53746174 
+ 1460      75735265 
+ 1461              	.LASF30:
+ 1462 00a3 696E7431 		.ascii	"int11\000"
+ 1462      3100
+ 1463              	.LASF41:
+ 1464 00a9 4D315175 		.ascii	"M1QuadDec_Start\000"
+ 1464      61644465 
+ 1464      635F5374 
+ 1464      61727400 
+ 1465              	.LASF11:
+ 1466 00b9 75696E74 		.ascii	"uint8\000"
+ 1466      3800
+ 1467              	.LASF0:
+ 1468 00bf 7369676E 		.ascii	"signed char\000"
+ 1468      65642063 
+ 1468      68617200 
+ 1469              	.LASF69:
+ 1470 00cb 54696D65 		.ascii	"Timer_1_Handler\000"
+ 1470      725F315F 
+ 1470      48616E64 
+ 1470      6C657200 
+ 1471              	.LASF15:
+ 1472 00db 666C6F61 		.ascii	"float\000"
+ 1472      7400
+ 1473              	.LASF27:
+ 1474 00e1 696E7432 		.ascii	"int2\000"
+ 1474      00
+ 1475              	.LASF28:
+ 1476 00e6 696E7433 		.ascii	"int3\000"
+ 1476      00
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccqAM5J5.s 			page 31
 
 
- 1495      70646174 
- 1495      6500
- 1496              	.LASF19:
- 1497 01ca 63796973 		.ascii	"cyisraddress\000"
- 1497      72616464 
- 1497      72657373 
- 1497      00
- 1498              	.LASF31:
- 1499 01d7 696E7432 		.ascii	"int22\000"
- 1499      3200
- 1500              	.LASF49:
- 1501 01dd 6973725F 		.ascii	"isr_1ms_Enable\000"
- 1501      316D735F 
- 1501      456E6162 
- 1501      6C6500
- 1502              	.LASF64:
- 1503 01ec 55415254 		.ascii	"UART_GetRxBufferSize\000"
- 1503      5F476574 
- 1503      52784275 
- 1503      66666572 
- 1503      53697A65 
- 1504              	.LASF48:
- 1505 0201 54696D65 		.ascii	"Timer_1_Start\000"
- 1505      725F315F 
- 1505      53746172 
- 1505      7400
- 1506              	.LASF7:
- 1507 020f 6C6F6E67 		.ascii	"long long unsigned int\000"
- 1507      206C6F6E 
- 1507      6720756E 
- 1507      7369676E 
- 1507      65642069 
- 1508              	.LASF8:
- 1509 0226 756E7369 		.ascii	"unsigned int\000"
- 1509      676E6564 
- 1509      20696E74 
- 1509      00
- 1510              	.LASF47:
- 1511 0233 4D325175 		.ascii	"M2QuadDec_SetCounter\000"
- 1511      61644465 
- 1511      635F5365 
- 1511      74436F75 
- 1511      6E746572 
- 1512              	.LASF45:
- 1513 0248 4D325175 		.ascii	"M2QuadDec_Start\000"
- 1513      61644465 
- 1513      635F5374 
- 1513      61727400 
- 1514              	.LASF22:
- 1515 0258 53657475 		.ascii	"Setup\000"
- 1515      7000
- 1516              	.LASF3:
- 1517 025e 73686F72 		.ascii	"short unsigned int\000"
- 1517      7420756E 
+ 1477              	.LASF68:
+ 1478 00eb 433A5C55 		.ascii	"C:\\Users\\tadge\\Documents\\GitHub\\PSOC_Creator\\"
+ 1478      73657273 
+ 1478      5C746164 
+ 1478      67655C44 
+ 1478      6F63756D 
+ 1479 0118 6C617365 		.ascii	"laser_follower\\FYP.cydsn\000"
+ 1479      725F666F 
+ 1479      6C6C6F77 
+ 1479      65725C46 
+ 1479      59502E63 
+ 1480              	.LASF6:
+ 1481 0131 6C6F6E67 		.ascii	"long long int\000"
+ 1481      206C6F6E 
+ 1481      6720696E 
+ 1481      7400
+ 1482              	.LASF35:
+ 1483 013f 6D797374 		.ascii	"mystring\000"
+ 1483      72696E67 
+ 1483      00
+ 1484              	.LASF60:
+ 1485 0148 6765745F 		.ascii	"get_serial_update2\000"
+ 1485      73657269 
+ 1485      616C5F75 
+ 1485      70646174 
+ 1485      653200
+ 1486              	.LASF4:
+ 1487 015b 6C6F6E67 		.ascii	"long int\000"
+ 1487      20696E74 
+ 1487      00
+ 1488              	.LASF26:
+ 1489 0164 696E7431 		.ascii	"int1\000"
+ 1489      00
+ 1490              	.LASF53:
+ 1491 0169 54696D65 		.ascii	"Timer_1_WritePeriod\000"
+ 1491      725F315F 
+ 1491      57726974 
+ 1491      65506572 
+ 1491      696F6400 
+ 1492              	.LASF25:
+ 1493 017d 74726967 		.ascii	"trigger1\000"
+ 1493      67657231 
+ 1493      00
+ 1494              	.LASF1:
+ 1495 0186 756E7369 		.ascii	"unsigned char\000"
+ 1495      676E6564 
+ 1495      20636861 
+ 1495      7200
+ 1496              	.LASF44:
+ 1497 0194 4D315175 		.ascii	"M1QuadDec_SetCounter\000"
+ 1497      61644465 
+ 1497      635F5365 
+ 1497      74436F75 
+ 1497      6E746572 
+ 1498              	.LASF59:
+ 1499 01a9 6E65775F 		.ascii	"new_path\000"
+ 1499      70617468 
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccqAM5J5.s 			page 32
+
+
+ 1499      00
+ 1500              	.LASF21:
+ 1501 01b2 6C6F6E67 		.ascii	"long double\000"
+ 1501      20646F75 
+ 1501      626C6500 
+ 1502              	.LASF54:
+ 1503 01be 6765745F 		.ascii	"get_serial_update\000"
+ 1503      73657269 
+ 1503      616C5F75 
+ 1503      70646174 
+ 1503      6500
+ 1504              	.LASF19:
+ 1505 01d0 63796973 		.ascii	"cyisraddress\000"
+ 1505      72616464 
+ 1505      72657373 
+ 1505      00
+ 1506              	.LASF31:
+ 1507 01dd 696E7432 		.ascii	"int22\000"
+ 1507      3200
+ 1508              	.LASF49:
+ 1509 01e3 6973725F 		.ascii	"isr_1ms_Enable\000"
+ 1509      316D735F 
+ 1509      456E6162 
+ 1509      6C6500
+ 1510              	.LASF65:
+ 1511 01f2 55415254 		.ascii	"UART_GetRxBufferSize\000"
+ 1511      5F476574 
+ 1511      52784275 
+ 1511      66666572 
+ 1511      53697A65 
+ 1512              	.LASF48:
+ 1513 0207 54696D65 		.ascii	"Timer_1_Start\000"
+ 1513      725F315F 
+ 1513      53746172 
+ 1513      7400
+ 1514              	.LASF10:
+ 1515 0215 696E7433 		.ascii	"int32_t\000"
+ 1515      325F7400 
+ 1516              	.LASF7:
+ 1517 021d 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 1517      206C6F6E 
+ 1517      6720756E 
  1517      7369676E 
  1517      65642069 
- 1517      6E7400
-ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 33
-
-
- 1518              	.LASF18:
- 1519 0271 63686172 		.ascii	"char\000"
+ 1518              	.LASF8:
+ 1519 0234 756E7369 		.ascii	"unsigned int\000"
+ 1519      676E6564 
+ 1519      20696E74 
  1519      00
- 1520              	.LASF65:
- 1521 0276 474E5520 		.ascii	"GNU C 4.9.3 20150303 (release) [ARM/embedded-4_9-br"
- 1521      4320342E 
- 1521      392E3320 
- 1521      32303135 
- 1521      30333033 
- 1522 02a9 616E6368 		.ascii	"anch revision 221220] -mcpu=cortex-m3 -mthumb -g -O"
- 1522      20726576 
- 1522      6973696F 
- 1522      6E203232 
- 1522      31323230 
- 1523 02dc 67202D66 		.ascii	"g -ffunction-sections -ffat-lto-objects\000"
- 1523      66756E63 
- 1523      74696F6E 
- 1523      2D736563 
- 1523      74696F6E 
- 1524              	.LASF38:
- 1525 0304 55415254 		.ascii	"UART_Start\000"
- 1525      5F537461 
- 1525      727400
- 1526              	.LASF10:
- 1527 030f 696E7433 		.ascii	"int32_t\000"
- 1527      325F7400 
- 1528              	.LASF50:
- 1529 0317 50574D5F 		.ascii	"PWM_M1_Stop\000"
- 1529      4D315F53 
- 1529      746F7000 
- 1530              	.LASF12:
- 1531 0323 75696E74 		.ascii	"uint16\000"
- 1531      313600
- 1532              	.LASF42:
- 1533 032a 4D315175 		.ascii	"M1QuadDec_Enable\000"
- 1533      61644465 
- 1533      635F456E 
- 1533      61626C65 
- 1533      00
- 1534              	.LASF56:
- 1535 033b 4379536F 		.ascii	"CySoftwareReset\000"
- 1535      66747761 
- 1535      72655265 
- 1535      73657400 
- 1536              	.LASF37:
- 1537 034b 50574D5F 		.ascii	"PWM_M2_Start\000"
- 1537      4D325F53 
+ 1520              	.LASF47:
+ 1521 0241 4D325175 		.ascii	"M2QuadDec_SetCounter\000"
+ 1521      61644465 
+ 1521      635F5365 
+ 1521      74436F75 
+ 1521      6E746572 
+ 1522              	.LASF45:
+ 1523 0256 4D325175 		.ascii	"M2QuadDec_Start\000"
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccqAM5J5.s 			page 33
+
+
+ 1523      61644465 
+ 1523      635F5374 
+ 1523      61727400 
+ 1524              	.LASF22:
+ 1525 0266 53657475 		.ascii	"Setup\000"
+ 1525      7000
+ 1526              	.LASF3:
+ 1527 026c 73686F72 		.ascii	"short unsigned int\000"
+ 1527      7420756E 
+ 1527      7369676E 
+ 1527      65642069 
+ 1527      6E7400
+ 1528              	.LASF18:
+ 1529 027f 63686172 		.ascii	"char\000"
+ 1529      00
+ 1530              	.LASF66:
+ 1531 0284 474E5520 		.ascii	"GNU C 4.9.3 20150303 (release) [ARM/embedded-4_9-br"
+ 1531      4320342E 
+ 1531      392E3320 
+ 1531      32303135 
+ 1531      30333033 
+ 1532 02b7 616E6368 		.ascii	"anch revision 221220] -mcpu=cortex-m3 -mthumb -g -O"
+ 1532      20726576 
+ 1532      6973696F 
+ 1532      6E203232 
+ 1532      31323230 
+ 1533 02ea 67202D66 		.ascii	"g -ffunction-sections -ffat-lto-objects\000"
+ 1533      66756E63 
+ 1533      74696F6E 
+ 1533      2D736563 
+ 1533      74696F6E 
+ 1534              	.LASF38:
+ 1535 0312 55415254 		.ascii	"UART_Start\000"
+ 1535      5F537461 
+ 1535      727400
+ 1536              	.LASF40:
+ 1537 031d 4D436C6F 		.ascii	"MClock_Start\000"
+ 1537      636B5F53 
  1537      74617274 
  1537      00
- 1538              	.LASF66:
- 1539 0358 6D61696E 		.ascii	"main.c\000"
- 1539      2E6300
- 1540              	.LASF5:
- 1541 035f 6C6F6E67 		.ascii	"long unsigned int\000"
- 1541      20756E73 
- 1541      69676E65 
- 1541      6420696E 
-ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 34
-
-
- 1541      7400
- 1542              	.LASF46:
- 1543 0371 4D325175 		.ascii	"M2QuadDec_Enable\000"
+ 1538              	.LASF50:
+ 1539 032a 50574D5F 		.ascii	"PWM_M1_Stop\000"
+ 1539      4D315F53 
+ 1539      746F7000 
+ 1540              	.LASF12:
+ 1541 0336 75696E74 		.ascii	"uint16\000"
+ 1541      313600
+ 1542              	.LASF42:
+ 1543 033d 4D315175 		.ascii	"M1QuadDec_Enable\000"
  1543      61644465 
  1543      635F456E 
  1543      61626C65 
  1543      00
- 1544              	.LASF14:
- 1545 0382 696E7433 		.ascii	"int32\000"
- 1545      3200
- 1546              	.LASF32:
- 1547 0388 696E7433 		.ascii	"int33\000"
- 1547      3300
- 1548              	.LASF13:
- 1549 038e 75696E74 		.ascii	"uint32\000"
- 1549      333200
- 1550              	.LASF57:
- 1551 0395 43686563 		.ascii	"Check_Speed\000"
- 1551      6B5F5370 
- 1551      65656400 
- 1552              	.LASF9:
- 1553 03a1 5F5F696E 		.ascii	"__int32_t\000"
- 1553      7433325F 
- 1553      7400
- 1554              	.LASF23:
- 1555 03ab 53746F70 		.ascii	"Stop\000"
- 1555      00
- 1556              	.LASF61:
- 1557 03b0 5072696E 		.ascii	"Print_Values\000"
- 1557      745F5661 
- 1557      6C756573 
- 1557      00
- 1558              	.LASF33:
- 1559 03bd 616E676C 		.ascii	"angle\000"
- 1559      6500
- 1560              	.LASF16:
- 1561 03c3 646F7562 		.ascii	"double\000"
- 1561      6C6500
- 1562              	.LASF34:
- 1563 03ca 49544D5F 		.ascii	"ITM_RxBuffer\000"
- 1563      52784275 
- 1563      66666572 
- 1563      00
- 1564              	.LASF43:
- 1565 03d7 43794465 		.ascii	"CyDelay\000"
- 1565      6C617900 
- 1566              	.LASF60:
- 1567 03df 75706461 		.ascii	"update_angle\000"
- 1567      74655F61 
- 1567      6E676C65 
+ 1544              	.LASF56:
+ 1545 034e 4379536F 		.ascii	"CySoftwareReset\000"
+ 1545      66747761 
+ 1545      72655265 
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccqAM5J5.s 			page 34
+
+
+ 1545      73657400 
+ 1546              	.LASF37:
+ 1547 035e 50574D5F 		.ascii	"PWM_M2_Start\000"
+ 1547      4D325F53 
+ 1547      74617274 
+ 1547      00
+ 1548              	.LASF67:
+ 1549 036b 6D61696E 		.ascii	"main.c\000"
+ 1549      2E6300
+ 1550              	.LASF5:
+ 1551 0372 6C6F6E67 		.ascii	"long unsigned int\000"
+ 1551      20756E73 
+ 1551      69676E65 
+ 1551      6420696E 
+ 1551      7400
+ 1552              	.LASF46:
+ 1553 0384 4D325175 		.ascii	"M2QuadDec_Enable\000"
+ 1553      61644465 
+ 1553      635F456E 
+ 1553      61626C65 
+ 1553      00
+ 1554              	.LASF14:
+ 1555 0395 696E7433 		.ascii	"int32\000"
+ 1555      3200
+ 1556              	.LASF32:
+ 1557 039b 696E7433 		.ascii	"int33\000"
+ 1557      3300
+ 1558              	.LASF13:
+ 1559 03a1 75696E74 		.ascii	"uint32\000"
+ 1559      333200
+ 1560              	.LASF57:
+ 1561 03a8 43686563 		.ascii	"Check_Speed\000"
+ 1561      6B5F5370 
+ 1561      65656400 
+ 1562              	.LASF9:
+ 1563 03b4 5F5F696E 		.ascii	"__int32_t\000"
+ 1563      7433325F 
+ 1563      7400
+ 1564              	.LASF23:
+ 1565 03be 53746F70 		.ascii	"Stop\000"
+ 1565      00
+ 1566              	.LASF62:
+ 1567 03c3 5072696E 		.ascii	"Print_Values\000"
+ 1567      745F5661 
+ 1567      6C756573 
  1567      00
- 1568              	.LASF39:
- 1569 03ec 4D31436C 		.ascii	"M1Clock_Start\000"
- 1569      6F636B5F 
- 1569      53746172 
- 1569      7400
- 1570              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 4.9.3 20150303 (release) [ARM/embedded-4_9-br
-ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccG1v2a7.s 			page 35
+ 1568              	.LASF33:
+ 1569 03d0 616E676C 		.ascii	"angle\000"
+ 1569      6500
+ 1570              	.LASF16:
+ 1571 03d6 646F7562 		.ascii	"double\000"
+ 1571      6C6500
+ 1572              	.LASF34:
+ 1573 03dd 49544D5F 		.ascii	"ITM_RxBuffer\000"
+ 1573      52784275 
+ 1573      66666572 
+ 1573      00
+ARM GAS  C:\Users\tadge\AppData\Local\Temp\ccqAM5J5.s 			page 35
 
 
+ 1574              	.LASF43:
+ 1575 03ea 43794465 		.ascii	"CyDelay\000"
+ 1575      6C617900 
+ 1576              	.LASF61:
+ 1577 03f2 75706461 		.ascii	"update_angle\000"
+ 1577      74655F61 
+ 1577      6E676C65 
+ 1577      00
+ 1578              	.LASF39:
+ 1579 03ff 4D31436C 		.ascii	"M1Clock_Start\000"
+ 1579      6F636B5F 
+ 1579      53746172 
+ 1579      7400
+ 1580              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 4.9.3 20150303 (release) [ARM/embedded-4_9-br
